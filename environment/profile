@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Import .env data
+. environment/env/app.env
+
+# Docker Compose services
+project=$(basename $(pwd))
+os=$(uname -s)
+compose="VOLUME_PREFIX=\"${project}_\" docker-compose -p ${project} -f environment/docker-compose.yml"
+
+if [ 'Darwin' = $os ]; then
+	compose="VOLUME_PREFIX=\"${project}_\" ${compose} -f environment/docker-compose.mac.yml"
+fi
+
+## WP CLI
+alias wp="${compose} run --rm wp"
+
+## Server
+alias server="${compose} up -d server"
+
+## Node
+alias node="${compose} run --rm assets-node"
+alias assets-watch="node npm run watch"
+alias assets-build="node npm run build"
+
+# Lint
+alias eslint="node npm run lint:js"
+alias stylint="node npm run lint:style"
+
+# PHPQA
+alias phpqa="${compose} run --rm phpqa"
+
+## Composer
+alias cli-composer="${compose} run --rm cli-composer"
+alias inc-composer="${compose} run --rm inc-composer"
+alias wp-composer="${compose} run --rm wp-composer"
+
+# Database
+alias db-export="${compose} run --rm wp db export - | gzip > environment/initdb/initdb.sql.gz"
+
+# SMTP
+alias smtp="${compose} up smtp"
+
+# Logs
+alias logs-wp="${compose} logs -f wordpress"
+
+# Shutdown
+alias down="${compose} down"
+
+# WP Shell
+alias wp-shell="${compose} run --rm wp shell"
+
+# Deployer
+alias deploy-ssh-keygen="mkdir -p deploy/.ssh && ssh-keygen -f deploy/.ssh/id_ed25519 -t ed25519 -N ''"
+alias deploy-ssh-key="cat deploy/.ssh/id_ed25519.pub"
+function dep() {
+	eval $(echo ${compose} run --rm deployer $@ --log deploy.log | tr -d \')
+}
+
+# Webgrind (Xdebug profiling viewer)
+alias webgrind="${compose} up -d webgrind"
+
+# Docker sync
+alias project-docker-sync="VOLUME_PREFIX=\"${project}_\" docker-sync start -c environment/docker-sync.yml"
+
+# Languages pot generation
+function i18n() {
+	eval $(echo sudo chown -R 82:82 themes/${THEME_ACTIVE}/languages/ && sudo chown -R 82:82 inc/languages/  )
+	eval $(echo ${compose} run --rm wp i18n make-pot --domain=${THEME_ACTIVE}_inc ../../inc/src ../../inc/languages/${THEME_ACTIVE}_inc.pot)
+	eval $(echo ${compose} run --rm wp i18n make-pot ../../themes/${THEME_ACTIVE} ../../themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
+	eval $(echo sudo chown -R $USER:$USER themes/${THEME_ACTIVE}/languages/ && sudo chown -R $USER:$USER inc/languages/  )
+}

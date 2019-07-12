@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Instala o projeto no servidor
+
+# Read and import dotenv variables to script
+dotenv () {
+  DOTENV_SHELL_LOADER_SAVED_OPTS=$(set +o)
+  set -o allexport
+  [ -f $1 ] && source $1
+  set +o allexport
+  eval "$DOTENV_SHELL_LOADER_SAVED_OPTS"
+  unset DOTENV_SHELL_LOADER_SAVED_OPTS
+}
+
+# Variables
+PACKAGES_DIR=public/packages
+UPLOADS_DIR="${PACKAGES_DIR}"/uploads
+THEMES_DIR="${PACKAGES_DIR}"/themes
+LANGUAGES_DIR="${PACKAGES_DIR}"/languages
+PLUGINS_DIR="${PACKAGES_DIR}"/plugins
+UPGRADE_DIR="${PACKAGES_DIR}"/upgrade
+WPMU_PLUGIN_DIR="${PACKAGES_DIR}"/mu-plugins
+PRIVATE_PACKAGES_DIR=wp-packages/private
+PRIVATE_PLUGINS_PACKAGES="${PRIVATE_PACKAGES_DIR}/plugins/*.zip"
+PRIVATE_THEMES_PACKAGES="${PRIVATE_PACKAGES_DIR}/themes/*.zip"
+THEME_LANGUAGES_DIR="wp-packages/languages/themes/*.*"
+PLUGINS_LANGUAGES_DIR="wp-packages/languages/plugins/*.*"
+
+# Go to project root
+cd $(dirname "$0")/../..
+
+set -xe
+
+# Load project environment variables
+dotenv environment/env/app.env
+
+# Cria diretórios via Docker por questões de permissão
+mkdir -p ${UPLOADS_DIR} ${THEMES_DIR} ${LANGUAGES_DIR} ${UPGRADE_DIR} ${PLUGINS_DIR} ${LANGUAGES_DIR}/plugins ${LANGUAGES_DIR}/themes
+
+# Create symlink for `mu-plugins` directory
+ln -nfs --relative wp-packages/mu-plugins ${WPMU_PLUGIN_DIR}
+
+# Composer
+bash -c 'cd inc && composer install --prefer-dist --no-scripts --optimize-autoloader'
+bash -c 'cd wp-packages && composer install --prefer-dist --no-scripts --optimize-autoloader'
+
+# NPM
+bash -c 'cd assets && npm install && npm run build'
+
+cd public
+
+if ! wp core is-installed 2> /dev/null; then
+    wp db reset --yes 2> /dev/null || wp db create
+    wp core install --url="${WP_URL}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
+fi
+
+# Install theme language
+wp language core install "${WP_LANG}" --activate
+
+# Update language of core, theme and plugins
+wp language core update
+
+# Install extra plugins
+PLUGINS=../${PRIVATE_PLUGINS_PACKAGES}
+if [ $(ls -la ${PLUGINS} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has packages inner the directory
+    for PLUGIN in ${PLUGINS}
+    do
+        wp plugin install ${PLUGIN} --force
+    done
+fi
+
+# Install extra themes
+THEMES=../${PRIVATE_THEMES_PACKAGES}
+if [ $(ls -la ${THEMES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has packages inner the directory
+    for THEME in ${THEMES}
+    do
+        wp theme install ${THEME} --force
+    done
+fi
+
+# Install themes languages
+LANGUAGES=../${THEME_LANGUAGES_DIR}
+if [ $(ls -la ${LANGUAGES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has languages inner the directory
+    for LANGUAGE in $LANGUAGES
+    do
+		ln -sf ../../../${LANGUAGE} ../${LANGUAGES_DIR}/themes/
+    done
+fi
+
+# Install plugins languages
+PLUGINS_LANGUAGES=../${PLUGINS_LANGUAGES_DIR}
+if [ $(ls -la ${PLUGINS_LANGUAGES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has languages inner the directory
+    for PLUGINS_LANGUAGE in $PLUGINS_LANGUAGES
+    do
+		ln -sf ../../../${PLUGINS_LANGUAGE} ../${LANGUAGES_DIR}/plugins/
+    done
+fi
+
+# Activate theme
+wp theme activate "${THEME_ACTIVE}"
+
+# Activate all plugins
+wp plugin activate --all
+
+# Install plugins languages
+wp language plugin list --all --language=${WP_LANG} --field=plugin | xargs -I % bash -c "echo % && wp language plugin install % ${WP_LANG}"

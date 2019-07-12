@@ -1,0 +1,105 @@
+# Development project infrastructure generated over the Docker
+version: "3.7"
+
+services:
+  # Nginx
+  server:
+    volumes:
+      - app:/app:nocopy
+      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf
+
+  # PHP-FPM with WP dependencies
+  wordpress:
+    volumes:
+      - app:/app:nocopy
+
+  # WP CLI
+  wp:
+    volumes:
+      - app:/app:nocopy
+
+  # Node 8.2 with NPM/Yarn/npx
+  assets-node:
+    volumes:
+      - app:/app:nocopy
+
+  # Composer
+  inc-composer:
+    volumes:
+      - inc:/app:nocopy
+      # Map local user Composer directory with container for cache packages
+      - composer_cache:/tmp/cache:nocopy
+
+  # Composer WP packages
+  wp-composer:
+    volumes:
+      - wp-packages:/app:nocopy
+      - public:/public:nocopy
+      # Map local user Composer directory with container for cache packages
+      - composer_cache:/tmp/cache:nocopy
+
+  # Composer CLI
+  cli-composer:
+    volumes:
+      - cli:/app:nocopy
+      # Map local user Composer directory with container for cache packages
+      - composer_cache:/tmp/cache:nocopy
+
+  # Composer CLI
+  phpqa-composer:
+    volumes:
+      - phpqa:/app:nocopy
+      # Map local user Composer directory with container for cache packages
+      - composer_cache:/tmp/cache:nocopy
+
+  # PHPQA
+  phpqa:
+    volumes:
+      - app:/app:nocopy
+      - phpqa_tmp:/tmp:nocopy
+
+  # Deployer
+  deployer:
+    volumes:
+      - deploy:/deploy:nocopy
+      - deploy_ssh:/root/.ssh:nocopy
+
+volumes:
+  composer_cache:
+    external: true
+
+  app:
+    name: ${VOLUME_PREFIX}app_sync
+    external: true
+
+  inc:
+    name: ${VOLUME_PREFIX}inc_sync
+    external: true
+
+  wp-packages:
+    name: ${VOLUME_PREFIX}wp-packages_sync
+    external: true
+
+  cli:
+    name: ${VOLUME_PREFIX}cli_sync
+    external: true
+
+  public:
+    name: ${VOLUME_PREFIX}public_sync
+    external: true
+
+  phpqa:
+    name: ${VOLUME_PREFIX}phpqa_sync
+    external: true
+
+  phpqa_tmp:
+    name: ${VOLUME_PREFIX}phpqa_tmp_sync
+    external: true
+
+  deploy:
+    name: ${VOLUME_PREFIX}deploy_sync
+    external: true
+
+  deploy_ssh:
+    name: ${VOLUME_PREFIX}deploy_ssh_sync
+    external: true

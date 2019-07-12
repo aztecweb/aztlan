@@ -1,0 +1,21 @@
+{
+	"name": "aztecweb/aztec-env-wp-packages",
+	"repositories": [{
+		"type": "composer",
+		"url": "https://wpackagist.org"
+	}],
+	"require": {
+		"johnpbloch/wordpress": "^5.2"
+	},
+	"extra": {
+		"wordpress-install-dir": "../public/wp",
+		"installer-paths": {
+			"../public/packages/plugins/{$name}/": [
+				"type:wordpress-plugin"
+			],
+			"../public/packages/themes/{$name}/": [
+				"type:wordpress-theme"
+			]
+		}
+	}
+}

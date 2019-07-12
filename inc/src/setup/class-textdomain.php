@@ -1,0 +1,36 @@
+<?php
+/**
+ * Textdomain class
+ *
+ * @package Aztec
+ */
+
+namespace Aztec\Setup;
+
+use Aztec\Base;
+
+/**
+ * Load traslation files
+ */
+class Textdomain extends Base {
+
+	/**
+	 * Execute hooks
+	 */
+	public function init() {
+		add_action( 'after_setup_theme', $this->callback( 'load_textdomain' ) );
+		add_action( 'wp_footer', $this->callback( 'test' ) );
+	}
+
+	/**
+	 * Load the installation locale theme language file
+	 */
+	public function load_textdomain() {
+		load_theme_textdomain( 'env-theme', get_stylesheet_directory() . '/languages' );
+		load_textdomain( 'env-theme_inc', getenv( 'INC_DIR' ) . '/languages/env-theme_inc-pt_BR.mo' );
+	}
+
+	public function test() {
+		echo '<br>'. __( 'Hello world Inc', 'env-theme_inc' );
+	}
+}
