@@ -1,0 +1,11 @@
+{
+    "name": "aztecweb/environment",
+	"description": "Aztec WordPress environment",
+	"autoload": {
+        "files": ["autoload.php"]
+    },
+    "require": {
+        "php-di/php-di": "^6.0",
+		"vlucas/phpdotenv": "^2.4"
+    }
+}

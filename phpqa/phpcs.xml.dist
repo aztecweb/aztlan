@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="land-agency">
+    <description>The PHP coding standard.</description>
+
+    <config name="installed_paths" value="/app/phpqa/vendor/wp-coding-standards/wpcs,/app/phpqa/vendor/phpcompatibility/php-compatibility" />
+
+    <!--
+         Use WordPress coding standard
+         https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards
+         https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
+
+         Exclude lowercase generic rule in favour of PSR-4
+     -->
+    <rule ref="WordPress">
+        <exclude name="WordPress.VIP.RestrictedFunctions" />
+        <exclude name="WordPress.VIP.RestrictedVariables" />
+        <exclude name="WordPress.VIP.SuperGlobalInputUsage" />
+        <exclude name="WordPress.VIP.FileSystemWritesDisallow" />
+    </rule>
+
+    <!-- Sniff the template and files -->
+    <file>/app/inc/src</file>
+    <file>/app/template</file>
+
+	 <!-- Non sniff assets files -->
+    <exclude-pattern>*.(js|css)</exclude-pattern>
+</ruleset>

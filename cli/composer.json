@@ -1,0 +1,6 @@
+{
+    "name": "aztecweb/wp-cli",
+    "require": {
+        "wp-cli/wp-cli-bundle": "^2.1"
+    }
+}
