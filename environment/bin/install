@@ -60,8 +60,8 @@ if [ 'Darwin' != $os ]; then
     sudo chown ${WWW_DATA} ${WWW_DATA_DIRS}
 fi
 
-# Create symlink for `mu-plugins` directory
-ln -fs ../../wp-packages/mu-plugins ../${WPMU_PLUGIN_DIR}
+# Create symlink for `mu-plugins` directory if it dosen't exists
+[ -d ../${WPMU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ../${WPMU_PLUGIN_DIR}
 
 # Composer
 ${compose} run --rm cli-composer install
