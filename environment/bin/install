@@ -13,120 +13,148 @@ dotenv () {
   unset DOTENV_SHELL_LOADER_SAVED_OPTS
 }
 
+# Go to project root
+cd $( dirname $0 )/../..
+
+# General variables
+ENVIRONMENT_DIR=environment
+PROJECT=$(basename $(pwd))
+OS=$(uname -s)
+
+# Docker Compose base command
+#
+# It must be executed before load environment variables because can be used for
+# them.
+[ $( command -v docker-compose ) ] &&
+	COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml $(
+		[ 'Darwin' = ${OS} ] && echo -f ${ENVIRONMENT_DIR}/docker-compose.mac.yml
+	)"
+
 # Load project environment variables
-dotenv env/app.env
+dotenv ${ENVIRONMENT_DIR}/env/app.env
+dotenv ${ENVIRONMENT_DIR}/env/install.env
 
-# Define Docker Compose conforme sistema operacional
-project=$(basename $(dirname $(pwd)))
-os=$(uname -s)
-compose="docker-compose -p ${project} -f docker-compose.yml"
-
-if [ 'Darwin' == $os ]; then
-    compose="${compose} -f docker-compose.mac.yml"
-fi
-
-export VOLUME_PREFIX=${project}_
-
-# Variables
-XDEBUG_DATA_DIR=xdebug
+# Xdebug
+XDEBUG_DATA_DIR=${ENVIRONMENT_DIR}/xdebug
 XDEBUG_PROFILER_DIR=${XDEBUG_DATA_DIR}/profiler
 XDEBUG_TRACE_DIR=${XDEBUG_DATA_DIR}/trace
-PACKAGES_DIR=public/packages
-UPLOADS_DIR="${PACKAGES_DIR}"/uploads
-THEMES_DIR="${PACKAGES_DIR}"/themes
-LANGUAGES_DIR="${PACKAGES_DIR}"/languages
-PLUGINS_DIR="${PACKAGES_DIR}"/plugins
-UPGRADE_DIR="${PACKAGES_DIR}"/upgrade
-WPMU_PLUGIN_DIR="${PACKAGES_DIR}"/mu-plugins
-PRIVATE_PACKAGES_DIR=wp-packages/private
-PRIVATE_PLUGINS_PACKAGES="${PRIVATE_PACKAGES_DIR}/plugins/*.zip"
-PRIVATE_THEMES_PACKAGES="${PRIVATE_PACKAGES_DIR}/themes/*.zip"
-THEME_LANGUAGES_DIR="wp-packages/languages/themes/*.*"
-PLUGINS_LANGUAGES_DIR="wp-packages/languages/plugins/*.*"
-START_UPLOADS=/app/environment/extra/uploads/*
 
-WP="${compose} run --rm wp"
+# WP core directory
+WP_ROOT=public/wp
 
-${compose} pull && ${compose} build --pull
+# WP packages public directory
+PUBLIC_PACKAGES_DIR=public/packages
+UPLOADS_DIR=${PUBLIC_PACKAGES_DIR}/uploads
+THEMES_DIR=${PUBLIC_PACKAGES_DIR}/themes
+PLUGINS_DIR=${PUBLIC_PACKAGES_DIR}/plugins
+UPGRADE_DIR=${PUBLIC_PACKAGES_DIR}/upgrade
+MU_PLUGIN_DIR=${PUBLIC_PACKAGES_DIR}/mu-plugins
+LANGUAGES_DIR=${PUBLIC_PACKAGES_DIR}/languages
+THEME_LANGUAGES_DIR=${LANGUAGES_DIR}/themes
+PLUGINS_LANGUAGES_DIR=${LANGUAGES_DIR}/plugins
 
-WWW_DATA_DIRS="${XDEBUG_PROFILER_DIR} ${XDEBUG_TRACE_DIR} ../${UPLOADS_DIR} ../${THEMES_DIR} ../${LANGUAGES_DIR} ../${UPGRADE_DIR} ../${PLUGINS_DIR} ../${LANGUAGES_DIR}/themes ../${LANGUAGES_DIR}/plugins"
+# Local WP packages data
+PACKAGES_DIR=wp-packages
+PACKAGES_LANGUAGES_DIR=${PACKAGES_DIR}/languages
+PACKAGES_THEME_LANGUAGES_DIR=${PACKAGES_LANGUAGES_DIR}/themes
+PACKAGES_PLUGINS_LANGUAGES_DIR=${PACKAGES_LANGUAGES_DIR}/plugins
+PRIVATE_PACKAGES_DIR=${PACKAGES_DIR}/private
+PRIVATE_PLUGINS_PACKAGES=${PRIVATE_PACKAGES_DIR}/plugins/*.zip
+PRIVATE_THEMES_PACKAGES=${PRIVATE_PACKAGES_DIR}/themes/*.zip
 
-# Cria diretórios via Docker por questões de permissão
-mkdir -p ${WWW_DATA_DIRS}
+# Extra data
+START_UPLOADS=${ENVIRONMENT_DIR}/extra/uploads
 
-# Altera usuário de uploads para www-data da imagem WP-CLI no Linux
-if [ 'Darwin' != $os ]; then
-    WWW_DATA="$($WP sh -c 'echo $(id -u):$(id -g)' | tr -d '\r')"
-    sudo chown ${WWW_DATA} ${WWW_DATA_DIRS}
-fi
+# Writable dirs
+WWW_DATA_DIRS=(
+	${XDEBUG_PROFILER_DIR}
+	${XDEBUG_TRACE_DIR}
+	${UPLOADS_DIR}
+	${THEMES_DIR}
+	${LANGUAGES_DIR}
+	${UPGRADE_DIR}
+	${PLUGINS_DIR}
+	${THEME_LANGUAGES_DIR}
+	${PLUGINS_LANGUAGES_DIR}
+)
 
-# Create symlink for `mu-plugins` directory if it dosen't exists
-[ -d ../${WPMU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ../${WPMU_PLUGIN_DIR}
+# # Cria diretórios via Docker por questões de permissão
+# mkdir -p ${WWW_DATA_DIRS[@]}
 
-# Composer
-${compose} run --rm cli-composer install
-${compose} run --rm inc-composer install
-${compose} run --rm wp-composer install
+# # Altera usuário de uploads para www-data da imagem WP-CLI no Linux
+# if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
+#     WWW_DATA_OWNER="$( ${WP_BASH} -c 'echo $(id -u):$(id -g)' | tr -d '\r')"
+#     sudo chown ${WWW_DATA} ${WWW_DATA_DIRS} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS}
+# fi
 
-# NPM
-${compose} run --rm assets-node npm install
-${compose} run --rm assets-node npm run build
+# # Create symlink for `mu-plugins` directory if it dosen't exists
+# [ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
 
-# Copy required uploads file
-$WP bash -c "[ -e ${START_UPLOADS} ] && cp -r ${START_UPLOADS} /app/${UPLOADS_DIR}"
+# # Install themes languages
+# ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
 
-if [ ! $($WP core is-installed) &> /dev/null ]; then
-    $WP db reset --yes 2> /dev/null || $WP db create
-    $WP core install --url="${WP_URL}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
-fi
+# # Install plugins languages
+# ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
-# Install theme language
-$WP language core install "${WP_LANG}" --activate
+# # Update Docker Compose images if command exists
+# [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
 
-# Update language of core, theme and plugins
-$WP language core update
+# # Composer
+# bash -c "${CLI_COMPOSER} install"
+# bash -c "${INC_COMPOSER} install"
+# bash -c "${WP_COMPOSER} install"
 
-# Install extra plugins
-PLUGINS="../${PRIVATE_PLUGINS_PACKAGES}"
-if [ $(ls -la ${PLUGINS} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has packages inner the directory
-    for PLUGIN in $PLUGINS
-    do
-        $WP plugin install ../${PLUGIN} --force
-    done
-fi
+# # NPM
+# bash -c "${NPM} install"
+# bash -c "${NPM} run build"
 
-# Install extra themes
-THEMES="../${PRIVATE_THEMES_PACKAGES}"
-if [ $(ls -la ${THEMES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has packages inner the directory
-    for THEME in $THEMES
-    do
-        $WP theme install ../${THEME} --force
-    done
-fi
+# Get the version installed of the core to be used for download its language
+# package
+CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
 
-# Install themes languages
-LANGUAGES="../${THEME_LANGUAGES_DIR}"
-if [ $(ls -la ${LANGUAGES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has languages inner the directory
-    for LANGUAGE in $LANGUAGES
-    do
-        ln -sf ../../../${LANGUAGE} ../${LANGUAGES_DIR}/themes/
-    done
-fi
+set +x
 
-# Install plugins languages
-PLUGINS_LANGUAGES="../${PLUGINS_LANGUAGES_DIR}"
-if [ $(ls -la ${PLUGINS_LANGUAGES} 2> /dev/null | wc -l) -gt 0 ]; then # verify if has languages inner the directory
-    for PLUGINS_LANGUAGE in $PLUGINS_LANGUAGES
-    do
-        ln -sf ../../../${PLUGINS_LANGUAGE} ../${LANGUAGES_DIR}/plugins/
-    done
-fi
+eval $( echo ${WP_BASH} -c "\"
+    set -x;
 
-# Activate theme
-$WP theme activate "${THEME_ACTIVE}"
+    [ -e ${START_UPLOADS} -a ${COPY_START_UPLOADS} = "true" ] && cp -r ${START_UPLOADS} ${UPLOADS_DIR};
 
-# Activate all plugins
-$WP plugin activate --all
+    # Install WordPress if not installed
+    wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
+        # Download the WordPress with the version set on composer.json to get the core language package
+        wp --path=${WP_ROOT} core download --version=${CORE_VERSION} --locale=${WP_LANG} --skip-content --force;
+		wp --path=${WP_ROOT} db create || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
+        wp --path=${WP_ROOT} core install --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
+    ';
 
-# Install plugins languages
-$WP language plugin list --all --language=${WP_LANG} --field=plugin || xargs -I % bash -c "echo % && ${WP} language plugin install % ${WP_LANG}"
+    # Install extra plugins
+    ls -1 ${PRIVATE_PLUGINS_PACKAGES} | xargs -I % wp --path=${WP_ROOT} plugin install % --force;
+
+    # Install extra themes
+    ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
+
+    # Activate theme
+    wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
+
+    # Activate all plugins
+    wp --path=${WP_ROOT} plugin activate --all;
+
+    # Install or update core language package
+    wp --path=${WP_ROOT} language core is-installed ${WP_LANG} &&
+        wp --path=${WP_ROOT} language core update ||
+        wp --path=${WP_ROOT} language core install ${WP_LANG} --activate;
+
+    # Install or update public plugins language packages
+    wp --path=${WP_ROOT} language plugin list --all --language=${WP_LANG} --field=plugin | xargs -n1 -I % bash -c '
+        wp --path=${WP_ROOT} language plugin is-installed % ${WP_LANG} &&
+            wp --path=${WP_ROOT} language plugin install % ${WP_LANG} ||
+            wp --path=${WP_ROOT} language plugin update % ${WP_LANG}
+    ';
+
+    # Install or update public themes language packages
+    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin | xargs -n1 -I % bash -c '
+        wp --path=${WP_ROOT} language theme is-installed % ${WP_LANG} &&
+            wp --path=${WP_ROOT} language theme install % ${WP_LANG} ||
+            wp --path=${WP_ROOT} language theme update % ${WP_LANG}
+    ';
+\"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
