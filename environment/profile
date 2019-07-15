@@ -13,7 +13,7 @@ if [ 'Darwin' = $os ]; then
 fi
 
 ## WP CLI
-alias wp="${compose} run --rm wp"
+alias wp="${compose} run --rm wp --path=public/wp "
 
 ## Server
 alias server="${compose} up -d server"
@@ -65,8 +65,6 @@ alias project-docker-sync="VOLUME_PREFIX=\"${project}_\" docker-sync start -c en
 
 # Languages pot generation
 function i18n() {
-	eval $(echo sudo chown -R 82:82 themes/${THEME_ACTIVE}/languages/ && sudo chown -R 82:82 inc/languages/  )
-	eval $(echo ${compose} run --rm wp i18n make-pot --domain=${THEME_ACTIVE}_inc ../../inc/src ../../inc/languages/${THEME_ACTIVE}_inc.pot)
-	eval $(echo ${compose} run --rm wp i18n make-pot ../../themes/${THEME_ACTIVE} ../../themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
-	eval $(echo sudo chown -R $USER:$USER themes/${THEME_ACTIVE}/languages/ && sudo chown -R $USER:$USER inc/languages/  )
+	eval $(echo ${compose} run --rm -u $(id -u ${USER}):$(id -g ${USER}) wp i18n make-pot --domain=${THEME_ACTIVE}_inc ../../inc/src ../../inc/languages/${THEME_ACTIVE}_inc.pot)
+	eval $(echo ${compose} run --rm -u $(id -u ${USER}):$(id -g ${USER}) wp i18n make-pot ../../themes/${THEME_ACTIVE} ../../themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
 }

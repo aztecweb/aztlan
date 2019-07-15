@@ -38,4 +38,4 @@ RUN { \
 
 USER www-data
 
-WORKDIR /app/public/wp
+WORKDIR /app

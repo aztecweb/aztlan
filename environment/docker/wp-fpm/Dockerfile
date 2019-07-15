@@ -45,4 +45,4 @@ RUN { \
         echo 'xdebug.remote_port = 9000'; \
     } > /usr/local/etc/php/conf.d/xdebug.ini
 
-WORKDIR /app/public
+WORKDIR /app
