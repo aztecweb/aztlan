@@ -31,7 +31,6 @@ services:
       context: ./docker/wp-fpm
     volumes:
       - ../:/app
-      - ./docker/wp-fpm/ssmtp.ini:/usr/local/etc/php/conf.d/ssmtp.ini
       - ./xdebug/profiler:/tmp/xdebug_profiler
       - ./xdebug/trace:/tmp/xdebug_trace
     env_file:
