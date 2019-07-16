@@ -25,10 +25,12 @@ OS=$(uname -s)
 #
 # It must be executed before load environment variables because can be used for
 # them.
-[ $( command -v docker-compose ) ] &&
-	COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml $(
-		[ 'Darwin' = ${OS} ] && echo -f ${ENVIRONMENT_DIR}/docker-compose.mac.yml
-	)"
+if [ $( command -v docker-compose ) ]; then
+	COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml"
+	if [ 'Darwin' = ${OS} ]; then
+		COMPOSE+="-f ${ENVIRONMENT_DIR}/docker-compose.mac.yml"
+	fi
+fi
 
 # Load project environment variables
 dotenv ${ENVIRONMENT_DIR}/env/app.env
@@ -78,35 +80,35 @@ WWW_DATA_DIRS=(
 	${PLUGINS_LANGUAGES_DIR}
 )
 
-# # Cria diretórios via Docker por questões de permissão
-# mkdir -p ${WWW_DATA_DIRS[@]}
+# Cria diretórios via Docker por questões de permissão
+mkdir -p ${WWW_DATA_DIRS[@]}
 
-# # Altera usuário de uploads para www-data da imagem WP-CLI no Linux
-# if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
-#     WWW_DATA_OWNER="$( ${WP_BASH} -c 'echo $(id -u):$(id -g)' | tr -d '\r')"
-#     sudo chown ${WWW_DATA} ${WWW_DATA_DIRS} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS}
-# fi
+# Altera usuário de uploads para www-data da imagem WP-CLI no Linux
+if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
+    WWW_DATA_OWNER=$( eval "${WP_BASH} -c 'echo \$(id -u):\$(id -g)' | tr -d '\r'")
+    sudo chown ${WWW_DATA_OWNER} ${WWW_DATA_DIRS[@]} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS[@]}
+fi
 
-# # Create symlink for `mu-plugins` directory if it dosen't exists
-# [ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
+# Create symlink for `mu-plugins` directory if it dosen't exists
+[ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
 
-# # Install themes languages
-# ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
+# Install themes languages
+ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
 
-# # Install plugins languages
-# ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
+# Install plugins languages
+ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
-# # Update Docker Compose images if command exists
-# [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
+# Update Docker Compose images if command exists
+[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
 
-# # Composer
-# bash -c "${CLI_COMPOSER} install"
-# bash -c "${INC_COMPOSER} install"
-# bash -c "${WP_COMPOSER} install"
+# Composer
+bash -c "${CLI_COMPOSER} install"
+bash -c "${INC_COMPOSER} install"
+bash -c "${WP_COMPOSER} install"
 
-# # NPM
-# bash -c "${NPM} install"
-# bash -c "${NPM} run build"
+# NPM
+bash -c "${NPM} install"
+bash -c "${NPM} run build"
 
 # Get the version installed of the core to be used for download its language
 # package
@@ -117,7 +119,7 @@ set +x
 eval $( echo ${WP_BASH} -c "\"
     set -x;
 
-    [ -e ${START_UPLOADS} -a ${COPY_START_UPLOADS} = "true" ] && cp -r ${START_UPLOADS} ${UPLOADS_DIR};
+    [ -e ${START_UPLOADS} -a ${COPY_START_UPLOADS} = "true" ] && cp -r ${START_UPLOADS} ${PUBLIC_PACKAGES_DIR};
 
     # Install WordPress if not installed
     wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
@@ -145,16 +147,16 @@ eval $( echo ${WP_BASH} -c "\"
         wp --path=${WP_ROOT} language core install ${WP_LANG} --activate;
 
     # Install or update public plugins language packages
-    wp --path=${WP_ROOT} language plugin list --all --language=${WP_LANG} --field=plugin | xargs -n1 -I % bash -c '
+    wp --path=${WP_ROOT} language plugin list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
         wp --path=${WP_ROOT} language plugin is-installed % ${WP_LANG} &&
-            wp --path=${WP_ROOT} language plugin install % ${WP_LANG} ||
-            wp --path=${WP_ROOT} language plugin update % ${WP_LANG}
+            wp --path=${WP_ROOT} language plugin update % ${WP_LANG} ||
+            wp --path=${WP_ROOT} language plugin install % ${WP_LANG}
     ';
 
     # Install or update public themes language packages
-    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin | xargs -n1 -I % bash -c '
+    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
         wp --path=${WP_ROOT} language theme is-installed % ${WP_LANG} &&
-            wp --path=${WP_ROOT} language theme install % ${WP_LANG} ||
-            wp --path=${WP_ROOT} language theme update % ${WP_LANG}
+            wp --path=${WP_ROOT} language theme update % ${WP_LANG} ||
+            wp --path=${WP_ROOT} language theme install % ${WP_LANG}
     ';
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
