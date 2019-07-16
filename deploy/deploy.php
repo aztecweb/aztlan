@@ -10,7 +10,7 @@ host('ambiente.aztecweb.net')
     ->port(2201)
     ->stage('staging')
 	->user('ambiente_staging')
-	->set('branch', '10-configuracao-do-deploy')
+	->set('branch', 'master')
 	->set('deploy_path', '/home/ambiente_staging');
 
 
