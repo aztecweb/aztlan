@@ -8,12 +8,7 @@ Author URI:   https://aztecweb.net/
 License:      GPLv2
 */
 
-$aztec_project_themes_dir = getenv( 'PROJECT_THEMES_DIR' );
-
-// Ignora carregamento caso variável não for definida
-if( empty( $aztec_project_themes_dir ) ) {
-    return;
-}
+$aztec_project_themes_dir = ABSPATH . '../../themes';
 
 $registered = register_theme_directory( $aztec_project_themes_dir );
 
