@@ -135,7 +135,9 @@ eval $( echo ${WP_BASH} -c "\"
     # Install extra themes
     ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
 
-    # Activate theme
+    wp --path=${WP_ROOT} plugin list ;
+
+	# Activate theme
     wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
 
     # Activate all plugins

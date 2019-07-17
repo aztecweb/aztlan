@@ -10,7 +10,7 @@ host('ambiente.aztecweb.net')
     ->port(2201)
     ->stage('staging')
 	->user('ambiente_staging')
-	->set('branch', 'master')
+	->set('branch', '10-configuracao-do-deploy')
 	->set('deploy_path', '/home/ambiente_staging');
 
 
@@ -40,7 +40,7 @@ task('deploy:install', function () {
 });
 
 /**
- * Move arquivo app.env, se ele existe, da raiz para o diretório shared 
+ * Move arquivo app.env, se ele existe, da raiz para o diretório shared
  */
 task('deploy:update_env', function() {
 	run('cd {{deploy_path}} && if [ -d env ]; then mkdir -p shared/environment/env/ && mv env/* shared/environment/env/ && rmdir env; fi');
