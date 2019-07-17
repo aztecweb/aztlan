@@ -29,6 +29,15 @@ RUN { \
         echo 'FromLineOverride=YES'; \
     } > /etc/ssmtp/ssmtp.conf
 
+# Custom PHP settings SSMTP
+RUN { \
+	echo 'upload_max_filesize = 10M'; \
+	echo 'post_max_size = 10M'; \
+	echo '[mail function]'; \
+	echo 'sendmail_path = /usr/sbin/ssmtp -t'; \
+	echo 'upload_max_filesize = 10M'; \
+} > /usr/local/etc/php/conf.d/ssmtp.ini
+
 # Install, enable and configure Xdebug
 RUN { \
         echo 'log_errors = On'; \
