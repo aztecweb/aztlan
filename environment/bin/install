@@ -4,13 +4,15 @@
 # Adapted from Argbash (https://argbash.io/generate) generator
 print_help ()
 {
-    printf 'Usage: %s [-d|--with-data]\n' "$0"
+    printf 'Usage: %s [-a|--arg]\n' "$0"
     printf "\t%s\n" "-u|--update: Runs composer update instead composer install"
+    printf "\t%s\n" "-p|--prod: Changes environment stage from develop to production"
 }
 
 default_parameters_values ()
 {
     COMPOSER_UPDATE=false;
+	ENV_STAGE="develop"
 }
 
 parse_commandline ()
@@ -21,7 +23,9 @@ parse_commandline ()
         case "$_key" in
             -u|--update)
                 COMPOSER_UPDATE=true
-                shift
+                ;;
+            -p|--prod)
+                ENV_STAGE="prod"
                 ;;
             -h|--help)
                 print_help
@@ -140,15 +144,19 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
 
 # set subcomand for install or update
-[ "$COMPOSER_UPDATE" = true ] && SUBCOMAND="update" || SUBCOMAND="install";
+[ ${COMPOSER_UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
+
+[ ${COMPOSER_UPDATE} = false -a ${ENV_STAGE} = "prod" ] && COMPOSER_SUBCOMAND_ARGS="--verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --no-suggest" || COMPOSER_SUBCOMAND_ARGS=" ";
+
+[ ${COMPOSER_UPDATE} = true -a ${ENV_STAGE} = "develop" ] && NPM_SUBCOMAND="update" || NPM_SUBCOMAND="ci";
 
 # Composer
-bash -c "${CLI_COMPOSER} ${SUBCOMAND}"
-bash -c "${INC_COMPOSER} ${SUBCOMAND}"
-bash -c "${WP_COMPOSER} ${SUBCOMAND}"
+bash -c "${CLI_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+bash -c "${INC_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 
 # NPM
-bash -c "${NPM} ${SUBCOMAND}"
+bash -c "${NPM} ${NPM_SUBCOMAND}"
 
 [ "$COMPOSER_UPDATE" = true ] && bash -c "${COMPOSE} pull && ${COMPOSE} build --pull" || bash -c "${NPM} run build";
 
