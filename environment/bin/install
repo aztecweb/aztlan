@@ -140,8 +140,8 @@ eval $( echo ${WP_BASH} -c "\"
 	wp --path=${WP_ROOT} option update template '';
 	wp --path=${WP_ROOT} option update stylesheet '';
 
-	# # Activate themeoption update stylesheet_root '';
-	# wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
+	# Activate themeoption update stylesheet_root '';
+	wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
 
     # # Activate all plugins
     # wp --path=${WP_ROOT} plugin activate --all;
