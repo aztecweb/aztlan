@@ -12,6 +12,8 @@ $aztec_project_themes_dir = ABSPATH . '../../themes';
 
 $registered = register_theme_directory( $aztec_project_themes_dir );
 
+var_dump($aztec_project_themes_dir);
+
 // Lança um erro caso o diretório não existe
 if( ! $registered ) {
     trigger_error( "Directory {$aztec_project_themes_dir} registered in PROJECT_THEMES_DIR environment variable does not exist.", E_USER_WARNING );
