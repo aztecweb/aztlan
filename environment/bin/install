@@ -80,35 +80,35 @@ WWW_DATA_DIRS=(
 	${PLUGINS_LANGUAGES_DIR}
 )
 
-# # Cria diretórios via Docker por questões de permissão
-# mkdir -p ${WWW_DATA_DIRS[@]}
+# Cria diretórios via Docker por questões de permissão
+mkdir -p ${WWW_DATA_DIRS[@]}
 
-# # Altera usuário de uploads para www-data da imagem WP-CLI no Linux
-# if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
-#     WWW_DATA_OWNER=$( eval "${WP_BASH} -c 'echo \$(id -u):\$(id -g)' | tr -d '\r'")
-#     sudo chown ${WWW_DATA_OWNER} ${WWW_DATA_DIRS[@]} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS[@]}
-# fi
+# Altera usuário de uploads para www-data da imagem WP-CLI no Linux
+if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
+    WWW_DATA_OWNER=$( eval "${WP_BASH} -c 'echo \$(id -u):\$(id -g)' | tr -d '\r'")
+    sudo chown ${WWW_DATA_OWNER} ${WWW_DATA_DIRS[@]} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS[@]}
+fi
 
-# # Create symlink for `mu-plugins` directory if it dosen't exists
-# [ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
+# Create symlink for `mu-plugins` directory if it dosen't exists
+[ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
 
-# # Install themes languages
-# ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
+# Install themes languages
+ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
 
-# # Install plugins languages
-# ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
+# Install plugins languages
+ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
-# # Update Docker Compose images if command exists
-# [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
+# Update Docker Compose images if command exists
+[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
 
-# # Composer
-# bash -c "${CLI_COMPOSER} install"
-# bash -c "${INC_COMPOSER} install"
-# bash -c "${WP_COMPOSER} install"
+# Composer
+bash -c "${CLI_COMPOSER} install"
+bash -c "${INC_COMPOSER} install"
+bash -c "${WP_COMPOSER} install"
 
-# # NPM
-# bash -c "${NPM} install"
-# bash -c "${NPM} run build"
+# NPM
+bash -c "${NPM} install"
+bash -c "${NPM} run build"
 
 # Get the version installed of the core to be used for download its language
 # package
@@ -136,7 +136,8 @@ eval $( echo ${WP_BASH} -c "\"
     ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
 
 
-	# Reset themes options for update the release path on deploy
+	# Reset themes options for update t
+	he release path on deploy
 	wp --path=${WP_ROOT} option update template '';
 	wp --path=${WP_ROOT} option update stylesheet '';
 
