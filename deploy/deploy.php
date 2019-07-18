@@ -54,10 +54,10 @@ task('deploy', [
 	'deploy:shared',
 	'deploy:update_env',
 	'deploy:install',
-	'deploy:writable',
-	'deploy:clear_paths',
-	'deploy:symlink',
-	'deploy:unlock',
-	'cleanup',
-	'success'
+	// 'deploy:writable',
+	// 'deploy:clear_paths',
+	// 'deploy:symlink',
+	// 'deploy:unlock',
+	// 'cleanup',
+	// 'success'
 ]);

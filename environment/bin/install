@@ -140,28 +140,28 @@ eval $( echo ${WP_BASH} -c "\"
 	wp --path=${WP_ROOT} option update template '';
 	wp --path=${WP_ROOT} option update stylesheet '';
 
-	# Activate themeoption update stylesheet_root '';
-	wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
+	# # Activate themeoption update stylesheet_root '';
+	# wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
 
-    # Activate all plugins
-    wp --path=${WP_ROOT} plugin activate --all;
+    # # Activate all plugins
+    # wp --path=${WP_ROOT} plugin activate --all;
 
-    # Install or update core language package
-    wp --path=${WP_ROOT} language core is-installed ${WP_LANG} &&
-        wp --path=${WP_ROOT} language core update ||
-        wp --path=${WP_ROOT} language core install ${WP_LANG} --activate;
+    # # Install or update core language package
+    # wp --path=${WP_ROOT} language core is-installed ${WP_LANG} &&
+    #     wp --path=${WP_ROOT} language core update ||
+    #     wp --path=${WP_ROOT} language core install ${WP_LANG} --activate;
 
-    # Install or update public plugins language packages
-    wp --path=${WP_ROOT} language plugin list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
-        wp --path=${WP_ROOT} language plugin is-installed % ${WP_LANG} &&
-            wp --path=${WP_ROOT} language plugin update % ${WP_LANG} ||
-            wp --path=${WP_ROOT} language plugin install % ${WP_LANG}
-    ';
+    # # Install or update public plugins language packages
+    # wp --path=${WP_ROOT} language plugin list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
+    #     wp --path=${WP_ROOT} language plugin is-installed % ${WP_LANG} &&
+    #         wp --path=${WP_ROOT} language plugin update % ${WP_LANG} ||
+    #         wp --path=${WP_ROOT} language plugin install % ${WP_LANG}
+    # ';
 
-    # Install or update public themes language packages
-    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
-        wp --path=${WP_ROOT} language theme is-installed % ${WP_LANG} &&
-            wp --path=${WP_ROOT} language theme update % ${WP_LANG} ||
-            wp --path=${WP_ROOT} language theme install % ${WP_LANG}
-    ';
+    # # Install or update public themes language packages
+    # wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
+    #     wp --path=${WP_ROOT} language theme is-installed % ${WP_LANG} &&
+    #         wp --path=${WP_ROOT} language theme update % ${WP_LANG} ||
+    #         wp --path=${WP_ROOT} language theme install % ${WP_LANG}
+    # ';
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
