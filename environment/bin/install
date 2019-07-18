@@ -136,8 +136,7 @@ eval $( echo ${WP_BASH} -c "\"
     ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
 
 
-	# Reset themes options for update t
-	he release path on deploy
+	# Reset themes options for update the release path on deploy
 	wp --path=${WP_ROOT} option update template '';
 	wp --path=${WP_ROOT} option update stylesheet '';
 
