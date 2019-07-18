@@ -135,14 +135,13 @@ eval $( echo ${WP_BASH} -c "\"
     # Install extra themes
     ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
 
-    wp --path=${WP_ROOT} plugin list;
+
+	# Reset themes options for update the release path on deploy
+	wp --path=${WP_ROOT} option update template '';
+	wp --path=${WP_ROOT} option update stylesheet '';
 
 	# Activate theme
-	wp --path=${WP_ROOT} theme is-active ${THEME_ACTIVE} && bash -c '
-		THEME_ROOT=$(pwd)/themes;
-		wp --path=${WP_ROOT} option set stylesheet_root ${THEME_ROOT};
-		wp --path=${WP_ROOT} option set template_root ${THEME_ROOT};
-	' || wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
+	wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
 
     # Activate all plugins
     wp --path=${WP_ROOT} plugin activate --all;
