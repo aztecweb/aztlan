@@ -139,6 +139,8 @@ eval $( echo ${WP_BASH} -c "\"
 	# Reset themes options for update the release path on deploy
 	wp --path=${WP_ROOT} option update template '';
 	wp --path=${WP_ROOT} option update stylesheet '';
+	wp --path=${WP_ROOT} option update template_root '';
+	wp --path=${WP_ROOT} option update stylesheet_root '';
 
 	# Activate theme
 	wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
