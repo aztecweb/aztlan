@@ -35,10 +35,10 @@ class Kernel {
 	 */
 	public function init() {
 		$init_classes = array(
-			// Assets
+			// Assets.
 			\Aztec\Setup\Assets::class,
 
-			// Languages
+			// Languages.
 			\Aztec\Setup\Textdomain::class,
 		);
 
