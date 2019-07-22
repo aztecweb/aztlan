@@ -34,6 +34,7 @@ alias phpqa="${compose} run --rm phpqa"
 alias cli-composer="${compose} run --rm cli-composer"
 alias inc-composer="${compose} run --rm inc-composer"
 alias wp-composer="${compose} run --rm wp-composer"
+alias phpqa-composer="${compose} run --rm phpqa-composer"
 
 # Database
 alias db-export="${compose} run --rm wp db export - | gzip > environment/initdb/initdb.sql.gz"

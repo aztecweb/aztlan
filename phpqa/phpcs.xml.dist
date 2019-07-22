@@ -20,7 +20,7 @@
 
     <!-- Sniff the template and files -->
     <file>/app/inc/src</file>
-    <file>/app/template</file>
+    <file>/app/themes</file>
 
 	 <!-- Non sniff assets files -->
     <exclude-pattern>*.(js|css)</exclude-pattern>
