@@ -68,10 +68,10 @@ OS=$(uname -s)
 # It must be executed before load environment variables because can be used for
 # them.
 if [ $( command -v docker-compose ) ]; then
-	COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml"
-	if [ 'Darwin' = ${OS} ]; then
-		COMPOSE+="-f ${ENVIRONMENT_DIR}/docker-compose.mac.yml"
-	fi
+    COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml"
+    if [ 'Darwin' = ${OS} ]; then
+        COMPOSE+=" -f ${ENVIRONMENT_DIR}/docker-compose.mac.yml"
+    fi
 fi
 
 # Load project environment variables
@@ -111,15 +111,15 @@ START_UPLOADS=${ENVIRONMENT_DIR}/extra/uploads
 
 # Writable dirs
 WWW_DATA_DIRS=(
-	${XDEBUG_PROFILER_DIR}
-	${XDEBUG_TRACE_DIR}
-	${UPLOADS_DIR}
-	${THEMES_DIR}
-	${LANGUAGES_DIR}
-	${UPGRADE_DIR}
-	${PLUGINS_DIR}
-	${THEME_LANGUAGES_DIR}
-	${PLUGINS_LANGUAGES_DIR}
+    ${XDEBUG_PROFILER_DIR}
+    ${XDEBUG_TRACE_DIR}
+    ${UPLOADS_DIR}
+    ${THEMES_DIR}
+    ${LANGUAGES_DIR}
+    ${UPGRADE_DIR}
+    ${PLUGINS_DIR}
+    ${THEME_LANGUAGES_DIR}
+    ${PLUGINS_LANGUAGES_DIR}
 )
 
 # Cria diretórios via Docker por questões de permissão
@@ -165,6 +165,7 @@ bash -c "${NPM} ${NPM_SUBCOMAND}"
 # package
 CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
 
+
 set +x
 
 eval $( echo ${WP_BASH} -c "\"
@@ -176,7 +177,7 @@ eval $( echo ${WP_BASH} -c "\"
     wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
         # Download the WordPress with the version set on composer.json to get the core language package
         wp --path=${WP_ROOT} core download --version=${CORE_VERSION} --locale=${WP_LANG} --skip-content --force;
-		wp --path=${WP_ROOT} db create || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
+        wp --path=${WP_ROOT} db create || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
         wp --path=${WP_ROOT} core install --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
     ';
 
@@ -187,7 +188,7 @@ eval $( echo ${WP_BASH} -c "\"
     ls -1 ${PRIVATE_THEMES_PACKAGES} | xargs -I % wp --path=${WP_ROOT} theme install % --force;
 
     # Activate theme
-    wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
+    wp --path=${WP_ROOT} theme is-active ${THEME_ACTIVE} || wp --path=${WP_ROOT} theme activate ${THEME_ACTIVE};
 
     # Activate all plugins
     wp --path=${WP_ROOT} plugin activate --all;

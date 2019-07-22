@@ -16,5 +16,7 @@
 </head>
 
 <body <?php body_class(); ?>>
-
-	<?php echo __( 'Hello World', 'env-theme' ); ?>
+	<div>
+		<img src="<?php echo esc_url( get_template_directory_uri() ); ?>/images/aztec.png" alt="<?php echo esc_attr( get_bloginfo( 'sitename' ) ); ?>" />
+	</div>
+	<?php esc_html_e( 'Hello World', 'env-theme' ); ?>
