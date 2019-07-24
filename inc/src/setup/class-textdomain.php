@@ -19,7 +19,6 @@ class Textdomain extends Base {
 	 */
 	public function init() {
 		add_action( 'after_setup_theme', $this->callback( 'load_textdomain' ) );
-		add_action( 'wp_footer', $this->callback( 'test' ) );
 	}
 
 	/**
@@ -27,10 +26,6 @@ class Textdomain extends Base {
 	 */
 	public function load_textdomain() {
 		load_theme_textdomain( 'env-theme', get_stylesheet_directory() . '/languages' );
-		load_textdomain( 'env-theme_inc', ABSPATH . '../../inc' . '/languages/env-theme_inc-pt_BR.mo' );
-	}
-
-	public function test() {
-		echo '<br>'. __( 'Hello world Inc', 'env-theme_inc' );
+		load_textdomain( 'env-theme_inc', ABSPATH . '../../inc/languages/env-theme_inc-pt_BR.mo' );
 	}
 }

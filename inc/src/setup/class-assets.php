@@ -29,6 +29,12 @@ class Assets extends Base {
 		add_action( 'wp_enqueue_scripts', $this->callback( 'enqueue_script' ) );
 	}
 
+	/**
+	 * Retorna a URL do diretório assets
+	 *
+	 * @param  string $path Caminho do arquivo.
+	 * @return string
+	 */
 	private function assets_uri( $path ) {
 		return getenv( 'ASSETS_URL' ) . '/' . trim( $path, '/' );
 	}

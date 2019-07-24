@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Theme start file
  *
