@@ -24,7 +24,7 @@ alias assets-watch="node npm run watch"
 alias assets-build="node npm run build"
 
 # Lint
-alias eslint="node npm run lint:js"
+alias jslint="node npm run lint:js"
 alias stylint="node npm run lint:style"
 
 # PHPQA
