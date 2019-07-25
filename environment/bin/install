@@ -142,6 +142,7 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 
 # Update Docker Compose images if command exists
 [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
+[ "$COMPOSER_UPDATE" = true ] && bash -c "${COMPOSE} pull && ${COMPOSE} build --pull" || bash -c "${COMPOSE} build"
 
 # set subcomand for install or update
 [ ${COMPOSER_UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
