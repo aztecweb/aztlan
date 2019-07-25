@@ -24,7 +24,7 @@ alias assets-watch="node npm run watch"
 alias assets-build="node npm run build"
 
 # Lint
-alias eslint="node npm run lint:js"
+alias jslint="node npm run lint:js"
 alias stylint="node npm run lint:style"
 
 # PHPQA
@@ -37,7 +37,7 @@ alias wp-composer="${compose} run --rm wp-composer"
 alias phpqa-composer="${compose} run --rm phpqa-composer"
 
 # Database
-alias db-export="${compose} run --rm wp db export - | gzip > environment/initdb/initdb.sql.gz"
+alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
 
 # SMTP
 alias smtp="${compose} up smtp"
