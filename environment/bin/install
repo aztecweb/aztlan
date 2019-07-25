@@ -157,8 +157,8 @@ bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 
 # NPM
 bash -c "${NPM} ${NPM_SUBCOMAND}"
+[ "$COMPOSER_UPDATE" = true ] || bash -c "${NPM} run build";
 
-[ "$COMPOSER_UPDATE" = true ] && bash -c "${COMPOSE} pull && ${COMPOSE} build --pull" || bash -c "${NPM} run build";
 
 
 # Get the version installed of the core to be used for download its language
