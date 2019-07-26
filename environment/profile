@@ -13,7 +13,13 @@ if [ 'Darwin' = $os ]; then
 fi
 
 ## WP CLI
-alias wp="${compose} run --rm wp --path=public/wp "
+function wp() {
+	if [ "$1" != "bash" ]; then
+		eval $(echo ${compose} run --rm wp --path=public/wp $@)
+	else
+		eval $(echo ${compose} run --rm wp $@)
+	fi
+}
 
 ## Server
 alias server="${compose} up -d server"
@@ -47,9 +53,6 @@ alias logs-wp="${compose} logs -f wordpress"
 
 # Shutdown
 alias down="${compose} down"
-
-# WP Shell
-alias wp-shell="${compose} run --rm wp shell"
 
 # Deployer
 alias deploy-ssh-keygen="mkdir -p deploy/.ssh && ssh-keygen -f deploy/.ssh/id_ed25519 -t ed25519 -N ''"
