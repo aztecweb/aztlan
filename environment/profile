@@ -12,6 +12,9 @@ if [ 'Darwin' = $os ]; then
 	compose="VOLUME_PREFIX=\"${project}_\" ${compose} -f environment/docker-compose.mac.yml"
 fi
 
+# docker-compose
+alias project-docker-compose="${compose}"
+
 ## WP CLI
 alias wp="${compose} run --rm wp --path=public/wp "
 
