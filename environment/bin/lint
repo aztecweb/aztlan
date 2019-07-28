@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# This hook runs all code standards before commit
+
+COLOR_ERROR="\033[0;31m"
+COLOR_SUCCESS="\033[0;32m"
+COLOR_DEFAULT="\033[0m"
+
+
+EXIT_CODE=0
+
+# General functions
+function print_success () {
+	printf "${COLOR_SUCCESS}Success\n${COLOR_DEFAULT}"
+}
+
+function print_error () {
+	printf "${COLOR_ERROR}Error\n${COLOR_DEFAULT}"
+}
+
+function return_run () {
+	echo ""
+	echo "#######################"
+	echo "        $1"
+	echo "#######################"
+	echo "$2"
+}
+
+# Code standards functions
+function run_phpcs ( ) {
+	printf "Running PHPCS\t........... ";
+	PHPCS=$(eval "bash -c '${COMPOSE} run --rm phpqa phpcs'")
+	if [ -z "${PHPCS}" ]
+	then
+		print_success
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+}
+
+function run_phpcbf(){
+	NO_ERRORS="No fixable errors"
+	printf "Running PHPCBF\t........... ";
+	PHPCBF=$(eval "bash -c '${COMPOSE} run --rm phpqa phpcbf'")
+	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
+}
+
+function run_stylint(){
+	printf "Running STYLINT\t........... ";
+	STYLINT=$(eval "bash -c '${COMPOSE} run --rm assets-node npm run lint:style'")
+
+	if [[ ! "${STYLINT}" =~ "Errors" ]] && [[ ! "${STYLINT}" =~ "Warnings" ]];
+	then
+		print_success;
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+}
+
+function run_eslint(){
+	printf "Running ESLINT\t........... ";
+	ESLINT=$(eval "bash -c '${COMPOSE} run --rm assets-node npm run lint:js'")
+
+	if [[ ! "${ESLINT}" =~ "errors" ]] && [[ ! "${STYLINT}" =~ "warnings" ]];
+	then
+		print_success;
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+}
+
+
+# load environment
+source environment/bin/docker-compose.sh
+
+# run code standards functions
+run_phpcbf
+run_phpcs
+run_stylint
+run_eslint
+
+if [ ${EXIT_CODE} == 0 ]
+then
+	printf "\nCode Standards validation successfull \nCommiting... \n\n"
+else
+	return_run "PHPCBF" "$PHPCBF"
+	return_run "PHPCS" "$PHPCS"
+	return_run "STYLINT" "$STYLINT"
+	return_run "ESLINT" "$ESLINT"
+fi
+
+exit ${EXIT_CODE};
