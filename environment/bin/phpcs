@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Go to project root
+cd $( dirname $0 )/../..
+
+source environment/bin/docker-compose.sh
+
+eval "bash -c '${COMPOSE} run --rm phpqa phpcs $@'"
