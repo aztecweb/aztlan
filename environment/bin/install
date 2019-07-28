@@ -160,3 +160,7 @@ eval $( echo ${WP_BASH} -c "\"
             wp --path=${WP_ROOT} language theme install % ${WP_LANG}
     ';
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
+
+# if there is a git folder in the project, create a symbolic link to the hooks.
+[ -d "\.git" ] || bash -c "ln -s ../../environment/bin/lint .git/hooks/pre-commit"
+
