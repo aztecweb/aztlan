@@ -159,4 +159,8 @@ eval $( echo ${WP_BASH} -c "\"
             wp --path=${WP_ROOT} language theme update % ${WP_LANG} ||
             wp --path=${WP_ROOT} language theme install % ${WP_LANG}
     ';
+
+	# Update permalink structure according to install.env
+	wp --path=${WP_ROOT} rewrite structure ${PERMALINK}
+	
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
