@@ -12,7 +12,7 @@ print_help ()
 default_parameters_values ()
 {
     COMPOSER_UPDATE=false;
-	ENV_STAGE="develop"
+    ENV_STAGE="develop"
 }
 
 parse_commandline ()
