@@ -1,2 +1,3 @@
-.ssh
 deploy.log
+.ssh/*
+!.ssh/.gitkeep
