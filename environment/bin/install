@@ -1,5 +1,47 @@
 #!/bin/bash
 
+# Parse arguments
+# Adapted from Argbash (https://argbash.io/generate) generator
+print_help ()
+{
+    printf 'Usage: %s [-a|--arg]\n' "$0"
+    printf "\t%s\n" "-u|--update: Runs composer update instead composer install"
+    printf "\t%s\n" "-p|--prod: Changes environment stage from develop to production"
+}
+
+default_parameters_values ()
+{
+    UPDATE=false;
+    ENV_STAGE="develop"
+}
+
+parse_commandline ()
+{
+    while test $# -gt 0
+    do
+        _key="$1"
+        case "$_key" in
+            -u|--update)
+                UPDATE=true
+                ;;
+            -p|--prod)
+                ENV_STAGE="prod"
+                ;;
+            -h|--help)
+                print_help
+                exit 0
+                ;;
+            -h*)
+                print_help
+                exit 0
+        esac
+        shift
+    done
+}
+
+default_parameters_values
+parse_commandline "$@"
+
 # Install and configure the website in the public directory
 set -xe
 
@@ -99,16 +141,24 @@ ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES
 ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
 # Update Docker Compose images if command exists
-[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} pull && ${COMPOSE} build --pull"
+[ ${UPDATE} = true ] && bash -c "${COMPOSE} pull"
+[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} build"
+
+# set subcomand for install or update
+[ ${UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
+
+[ ${UPDATE} = false -a ${ENV_STAGE} = "prod" ] && COMPOSER_SUBCOMAND_ARGS="--verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --no-suggest" || COMPOSER_SUBCOMAND_ARGS=" ";
+
+[ ${UPDATE} = true -a ${ENV_STAGE} = "develop" ] && NPM_SUBCOMAND="update" || NPM_SUBCOMAND="ci";
 
 # Composer
-bash -c "${CLI_COMPOSER} install"
-bash -c "${INC_COMPOSER} install"
-bash -c "${WP_COMPOSER} install"
+bash -c "${CLI_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+bash -c "${INC_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 
 # NPM
-bash -c "${NPM} ci"
-bash -c "${NPM} run build"
+bash -c "${NPM} ${NPM_SUBCOMAND}"
+[ ${UPDATE} = true ] || bash -c "${NPM} run build";
 
 # Get the version installed of the core to be used for download its language
 # package
