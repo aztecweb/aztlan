@@ -144,7 +144,6 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 [ ${UPDATE} = true ] && bash -c "${COMPOSE} pull"
 [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} build"
 
-
 # set subcomand for install or update
 [ ${UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
 
@@ -160,8 +159,6 @@ bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 # NPM
 bash -c "${NPM} ${NPM_SUBCOMAND}"
 [ ${UPDATE} = true ] || bash -c "${NPM} run build";
-
-
 
 # Get the version installed of the core to be used for download its language
 # package
