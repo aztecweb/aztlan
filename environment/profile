@@ -42,6 +42,16 @@ alias phpqa-composer="${compose} run --rm phpqa-composer"
 # Database
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
 
+# Database reload
+
+alias db-reload="
+	[ -f environment/initdb/initdb.sql.gz ] &&
+		eval '
+			wp db reset --yes &&
+			gunzip -ck environment/initdb/initdb.sql.gz | wp db import - &&
+		' && echo 'Database reloaded' || echo 'initdb.sql.gz not found in environment/initdb/'
+	"
+
 # SMTP
 alias smtp="${compose} up smtp"
 
