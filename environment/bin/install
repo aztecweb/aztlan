@@ -160,6 +160,9 @@ bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 bash -c "${NPM} ${NPM_SUBCOMAND}"
 [ ${UPDATE} = true ] || bash -c "${NPM} run build";
 
+# Install PHPQA packages
+bash -c "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
+
 # Get the version installed of the core to be used for download its language
 # package
 CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
@@ -212,7 +215,7 @@ eval $( echo ${WP_BASH} -c "\"
 
 	# Update permalink structure according to install.env
 	wp --path=${WP_ROOT} rewrite structure ${PERMALINK}
-	
+
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
 
 # if there is a git folder in the project, create a symbolic link to the hooks.
