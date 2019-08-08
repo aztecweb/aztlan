@@ -5,8 +5,10 @@ $webroot_dir = $root_dir . '/public';
 
 require_once $root_dir . '/inc/vendor/autoload.php';
 
-// Carrega variáveis de ambiente da aplicação caso não ainda foi carregado
-if( false === getenv( 'ENV' ) ) {
+/**
+ * Load environmen variables
+ */
+if ( false === getenv( 'ENV' ) ) {
 	$env_dir = $root_dir . '/environment/env';
 	$dotenv = new Dotenv\Dotenv( $env_dir, 'app.env' );
 	$dotenv->load();
@@ -66,7 +68,6 @@ define( 'FS_METHOD', 'direct' );
 /**
  * Custom content directory.
  */
-
 define( 'WP_HOME', getenv( 'WP_HOME' ) );
 define( 'WP_SITEURL', getenv( 'WP_SITEURL' ) );
 define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/packages' );

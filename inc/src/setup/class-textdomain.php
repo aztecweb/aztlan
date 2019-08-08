@@ -10,12 +10,11 @@ namespace Aztec\Setup;
 use Aztec\Base;
 
 /**
- * Load traslation files
+ * Load translation files
  */
 class Textdomain extends Base {
-
 	/**
-	 * Execute hooks
+	 * Add hooks
 	 */
 	public function init() {
 		add_action( 'after_setup_theme', $this->callback( 'load_textdomain' ) );
