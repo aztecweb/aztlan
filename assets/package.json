@@ -1,7 +1,7 @@
 {
-  "name": "assets",
+  "name": "aztlan",
   "version": "1.0.0",
-  "description": "Gerenciamento de assets do projeto.",
+  "description": "Aztlan assets.",
   "main": "app.js",
   "scripts": {
     "dev": "webpack --env.development",

@@ -10,7 +10,7 @@ RUN apk update --no-cache \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN set -ex; \
-        # install composer packages
+        # Install composer packages
         composer global require --prefer-dist --no-scripts --prefer-stable --optimize-autoloader \
             deployer/deployer \
             deployer/recipes && \

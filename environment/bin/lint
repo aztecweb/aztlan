@@ -6,19 +6,18 @@ COLOR_ERROR="\033[0;31m"
 COLOR_SUCCESS="\033[0;32m"
 COLOR_DEFAULT="\033[0m"
 
-
 EXIT_CODE=0
 
 # General functions
-function print_success () {
+function print_success() {
 	printf "${COLOR_SUCCESS}Success\n${COLOR_DEFAULT}"
 }
 
-function print_error () {
+function print_error() {
 	printf "${COLOR_ERROR}Error\n${COLOR_DEFAULT}"
 }
 
-function return_run () {
+function return_run() {
 	echo ""
 	echo "#######################"
 	echo "        $1"
@@ -27,7 +26,7 @@ function return_run () {
 }
 
 # Code standards functions
-function run_phpcs ( ) {
+function run_phpc ( ) {
 	printf "Running PHPCS\t........... ";
 	PHPCS=$(eval "bash -c '${COMPOSE} run --rm phpqa phpcs'")
 	if [ -z "${PHPCS}" ]
@@ -39,14 +38,14 @@ function run_phpcs ( ) {
 	fi
 }
 
-function run_phpcbf(){
+function run_phpcbf() {
 	NO_ERRORS="No fixable errors"
 	printf "Running PHPCBF\t........... ";
 	PHPCBF=$(eval "bash -c '${COMPOSE} run --rm phpqa phpcbf'")
 	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
 }
 
-function run_stylint(){
+function run_stylint() {
 	printf "Running STYLINT\t........... ";
 	STYLINT=$(eval "bash -c '${COMPOSE} run --rm assets-node npm run lint:style'")
 
@@ -59,7 +58,7 @@ function run_stylint(){
 	fi
 }
 
-function run_eslint(){
+function run_eslint() {
 	printf "Running ESLINT\t........... ";
 	ESLINT=$(eval "bash -c '${COMPOSE} run --rm assets-node npm run lint:js'")
 
@@ -72,11 +71,10 @@ function run_eslint(){
 	fi
 }
 
-
-# load environment
+# Load environment
 source environment/bin/docker-compose.sh
 
-# run code standards functions
+# Run code standards functions
 run_phpcbf
 run_phpcs
 run_stylint

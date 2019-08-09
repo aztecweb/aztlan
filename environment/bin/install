@@ -122,10 +122,10 @@ WWW_DATA_DIRS=(
     ${PLUGINS_LANGUAGES_DIR}
 )
 
-# Cria diretórios via Docker por questões de permissão
+# Create wriables directories
 mkdir -p ${WWW_DATA_DIRS[@]}
 
-# Altera usuário de uploads para www-data da imagem WP-CLI no Linux
+# Change writables directories user to www-data on Linux
 if [ 'Darwin' != ${OS} -a ${SET_PERMISSIONS} = "true" ]; then
     WWW_DATA_OWNER=$( eval "${WP_BASH} -c 'echo \$(id -u):\$(id -g)' | tr -d '\r'")
     sudo chown ${WWW_DATA_OWNER} ${WWW_DATA_DIRS[@]} && sudo setfacl -R -m u:`whoami`:rwx . && sudo setfacl -Rd -m u:`whoami`:rwx ${WWW_DATA_DIRS[@]}
@@ -144,7 +144,7 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 [ ${UPDATE} = true ] && bash -c "${COMPOSE} pull"
 [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} build"
 
-# set subcomand for install or update
+# Set subcomand for install or update
 [ ${UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
 
 [ ${UPDATE} = false -a ${ENV_STAGE} = "prod" ] && COMPOSER_SUBCOMAND_ARGS="--verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader --no-suggest" || COMPOSER_SUBCOMAND_ARGS=" ";
@@ -163,8 +163,7 @@ bash -c "${NPM} ${NPM_SUBCOMAND}"
 # Install PHPQA packages
 bash -c "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
 
-# Get the version installed of the core to be used for download its language
-# package
+# Get the version installed of the core to be used for download its language package
 CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
 
 set +x

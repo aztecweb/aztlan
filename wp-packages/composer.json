@@ -1,5 +1,5 @@
 {
-	"name": "aztecweb/aztec-env-wp-packages",
+	"name": "aztecweb/aztlan",
 	"repositories": [{
 		"type": "composer",
 		"url": "https://wpackagist.org"
