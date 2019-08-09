@@ -1,5 +1,15 @@
-const title = document.createElement( 'h1' );
-const content = document.createTextNode( 'Aztec WordPress Environment' );
+class Welcome {
+	constructor() {
+		this.message = 'Welcome to Aztlan';
+	}
 
-title.appendChild( content );
-document.body.appendChild( title );
+	hello() {
+		const p = document.createElement( 'p' );
+		p.innerText = '...';
+
+		document.querySelector( '.welcome' ).appendChild( p );
+	}
+}
+
+const app = new Welcome();
+app.hello();
