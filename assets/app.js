@@ -1,5 +1,5 @@
 // Scripts
 import './js/app.js';
 
-// Styles
+// Stylus
 import './stylus/style.styl';
