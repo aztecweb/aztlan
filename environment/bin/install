@@ -206,7 +206,7 @@ eval $( echo ${WP_BASH} -c "\"
     ';
 
     # Install or update public themes language packages
-    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=plugin \| xargs -n1 -I % bash -c '
+    wp --path=${WP_ROOT} language theme list --all --language=${WP_LANG} --field=theme \| xargs -n1 -I % bash -c '
         wp --path=${WP_ROOT} language theme is-installed % ${WP_LANG} &&
             wp --path=${WP_ROOT} language theme update % ${WP_LANG} ||
             wp --path=${WP_ROOT} language theme install % ${WP_LANG}
