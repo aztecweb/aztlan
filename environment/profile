@@ -9,7 +9,7 @@ os=$(uname -s)
 compose="VOLUME_PREFIX=\"${project}_\" docker-compose -p ${project} -f environment/docker-compose.yml"
 
 if [ 'Darwin' = $os ]; then
-	compose="VOLUME_PREFIX=\"${project}_\" ${compose} -f environment/docker-compose.mac.yml"
+	compose="${compose} -f environment/docker-compose.mac.yml"
 fi
 
 # docker-compose
