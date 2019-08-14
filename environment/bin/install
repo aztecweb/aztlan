@@ -177,7 +177,7 @@ eval $( echo ${WP_BASH} -c "\"
     wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
         # Download the WordPress with the version set on composer.json to get the core language package
         wp --path=${WP_ROOT} core download --version=${CORE_VERSION} --locale=${WP_LANG} --skip-content --force;
-        wp --path=${WP_ROOT} db create || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
+        wp --path=${WP_ROOT} db create &> /dev/null || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
         wp --path=${WP_ROOT} core install --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
     ';
 
@@ -218,5 +218,5 @@ eval $( echo ${WP_BASH} -c "\"
 \"" | sed -e 's/#.*$//' ) # `sed` removes the comments to run the commands on eval
 
 # if there is a git folder in the project, create a symbolic link to the hooks.
-[ -d "\.git" ] || bash -c "ln -s ../../environment/bin/lint .git/hooks/pre-commit"
+[ -d "\.git" ] || bash -c "ln -fs ../../environment/bin/lint .git/hooks/pre-commit"
 
