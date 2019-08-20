@@ -122,6 +122,8 @@ services:
     volumes:
       - ../deploy:/deploy
       - ../deploy/.ssh:/root/.ssh
+    env_file:
+      - ./env/deploy.env
 
   # Xdebug profiling viewer
   webgrind:
