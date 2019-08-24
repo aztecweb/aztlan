@@ -8,8 +8,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql:Z
-      - ./initdb:/docker-entrypoint-initdb.d:Z
+      - mysql_data:/var/lib/mysql:z
+      - ./initdb:/docker-entrypoint-initdb.d:z
     env_file:
       - ./env/mysql.env
 
@@ -22,17 +22,17 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ../:/app:Z
-      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:Z
+      - ../:/app:z
+      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
 
   # PHP-FPM with WP dependencies
   wordpress:
     build:
       context: ./docker/wp-fpm
     volumes:
-      - ../:/app:Z
-      - ./xdebug/profiler:/tmp/xdebug_profiler:Z
-      - ./xdebug/trace:/tmp/xdebug_trace:Z
+      - ../:/app:z
+      - ./xdebug/profiler:/tmp/xdebug_profiler:z
+      - ./xdebug/trace:/tmp/xdebug_trace:z
     env_file:
       - ./env/app.env
       - ./env/xdebug.env
@@ -51,56 +51,56 @@ services:
       - ./env/app.env
       - ./env/xdebug.env
     volumes:
-      - ../:/app:Z
-      - ./xdebug/profiler:/tmp/xdebug_profiler:Z
-      - ./xdebug/trace:/tmp/xdebug_trace:Z
+      - ../:/app:z
+      - ./xdebug/profiler:/tmp/xdebug_profiler:z
+      - ./xdebug/trace:/tmp/xdebug_trace:z
 
   # Node 8.2 with NPM/Yarn/npx
   assets-node:
     image: node:10
     volumes:
-      - ../:/app:Z
+      - ../:/app:z
     working_dir: /app/assets
 
   # Composer
   inc-composer:
     image: composer
     volumes:
-      - ../inc:/app:Z
+      - ../inc:/app:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:Z
+      - ~/.docker_cache/composer:/tmp/cache:z
 
   # Composer WP packages
   wp-composer:
     image: composer
     volumes:
-      - ../wp-packages:/app:Z
-      - ../public:/public:Z
+      - ../wp-packages:/app:z
+      - ../public:/public:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:Z
+      - ~/.docker_cache/composer:/tmp/cache:z
 
   # Composer CLI
   cli-composer:
     image: composer
     volumes:
-      - ../cli:/app:Z
+      - ../cli:/app:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:Z
+      - ~/.docker_cache/composer:/tmp/cache:z
 
   # Composer CLI
   phpqa-composer:
     image: composer
     volumes:
-      - ../phpqa:/app:Z
+      - ../phpqa:/app:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:Z
+      - ~/.docker_cache/composer:/tmp/cache:z
 
   # PHPQA
   phpqa:
     image: jakzal/phpqa:alpine
     volumes:
-      - ../:/app:Z
-      - ../phpqa/.tmp-phpqa:/tmp:Z
+      - ../:/app:z
+      - ../phpqa/.tmp-phpqa:/tmp:z
     working_dir: /app/phpqa
 
   # Test SMTP server
@@ -120,8 +120,8 @@ services:
         - PHP_VERSION=7
         - DEPLOYER_VERSION=latest
     volumes:
-      - ../deploy:/deploy:Z
-      - ../deploy/.ssh:/root/.ssh:Z
+      - ../deploy:/deploy:z
+      - ../deploy/.ssh:/root/.ssh:z
     env_file:
       - ./env/deploy.env
 
@@ -131,8 +131,8 @@ services:
     ports:
       - "8000:8080"
     volumes:
-      - ./xdebug/profiler:/tmp:Z
-      - ../:/app:Z
+      - ./xdebug/profiler:/tmp:z
+      - ../:/app:z
 
 volumes:
   mysql_data:
