@@ -10,8 +10,10 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
+      - ./docker/mariadb/innodb-fix.cnf:/etc/mysql/conf.d/innodb-fix.cnf
     env_file:
       - ./env/mysql.env
+    command: mysqld --innodb-flush-method=littlesync --innodb-use-native-aio=OFF --log_bin=ON
 
   # Nginx
   server:
