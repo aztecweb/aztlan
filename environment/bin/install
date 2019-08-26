@@ -134,6 +134,9 @@ fi
 # Create symlink for `mu-plugins` directory if it dosen't exists
 [ -d ${MU_PLUGIN_DIR} ] || ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}
 
+# Clear public/{themes, plugins} folder before install
+rm -R ${PUBLIC_PACKAGES_DIR}/{plugins,themes}/{*,.*}
+
 # Install themes languages
 ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/
 
