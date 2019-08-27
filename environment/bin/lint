@@ -26,7 +26,7 @@ function return_run() {
 }
 
 # Code standards functions
-function run_phpc ( ) {
+function run_phpcs() {
 	printf "Running PHPCS\t........... ";
 	PHPCS=$(eval "bash -c '${COMPOSE} run --rm phpqa phpcs'")
 	if [ -z "${PHPCS}" ]

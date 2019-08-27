@@ -32,7 +32,7 @@ class Assets extends Base {
 	/**
 	 * Get assets URI
 	 *
-	 * @param  string $path File path
+	 * @param  string $path File path.
 	 * @return string
 	 */
 	private function assets_uri( $path ) {
