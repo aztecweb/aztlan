@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set +x
+
+cd $( dirname $0 )/../..
+
+# Variables
+UPGRADE_DIR=.upgrade
+UPGRADEABLE_FILES=environment/.upgradeable
+
+# DOWNLOAD
+function download {
+	mkdir $UPGRADE_DIR
+
+	# Download master.zip
+	wget -O master.zip https://github.com/aztecweb/aztlan/archive/master.zip 2>/dev/null
+
+	# Unzip
+	unzip -q master.zip -d $UPGRADE_DIR
+	rm master.zip
+}
+
+# set -x
+# find .upgrade $(printf "! -path .upgrade/aztlan-master/%s " $(cat environment/.upgradeignore))
+# exit
+
+# UPGRADE
+function upgrade {
+	while read file; do
+        cp $UPGRADE_DIR/aztlan-master/$file $file
+	done <$UPGRADEABLE_FILES
+}
+# CLEANUP
+function cleanup {
+	# Setup .upgrade directory
+	if [ -d $UPGRADE_DIR ]; then
+		rm -rf $UPGRADE_DIR
+	fi
+}
+
+cleanup
+download
+upgrade
+cleanup
