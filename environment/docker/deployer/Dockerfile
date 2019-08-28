@@ -19,8 +19,7 @@ RUN set -ex; \
 
 ENV PATH="/root/.composer/vendor/bin:${PATH}"
 
-VOLUME ["/deploy", "$HOME/.ssh"]
-WORKDIR /deploy
+WORKDIR /app/deploy
 
 ENTRYPOINT ["dep"]
 CMD ["list"]

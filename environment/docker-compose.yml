@@ -31,8 +31,6 @@ services:
       context: ./docker/wp-fpm
     volumes:
       - ../:/app:z
-      - ./xdebug/profiler:/tmp/xdebug_profiler:z
-      - ./xdebug/trace:/tmp/xdebug_trace:z
     env_file:
       - ./env/app.env
       - ./env/xdebug.env
@@ -52,8 +50,6 @@ services:
       - ./env/xdebug.env
     volumes:
       - ../:/app:z
-      - ./xdebug/profiler:/tmp/xdebug_profiler:z
-      - ./xdebug/trace:/tmp/xdebug_trace:z
 
   # Node 8.2 with NPM/Yarn/npx
   assets-node:
@@ -66,41 +62,43 @@ services:
   inc-composer:
     image: composer
     volumes:
-      - ../inc:/app:z
+      - ../:/app:z
       # Map local user Composer directory with container for cache packages
       - ~/.docker_cache/composer:/tmp/cache:z
+    working_dir: /app/inc
 
   # Composer WP packages
   wp-composer:
     image: composer
     volumes:
-      - ../wp-packages:/app:z
-      - ../public:/public:z
+      - ../:/app:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:z
+      - ~/.docker_cache/composer:/tmp/cache
+    working_dir: /app/wp-packages
 
   # Composer CLI
   cli-composer:
     image: composer
     volumes:
-      - ../cli:/app:z
+      - ../:/app:z
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:z
+      - ~/.docker_cache/composer:/tmp/cache
+    working_dir: /app/cli
 
   # Composer CLI
   phpqa-composer:
     image: composer
     volumes:
-      - ../phpqa:/app:z
+      - ../:/app
       # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:z
+      - ~/.docker_cache/composer:/tmp/cache
+    working_dir: /app/phpqa
 
   # PHPQA
   phpqa:
     image: jakzal/phpqa:alpine
     volumes:
-      - ../:/app:z
-      - ../phpqa/.tmp-phpqa:/tmp:z
+      - ../:/app
     working_dir: /app/phpqa
 
   # Test SMTP server
@@ -120,7 +118,7 @@ services:
         - PHP_VERSION=7
         - DEPLOYER_VERSION=latest
     volumes:
-      - ../deploy:/deploy:z
+      - ../:/app:z
       - ../deploy/.ssh:/root/.ssh:z
     env_file:
       - ./env/deploy.env
@@ -131,7 +129,7 @@ services:
     ports:
       - "8000:8080"
     volumes:
-      - ./xdebug/profiler:/tmp:z
+      - ../xdebug/profiler:/tmp:z
       - ../:/app:z
 
 volumes:

@@ -1,34 +1,18 @@
 version: "2"
 
 syncs:
+  # Speedup Composer
   composer_cache:
     src: '~/.docker_cache/composer'
 
+  # Volume without special user
   ${VOLUME_PREFIX}app_sync:
     src: '.'
+    sync_excludes: ['.editorconfig', '.git', '.gitignore', '.vscode', 'build', 'environment']
+
+  # www-data user volume to use on WP-CLI and PHP-FPM
+  ${VOLUME_PREFIX}www_sync:
+    src: '.'
+    sync_excludes: ['.editorconfig', '.git', '.gitignore', '.vscode', 'build', 'environment', 'node_modules', 'phpqa']
     sync_userid: '82'
     sync_groupid: '82'
-
-  ${VOLUME_PREFIX}inc_sync:
-    src: 'inc'
-
-  ${VOLUME_PREFIX}wp-packages_sync:
-    src: 'wp-packages'
-
-  ${VOLUME_PREFIX}cli_sync:
-    src: 'cli'
-
-  ${VOLUME_PREFIX}public_sync:
-    src: 'public'
-
-  ${VOLUME_PREFIX}phpqa_sync:
-    src: 'phpqa'
-
-  ${VOLUME_PREFIX}phpqa_tmp_sync:
-    src: 'phpqa/.tmp-phpqa'
-
-  ${VOLUME_PREFIX}deploy_sync:
-    src: 'deploy'
-
-  ${VOLUME_PREFIX}deploy_ssh_sync:
-    src: 'deploy/.ssh'
