@@ -77,7 +77,8 @@ function dep() {
 alias webgrind="${compose} up -d webgrind"
 
 # Docker sync
-alias project-docker-sync="VOLUME_PREFIX=\"${project}_\" docker-sync start -c environment/docker-sync.yml"
+. environment/bin/shared/docker_sync.sh
+alias project-docker-sync="docker_sync"
 
 # Languages POT generation
 function i18n() {

@@ -79,7 +79,7 @@ dotenv ${ENVIRONMENT_DIR}/env/app.env
 dotenv ${ENVIRONMENT_DIR}/env/install.env
 
 # Xdebug
-XDEBUG_DATA_DIR=${ENVIRONMENT_DIR}/xdebug
+XDEBUG_DATA_DIR=xdebug
 XDEBUG_PROFILER_DIR=${XDEBUG_DATA_DIR}/profiler
 XDEBUG_TRACE_DIR=${XDEBUG_DATA_DIR}/trace
 
