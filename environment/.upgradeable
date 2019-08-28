@@ -2,7 +2,7 @@ assets/.babelrc
 assets/.editorconfig
 assets/.gitignore
 assets/.eslintrc.js
-assets/.stylintrc
+assets/.stylin
 assets/app.js
 assets/webpack.config.js
 environment/bin/install

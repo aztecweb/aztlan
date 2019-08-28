@@ -8,6 +8,11 @@ cd $( dirname $0 )/../..
 UPGRADE_DIR=.upgrade
 UPGRADEABLE_FILES=environment/.upgradeable
 
+# START
+function start {
+	echo "Updating your environment from https://github.com/aztecweb/aztlan..."
+}
+
 # DOWNLOAD
 function download {
 	mkdir $UPGRADE_DIR
@@ -20,14 +25,15 @@ function download {
 	rm master.zip
 }
 
-# set -x
-# find .upgrade $(printf "! -path .upgrade/aztlan-master/%s " $(cat environment/.upgradeignore))
-# exit
-
 # UPGRADE
 function upgrade {
 	while read file; do
-        cp $UPGRADE_DIR/aztlan-master/$file $file
+		if test -f $UPGRADE_DIR/aztlan-master/$file; then
+        	cp $UPGRADE_DIR/aztlan-master/$file $file
+			echo -e "\e[32m✔ Upgrade $UPGRADE_DIR/aztlan-master/$file"
+		else
+			echo -e "\e[31m✖ File $UPGRADE_DIR/aztlan-master/$file doesn't exists"
+		fi
 	done <$UPGRADEABLE_FILES
 }
 # CLEANUP
@@ -38,6 +44,7 @@ function cleanup {
 	fi
 }
 
+start
 cleanup
 download
 upgrade
