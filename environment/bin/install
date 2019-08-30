@@ -161,7 +161,9 @@ bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
 
 # NPM
 bash -c "${NPM} ${NPM_SUBCOMAND}"
-[ ${UPDATE} = true ] || bash -c "${NPM} run build";
+[ ${ENV} = 'development' ] && WEBPACK_ENVIRONMENT="dev" || WEBPACK_ENVIRONMENT="build"
+
+[ ${UPDATE} = true ] || bash -c "${NPM} run ${WEBPACK_ENVIRONMENT}";
 
 # Install PHPQA packages
 bash -c "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
