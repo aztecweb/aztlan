@@ -11,6 +11,7 @@ module.exports = env => {
       filename: 'app.js',
       path: path.resolve(__dirname, 'dist')
     },
+    devtool: 'source-map',
     module: {
       rules: [
         {
@@ -87,19 +88,8 @@ module.exports = env => {
         }
       },
       minimizer: [
-        new UglifyJsPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true
-        }),
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorOptions: {
-            map: {
-              inline: false,
-              annotation: true
-            }
-          }
-        })
+        new UglifyJsPlugin(),
+        new OptimizeCSSAssetsPlugin()
       ]
     },
     externals: {
