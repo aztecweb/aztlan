@@ -28,7 +28,9 @@ function download {
 # UPGRADE
 function upgrade {
 	while read file; do
-		if test -f $UPGRADE_DIR/aztlan-master/$file; then
+		[ -z $file ] && continue
+
+		if [ -f $UPGRADE_DIR/aztlan-master/$file ]; then
         	cp $UPGRADE_DIR/aztlan-master/$file $file
 			echo -e "\e[32m✔ Upgrade $UPGRADE_DIR/aztlan-master/$file"
 		else
@@ -36,6 +38,7 @@ function upgrade {
 		fi
 	done <$UPGRADEABLE_FILES
 }
+
 # CLEANUP
 function cleanup {
 	# Setup .upgrade directory
