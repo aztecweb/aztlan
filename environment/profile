@@ -49,19 +49,25 @@ alias phpqa-composer="${compose} run --rm phpqa-composer"
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
 
 # Database reload
-alias db-reload="
-	[ -f environment/initdb/initdb.sql.gz ] &&
+# This command decompresses the database because a direct import can cause
+# memory overload and close bash.
+db_path="environment/initdb/"
+db_name="initdb.sql"
+alias db-reload="[ -f ${db_path}${db_name}.gz ] &&
 		eval '
 			wp db reset --yes &&
-			gunzip -ck environment/initdb/initdb.sql.gz | wp db import - &&
-		' && echo 'Database reloaded' || echo 'initdb.sql.gz not found in environment/initdb/'
+			gunzip -cd ${db_path}${db_name}.gz > ${db_path}${db_name} &&
+			wp db import ${db_path}${db_name} &&
+			rm ${db_path}${db_name}
+		' && echo 'Database reloaded' || echo '${db_name} not found in ${db_path}'
 	"
 
 # SMTP
 alias smtp="${compose} up smtp"
 
 # Logs
-alias logs-wp="${compose} logs -f wordpress"
+alias logs-fpm="${compose} logs -f wordpress"
+alias logs-nginx="${compose} logs -f server"
 
 # Shutdown
 alias down="${compose} down"
@@ -77,7 +83,8 @@ function dep() {
 alias webgrind="${compose} up -d webgrind"
 
 # Docker sync
-alias project-docker-sync="VOLUME_PREFIX=\"${project}_\" docker-sync start -c environment/docker-sync.yml"
+. environment/bin/shared/docker_sync.sh
+alias project-docker-sync="docker_sync"
 
 # Languages POT generation
 function i18n() {
