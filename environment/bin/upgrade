@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set +x
+
+cd $( dirname $0 )/../..
+
+# Variables
+UPGRADE_DIR=.upgrade
+UPGRADEABLE_FILES=environment/.upgradeable
+
+# START
+function start {
+	echo "Updating your environment from https://github.com/aztecweb/aztlan..."
+}
+
+# DOWNLOAD
+function download {
+	mkdir $UPGRADE_DIR
+
+	# Download master.zip
+	wget -O master.zip https://github.com/aztecweb/aztlan/archive/master.zip 2>/dev/null
+
+	# Unzip
+	unzip -q master.zip -d $UPGRADE_DIR
+	rm master.zip
+}
+
+# UPGRADE
+function upgrade {
+	while read file; do
+		[ -z $file ] && continue
+
+		if [ -f $UPGRADE_DIR/aztlan-master/$file ]; then
+        	cp $UPGRADE_DIR/aztlan-master/$file $file
+			echo -e "\e[32m✔ Upgrade $UPGRADE_DIR/aztlan-master/$file"
+		else
+			echo -e "\e[31m✖ File $UPGRADE_DIR/aztlan-master/$file doesn't exists"
+		fi
+	done <$UPGRADEABLE_FILES
+}
+
+# CLEANUP
+function cleanup {
+	# Setup .upgrade directory
+	if [ -d $UPGRADE_DIR ]; then
+		rm -rf $UPGRADE_DIR
+	fi
+}
+
+start
+cleanup
+download
+upgrade
+cleanup
