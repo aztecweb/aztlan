@@ -6,7 +6,7 @@ services:
   db:
     image: mariadb:10.3
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql:z
       - ./initdb:/docker-entrypoint-initdb.d:z
@@ -20,7 +20,7 @@ services:
     links:
       - wordpress
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - ../:/app:z
       - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
@@ -127,10 +127,19 @@ services:
   webgrind:
     image: wodby/webgrind:1.5
     ports:
-      - "8000:8080"
+      - 8000:8080
     volumes:
       - ../xdebug/profiler:/tmp:z
       - ../:/app:z
+
+  # Live reload
+  livereload:
+    build:
+      context: ./docker/livereload
+    ports:
+      - 35729:35729
+    volumes:
+      - ../:/app
 
 volumes:
   mysql_data:

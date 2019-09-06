@@ -13,6 +13,12 @@ use DI\Container;
  * Base class for manipulate hooks using dependency injection
  */
 abstract class Base {
+	/**
+	 * Current version
+	 *
+	 * @var string
+	 */
+	const VERSION = '0.1';
 
 	/**
 	 * The dependency injection container

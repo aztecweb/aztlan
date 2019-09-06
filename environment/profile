@@ -27,6 +27,9 @@ function wp() {
 ## Server
 alias server="${compose} up -d server"
 
+# Live reload
+alias livereload="${compose} up -d livereload"
+
 ## Node
 alias node="${compose} run --rm assets-node"
 alias assets-watch="node npm run watch"
@@ -49,6 +52,7 @@ alias phpqa-composer="${compose} run --rm phpqa-composer"
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
 
 # Database reload
+
 # This command decompresses the database because a direct import can cause
 # memory overload and close bash.
 db_path="environment/initdb/"
@@ -90,5 +94,4 @@ alias project-docker-sync="docker_sync"
 function i18n() {
 	eval $(echo ${compose} run --rm -u 82:82 wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
 	eval $(echo ${compose} run --rm -u 82:82 wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
-
 }
