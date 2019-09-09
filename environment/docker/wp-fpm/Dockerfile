@@ -1,4 +1,11 @@
-# Production WordPress image
+FROM wordpress:php7.2-fpm-alpine AS base
+
+# Replace wordpress image dockerfile entrypoint, default by custom configuration
+COPY docker-entrypoint.sh /usr/local/bin/
+
+WORKDIR /app
+
+
 FROM wordpress:php7.2-fpm-alpine AS development
 
 RUN set -ex; \
@@ -70,7 +77,5 @@ RUN { \
 	echo 'xdebug.trace_output_name = trace.out.%R-%u'; \
 } > /usr/local/etc/php/conf.d/xdebug.ini
 
-# Replace wordpress image dockerfile entrypoint, default by custom configuration
-COPY docker-entrypoint.sh /usr/local/bin/
-
-WORKDIR /app
+FROM base AS distribution
+ADD dist.tar.gz /app

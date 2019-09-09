@@ -1,0 +1,174 @@
+#!/bin/bash
+
+# General variables
+BIN_DIR=$( dirname $0 )
+
+# Set build dir as environment root to run the docker-compose commands
+ENV_ROOT=build
+
+# Include helper scripts
+. ${BIN_DIR}/shared/dotenv.sh
+. ${BIN_DIR}/shared/aztlan_variables.sh
+. ${BIN_DIR}/shared/docker_compose.sh
+. ${BIN_DIR}/shared/docker_sync.sh
+
+ENVIRONMENT_DIR=${ENV_ROOT_PATH}/environment
+
+# List of files used to build the application
+BUILD_FILES=(
+	assets/fonts/
+	assets/js/
+	assets/stylus/
+	assets/.babelrc
+	assets/app.js
+	assets/package-lock.json
+	assets/package.json
+	assets/webpack.config.js
+	cli/composer.json
+	cli/composer.lock
+	environment/docker/
+	environment/env/
+	environment/docker-compose.yml
+	environment/docker-compose.mac.yml
+	environment/docker-sync.yml
+	environment/profile
+	inc/languages/
+	inc/src/
+	inc/autoload.php
+	inc/composer.json
+	inc/composer.lock
+	public/index.php
+	public/wp-config.php
+	themes/
+	wp-packages/languages
+	wp-packages/mu-plugins
+	wp-packages/private
+	wp-packages/composer.json
+	wp-packages/composer.lock
+)
+
+# Files doesn't necessary after the build
+BUILD_CLEAN_FILES=(
+	assets/fonts/
+	assets/js/
+	assets/node_modules/
+	assets/stylus/
+	assets/.babelrc
+	assets/app.js
+	assets/package-lock.json
+	assets/package.json
+	assets/webpack.config.js
+	cli/composer.json
+	cli/composer.lock
+	inc/composer.json
+	inc/composer.lock
+	wp-packages/
+)
+set -euxo pipefail
+
+# Ensure that the build start on the project root
+cd ${PROJECT_ROOT_PATH}
+
+# Make sure that build directory is empty and it exists
+sudo rm -rf ${ENV_ROOT_PATH}
+mkdir -p ${ENV_ROOT_PATH}
+
+# Copy file to execute the build process
+# Use rsync to work with MacOS
+rsync -aR ${BUILD_FILES[@]} ${ENV_ROOT_PATH}/
+
+# Load build variables
+# Deactivate debug for this action because it generate a lot of output
+set +x
+dotenv ${ENVIRONMENT_DIR}/env/build.env
+set -x
+
+# Use Docker Sync to speed up the build process on Mac
+docker_sync start
+
+# Install PHP packages
+docker_compose run --rm cli-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run --rm inc-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+
+# Download core languange pack
+WP_VERSION=$(docker_compose run --rm wp-composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
+DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages
+mkdir -p ${DEST_DIR}
+wget -qO- https://downloads.wordpress.org/translation/core/${WP_VERSION}/${WP_LANG}.zip | busybox unzip - -d ${DEST_DIR}
+
+# Download the themes language packages
+DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/themes
+mkdir -p ${DEST_DIR}
+docker_compose run --rm wp-composer info | \
+	awk '{ if ( match($1, /^wpackagist-theme/ ) ) { gsub("wpackagist-theme/", "",$1); print $1, $2 } }' | \
+	xargs -l sh -c 'wget -qO- http://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip | busybox unzip - -d '${DEST_DIR} sh
+
+# Download plugins language packages
+DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/plugins
+mkdir -p ${DEST_DIR}
+docker_compose run --rm wp-composer info | \
+	awk '{ if ( match($1, /^wpackagist-plugin/ ) ) { gsub("wpackagist-plugin/", "",$1); print $1, $2 } }' | \
+	xargs -l sh -c 'wget -qO- http://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip | busybox unzip - -d '${DEST_DIR} sh
+
+# Unpack private plugins and themes in public directory
+PACKAGES_TYPE=(plugins themes)
+for TYPE in "${PACKAGES_TYPE[@]}"; do
+  DEST_DIR=${ENV_ROOT_PATH}/public/packages/${TYPE}
+  mkdir -p ${DEST_DIR}
+  find ${ENV_ROOT_PATH}/wp-packages/private/${TYPE} -name *.zip | xargs unzip -od ${DEST_DIR}
+done
+
+# Copy mu-plugins files to public directory
+DEST_DIR=${ENV_ROOT_PATH}/public/packages/mu-plugins
+sudo mkdir -p ${DEST_DIR}
+sudo rsync -a ${ENV_ROOT_PATH}/wp-packages/mu-plugins/* ${DEST_DIR}
+
+# Install Node packages and build assets to distribution
+docker_compose run --rm assets-node npm ci
+docker_compose run --rm assets-node npm run build
+
+# Wait build process generated files to be synced with host
+docker_sync_wait assets/dist
+docker_sync_wait cli/vendor
+docker_sync_wait inc/vendor
+docker_sync_wait public/packages
+docker_sync_wait public/wp
+
+# Cleanup not necessary files after the build
+cd ${ENV_ROOT_PATH}
+sudo rm -rf ${BUILD_CLEAN_FILES[@]}
+cd ${PROJECT_ROOT_PATH}
+
+# Build WP-CLI image
+CLI_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:cli
+CLI_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-cli
+
+tar -zcf ${CLI_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} cli inc public themes
+docker build --target distribution -t ${CLI_IMAGE} -t ${CLI_IMAGE}-${VERSION} ${CLI_IMAGE_DIR}
+docker push ${CLI_IMAGE}
+docker push ${CLI_IMAGE}-${VERSION}
+
+# Build server image
+SERVER_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:server
+SERVER_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/nginx
+
+tar -zcf ${SERVER_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets public themes
+docker build -t ${SERVER_IMAGE} -t ${SERVER_IMAGE}-${VERSION} ${SERVER_IMAGE_DIR}
+docker push ${SERVER_IMAGE}
+docker push ${SERVER_IMAGE}-${VERSION}
+
+# Build WordPress PHP-FPM image
+FPM_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:fpm
+FPM_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-fpm
+
+tar -zcf ${FPM_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} inc public themes
+docker build -t ${FPM_IMAGE} -t ${FPM_IMAGE}-${VERSION} ${FPM_IMAGE_DIR}
+docker push ${FPM_IMAGE}
+docker push ${FPM_IMAGE}-${VERSION}
+
+# Stop Docker Sync because it isn't more necessary
+docker_sync stop
+
+# Cleanup build directory
+sudo rm -rf ${ENV_ROOT_PATH}

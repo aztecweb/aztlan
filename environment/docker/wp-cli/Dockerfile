@@ -1,7 +1,10 @@
-FROM wordpress:cli-php7.2
+FROM wordpress:cli-php7.2 AS base
 
+ENV PATH=/app/cli/vendor/bin:$PATH
+WORKDIR /app
+
+FROM base AS development
 USER root
-
 RUN set -ex; \
         \
         # Image build dependencies
@@ -70,4 +73,6 @@ RUN { \
 
 USER www-data
 
-WORKDIR /app
+FROM base AS distribution
+COPY aztlan-install /usr/local/bin/
+ADD dist.tar.gz /app
