@@ -42,14 +42,17 @@ services:
   wp:
     build:
       context: ./docker/wp-cli
+      target: development
     depends_on:
       - db
       - smtp
     env_file:
       - ./env/app.env
+      - ./env/install.env
       - ./env/xdebug.env
     volumes:
       - ../:/app:z
+      - ./docker/wp-cli/aztlan-install:/usr/local/bin/aztlan-install:z
 
   # Node 8.2 with NPM/Yarn/npx
   assets-node:
@@ -139,7 +142,8 @@ services:
     ports:
       - 35729:35729
     volumes:
-      - ../:/app
+      - ../xdebug/profiler:/tmp:z
+      - ../:/app:z
 
 volumes:
   mysql_data:

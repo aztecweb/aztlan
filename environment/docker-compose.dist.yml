@@ -1,0 +1,24 @@
+# Development project infrastructure generated over the Docker
+version: "3.7"
+
+services:
+  # Nginx
+  server:
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:server
+    links:
+      - wordpress
+    ports:
+      - "80:80"
+
+  # PHP-FPM with WP dependencies
+  wordpress:
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:fpm
+    env_file:
+      - ./env/app.env
+
+  # WP CLI
+  wp:
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:cli
+    env_file:
+      - ./env/app.env
+      - ./env/install.env
