@@ -6,16 +6,19 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 module.exports = env => {
   return {
     mode: env.production ? 'production' : 'development',
-    entry: './app.js',
+    entry: {
+        app: './src/app.js',
+        editor: './src/editor.js'
+    },
     output: {
-      filename: 'app.js',
+      filename: '[name].js',
       path: path.resolve(__dirname, 'dist')
     },
     devtool: 'source-map',
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: /(node_modules)/,
           use: [
             'babel-loader'
@@ -72,8 +75,7 @@ module.exports = env => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: 'app.css',
-        chunkFilename: 'vendor.css'
+        filename: '[name].css'
       })
     ],
     optimization: {

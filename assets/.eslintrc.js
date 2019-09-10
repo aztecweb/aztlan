@@ -1,7 +1,11 @@
 module.exports = {
-    "extends": [ "plugin:@wordpress/eslint-plugin/esnext" ],
+    "extends": [ "plugin:@wordpress/eslint-plugin/recommended" ],
     "globals": {
+        "wp": true,
         "window": true,
-        "document": true
+        "history": true,
+        "document": true,
+        "location": true,
+        "XMLHttpRequest": true
     }
 };
