@@ -86,7 +86,7 @@ alias project-docker-sync="docker_sync"
 
 # Languages POT generation
 function i18n() {
-	eval $(echo docker_compose run --rm -u 82:82 wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
-	eval $(echo docker_compose run --rm -u 82:82 wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
-
+	eval $(echo ${compose} run --rm -u $(id -u ${USER}):$(id -g ${USER}) wp i18n make-pot --domain=${THEME_ACTIVE}_assets assets/src assets/languages/${THEME_ACTIVE}_assets.pot)
+	eval $(echo ${compose} run --rm -u $(id -u ${USER}):$(id -g ${USER}) wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
+	eval $(echo ${compose} run --rm -u $(id -u ${USER}):$(id -g ${USER}) wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
 }

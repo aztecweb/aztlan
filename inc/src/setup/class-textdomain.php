@@ -24,7 +24,8 @@ class Textdomain extends Base {
 	 * Load the installation locale theme language file
 	 */
 	public function load_textdomain() {
-		load_theme_textdomain( 'aztlan', get_stylesheet_directory() . '/languages' );
-		load_theme_textdomain( 'aztlan_inc', ABSPATH . '../../inc/languages' );
+		load_theme_textdomain( 'env-theme', get_stylesheet_directory() . '/languages' );
+		load_theme_textdomain( 'env-theme_inc', ABSPATH . '../../inc/languages' );
+		load_theme_textdomain( 'env-theme_assets', ABSPATH . '../../assets/languages' );
 	}
 }
