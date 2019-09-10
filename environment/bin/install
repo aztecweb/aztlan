@@ -130,7 +130,7 @@ WP_ROOT=public/wp
 
 # WP packages public directory
 PUBLIC_PACKAGES_DIR=public/packages
-UPLOADS_DIR=${PUBLIC_PACKAGES_DIR}/uploads
+UPLOADS_DIR=${UPLOADS_DIR}
 THEMES_DIR=${PUBLIC_PACKAGES_DIR}/themes
 PLUGINS_DIR=${PUBLIC_PACKAGES_DIR}/plugins
 UPGRADE_DIR=${PUBLIC_PACKAGES_DIR}/upgrade
@@ -218,7 +218,7 @@ set +x
 eval $( echo ${WP_BASH} -c "\"
     set -x;
 
-    [ -e ${START_UPLOADS} -a ${COPY_START_UPLOADS} = "true" ] && cp -r ${START_UPLOADS} ${PUBLIC_PACKAGES_DIR};
+    [ -e ${START_UPLOADS} -a ${COPY_START_UPLOADS} = "true" ] && cp -rT ${START_UPLOADS} ${UPLOADS_DIR};
 
     # Install WordPress if not installed
     wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
