@@ -1,12 +1,7 @@
-/**
+/**asd
  * Registers a new block provided a unique name and an object defining its behavior.
  */
 const registerBlockType = wp.blocks.registerBlockType;
-
-/**
- * Returns a new element of given type. Element is an abstraction layer atop React.
- */
-const el = wp.element.createElement;
 
 /**
  * Retrieves the translation of text.
@@ -14,15 +9,20 @@ const el = wp.element.createElement;
 const __ = wp.i18n.__;
 
 /**
+ * The block content to be rendered on editor and frontend
+ */
+const blockContent = <p>{ __( 'Aztlan demo block.', 'aztlan_assets' ) }</p>;
+
+/**
  * Every block starts by registering a new block type definition.
  */
-registerBlockType( 'env-theme/aztec-env-test', {
+registerBlockType( 'aztlan/demo', {
 
 	/**
 	 * This is the display title for your block, which can be translated with `i18n` functions.
 	 * The block inserter will show this name.
 	 */
-	title: __( 'Aztec Env Test', 'env-theme_assets' ),
+	title: __( 'Aztlan Demo', 'aztlan_assets' ),
 
 	/**
 	 * Blocks are grouped into categories to help users browse and discover them.
@@ -45,13 +45,7 @@ registerBlockType( 'env-theme/aztec-env-test', {
 	 * @param {Object} [props] Properties passed from the editor.
 	 * @return {Element}       Element to render.
 	 */
-	edit( props ) {
-		return el(
-			'p',
-			{ className: props.className },
-			__( 'Aztec Env test block', 'env-theme_assets' )
-		);
-	},
+	edit: () => blockContent,
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
@@ -59,11 +53,5 @@ registerBlockType( 'env-theme/aztec-env-test', {
 	 *
 	 * @return {Element}       Element to render.
 	 */
-	save() {
-		return el(
-			'p',
-			{},
-			__( 'Aztec Env test block', 'env-theme_assets' )
-		);
-	},
+	save: () => blockContent,
 } );

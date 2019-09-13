@@ -1,2 +1,3 @@
 dist
+languages/*.json
 node_modules
