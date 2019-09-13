@@ -40,7 +40,8 @@ class Kernel {
 			\Aztec\Aztlan\Integration\Livereload::class,
 
 			// Assets.
-			\Aztec\Setup\Assets::class,
+			\Aztec\Aztlan\Assets\App::class,
+			\Aztec\Aztlan\Assets\Editor::class,
 
 			// Languages.
 			\Aztec\Setup\Textdomain::class,
