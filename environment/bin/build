@@ -16,11 +16,8 @@ ENVIRONMENT_DIR=${ENV_ROOT_PATH}/environment
 
 # List of files used to build the application
 BUILD_FILES=(
-	assets/fonts/
-	assets/js/
-	assets/stylus/
+	assets/src
 	assets/.babelrc
-	assets/app.js
 	assets/package-lock.json
 	assets/package.json
 	assets/webpack.config.js
@@ -49,12 +46,9 @@ BUILD_FILES=(
 
 # Files doesn't necessary after the build
 BUILD_CLEAN_FILES=(
-	assets/fonts/
-	assets/js/
 	assets/node_modules/
-	assets/stylus/
+	assets/src/
 	assets/.babelrc
-	assets/app.js
 	assets/package-lock.json
 	assets/package.json
 	assets/webpack.config.js
