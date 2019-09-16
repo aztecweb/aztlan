@@ -3,10 +3,9 @@ assets/.editorconfig
 assets/.gitignore
 assets/.eslintrc.js
 assets/.stylintrc
-
-assets/app.js
+assets/src/app.js
 assets/webpack.config.js
-environment/bin/install
+environment/bin/shared
 environment/env/install.env
 environment/env/mysql.env
 environment/env/xdebug.env

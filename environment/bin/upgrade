@@ -29,12 +29,22 @@ function download {
 function upgrade {
 	while read file; do
 		[ -z $file ] && continue
+		FOUND_FILE=false
 
-		if [ -f $UPGRADE_DIR/aztlan-master/$file ]; then
+		if [ -f "$UPGRADE_DIR/aztlan-master/$file" ] ; then
+			FOUND_FILE=true
         	cp $UPGRADE_DIR/aztlan-master/$file $file
 			echo -e "\e[32m✔ Upgrade $UPGRADE_DIR/aztlan-master/$file"
-		else
-			echo -e "\e[31m✖ File $UPGRADE_DIR/aztlan-master/$file doesn't exists"
+		fi
+
+		if [ -d "$UPGRADE_DIR/aztlan-master/$file" ] ; then
+			FOUND_FILE=true
+        	cp -r $UPGRADE_DIR/aztlan-master/$file/ $file/..
+			echo -e "\e[32m✔ Upgrade $UPGRADE_DIR/aztlan-master/$file"
+		fi
+
+		if ! $FOUND_FILE ; then
+			echo -e "\e[31m✖ $UPGRADE_DIR/aztlan-master/$file doesn't exist"
 		fi
 	done <$UPGRADEABLE_FILES
 }
