@@ -17,6 +17,7 @@ services:
   server:
     build:
       context: ./docker/nginx
+      target: development
     links:
       - wordpress
     ports:
@@ -29,6 +30,7 @@ services:
   wordpress:
     build:
       context: ./docker/wp-fpm
+      target: development
     volumes:
       - ../:/app:z
     env_file:
