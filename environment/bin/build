@@ -80,11 +80,6 @@ set -x
 # Use Docker Sync to speed up the build process on Mac
 docker_sync start
 
-# Install PHP packages
-docker_compose run --rm cli-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-docker_compose run --rm inc-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-
 # Download core languange pack
 WP_VERSION=$(docker_compose run --rm wp-composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages
@@ -115,8 +110,13 @@ done
 
 # Copy mu-plugins files to public directory
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/mu-plugins
-sudo mkdir -p ${DEST_DIR}
-sudo rsync -a ${ENV_ROOT_PATH}/wp-packages/mu-plugins/* ${DEST_DIR}
+mkdir -p ${DEST_DIR}
+rsync -a ${ENV_ROOT_PATH}/wp-packages/mu-plugins/* ${DEST_DIR}
+
+# Install PHP packages
+docker_compose run --rm cli-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run --rm inc-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
 
 # Install Node packages and build assets to distribution
 docker_compose run --rm assets-node npm ci
