@@ -69,6 +69,7 @@ RUN { \
 	echo 'xdebug.trace_format = 1'; \
 	echo 'xdebug.trace_output_dir = /app/xdebug/trace'; \
 	echo 'xdebug.trace_output_name = trace.out.%R-%u'; \
+	echo 'xdebug.max_nesting_level = ${PHP_XDEBUG_MAX_NESTING_LEVEL}'; \
 } > /usr/local/etc/php/conf.d/xdebug.ini
 
 USER www-data
