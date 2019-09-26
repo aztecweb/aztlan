@@ -5,7 +5,7 @@ assets/.editorconfig
 assets/.eslintrc.js
 assets/.gitignore
 assets/.stylintrc
-assets/packages.json
+assets/package.json
 assets/webpack.config.js
 cli
 deploy
@@ -19,6 +19,7 @@ environment/docker-compose.mac.yml
 environment/docker-compose.yml
 environment/docker-sync.yml
 environment/profile
+inc/src/aztlan
 inc/src/class-base.php
 inc/autoload.php
 inc/composer.json
