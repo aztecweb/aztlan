@@ -74,6 +74,13 @@ define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/packages' );
 define( 'WP_CONTENT_URL', getenv( 'WP_HOME' ) . '/packages' );
 
 /**
+ * Force process as HTTPS when the request is HTTPS but internally the server answer on the port 80
+ */
+if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
+	$_SERVER['HTTPS'] = 'on';
+}
+
+/**
  * Absolute path to the WordPress directory.
  *
  */
