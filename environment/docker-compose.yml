@@ -45,9 +45,6 @@ services:
     build:
       context: ./docker/wp-cli
       target: development
-    depends_on:
-      - db
-      - smtp
     env_file:
       - ./env/app.env
       - ./env/install.env

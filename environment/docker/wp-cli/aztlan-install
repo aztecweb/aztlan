@@ -12,7 +12,10 @@ wp core is-installed &> /dev/null || bash -c '
 ';
 
 # Activate theme
-wp theme is-active ${THEME_ACTIVE} || wp theme activate ${THEME_ACTIVE};
+wp theme is-active ${THEME_ACTIVE} || wp theme activate ${THEME_ACTIVE}
+
+# Set WordPress defaut language
+wp site switch-language ${WP_LANG}
 
 # Activate all plugins
 wp plugin activate --all;
