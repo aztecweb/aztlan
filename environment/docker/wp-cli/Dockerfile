@@ -1,4 +1,4 @@
-FROM wordpress:cli-php7.2 AS base
+FROM wordpress:cli-php7.3 AS base
 
 ENV PATH=/app/cli/vendor/bin:$PATH
 WORKDIR /app
