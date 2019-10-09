@@ -195,6 +195,9 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 [ ${UPDATE} = true ] && bash -c "${COMPOSE} pull"
 [ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} build"
 
+# To prevent connection problems, the db container will be initialized
+[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} up -d db"
+
 # Set subcomand for install or update
 [ ${UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
 
