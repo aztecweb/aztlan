@@ -42,6 +42,11 @@ parse_commandline ()
 # Check requisites
 check_prerequisites()
 {
+	if [[ ${CHECK_PREREQUISITE} = false ]];
+	then
+		return 0
+	fi
+
 	EXIT_CODE=0
 	DOCKER_COMPOSE_VERSION="1.23"
 	DOCKER_COMPOSE_MAJOR=$(echo $DOCKER_COMPOSE_VERSION| cut -d'.' -f 1)
@@ -79,8 +84,6 @@ check_prerequisites()
 
 	[ ${EXIT_CODE} == 1 ] && exit
 }
-
-check_prerequisites
 
 default_parameters_values
 parse_commandline "$@"
@@ -120,6 +123,8 @@ fi
 # Load project environment variables
 dotenv ${ENVIRONMENT_DIR}/env/app.env
 dotenv ${ENVIRONMENT_DIR}/env/install.env
+
+check_prerequisites
 
 # Xdebug
 XDEBUG_DATA_DIR=xdebug
