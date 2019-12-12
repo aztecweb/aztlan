@@ -24,7 +24,7 @@ function wp() {
 alias server="docker_compose up -d server"
 
 # Live reload
-alias livereload="${compose} up -d livereload"
+alias livereload="docker_compose up -d livereload"
 
 ## Node
 alias node="docker_compose run --rm assets-node"
@@ -65,8 +65,8 @@ alias db-reload="[ -f ${db_path}${db_name}.gz ] &&
 alias smtp="docker_compose up smtp"
 
 # Logs
-alias logs-fpm="${compose} logs -f wordpress"
-alias logs-nginx="${compose} logs -f server"
+alias logs-fpm="docker_compose logs -f wordpress"
+alias logs-nginx="docker_compose logs -f server"
 
 # Shutdown
 alias down="docker_compose down"
