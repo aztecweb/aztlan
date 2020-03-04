@@ -9,5 +9,15 @@
 ## Artefatos
 (Lista de materiais [artefatos] que fazem parte. Nessa lista pode conter o link para o Zeplin e Anima, para referência. Também pode ser adicionado links de inspiração, imagens e vídeos)
 
+## Etapas
+(Remover todas as etapas que não serão executadas para essa feature)
 
-~"Genérica" 
+* Especificação
+* Design
+* Desenvolvimento
+* Deploy em staging
+* Deploy em produção
+* Manual de usuário
+* Fechamento
+
+/label ~"Genérica"

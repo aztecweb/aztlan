@@ -28,5 +28,16 @@
 ## Outros artefatos
 (Adicione imagens, GIFs, vídeos ou qualquer outra ferramenta que auxilie nas demonstrações e exemplificações.)
 
+## Etapas
+(Remover todas as etapas que não serão executadas para essa feature)
 
-/label ~Bug
+* Especificação
+* Design
+* Desenvolvimento
+* Deploy em staging
+* Deploy em produção
+* Manual de usuário
+* Fechamento
+
+
+/label ~"Bug"

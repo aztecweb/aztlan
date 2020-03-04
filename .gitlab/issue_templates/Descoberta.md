@@ -9,5 +9,16 @@
 ## Resultados da descoberta
 (o que foi decidido, documentos criados ou tarefas após a conclusão da pesquisa)
 
+## Etapas
+(Remover todas as etapas que não serão executadas para essa feature)
 
-~Descoberta 
+* Especificação
+* Design
+* Desenvolvimento
+* Deploy em staging
+* Deploy em produção
+* Manual de usuário
+* Fechamento
+
+
+/label ~Descoberta 

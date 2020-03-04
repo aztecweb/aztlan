@@ -27,4 +27,4 @@
 * Fechamento
 
 
-/label ~Feature
+/label ~"Feature"

@@ -2,12 +2,12 @@
 (Deve ser descrito em forma de lista, todos os átomos existentes no determinado componente)
 
 
-## Moléculas 
-(Listar todas as moléculas existentes no determinado componente [se tiver])
+## Moléculas
+(Listar todas as moléculas existentes no determinado componente [se tiver]).
 
 
 ## Links
-(Disponibilizar os links de interesse do componente no Zeplin, se já foi criado)
+(Disponibilizar os links de interesse do componente no Zeplin - sempre manter atualizado).
 
 
 ## Especificações de layout
@@ -15,11 +15,22 @@
 
 
 ## Estágios
-(Checklist com os estágios a serem transcorridos, como wireframes, aprovação do cliente e mockups)
+* [ ] Wireframes
+  * [ ] Aprovado pelo cliente
+* [ ] Mockups
+  * [ ] Aprovado pelo cliente
 
 
 ## Etapas
-(Listagem das etapas a serem concluídas, como Design, Desenvolvimento, Deploy staging e Deploy produção)
+(Remover todas as etapas que não serão executadas para essa feature)
+
+* Especificação
+* Design
+* Desenvolvimento
+* Deploy em staging
+* Deploy em produção
+* Manual de usuário
+* Fechamento
 
 
-~Componente 
+/label ~"Componente"

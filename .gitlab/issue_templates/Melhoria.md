@@ -21,5 +21,15 @@
 ## Outros artefatos 
 (Nessa seção pode conter imagens, GIFs, vídeos ou qualquer outra ferramenta que auxilie nas demonstrações e exemplificações)
 
+## Etapas
+(Remover todas as etapas que não serão executadas para essa feature)
 
-~Melhoria  
+* Especificação
+* Design
+* Desenvolvimento
+* Deploy em staging
+* Deploy em produção
+* Manual de usuário
+* Fechamento
+
+/label ~Melhoria  
