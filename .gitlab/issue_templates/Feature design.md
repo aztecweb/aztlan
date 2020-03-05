@@ -1,14 +1,4 @@
 ## Descrição
-
-É preciso inserir o template Feature Design no GitLab
-
-Feature Design: Compõe uma parte pequena e isolada do sistema. Ela é composta por uma série de histórias de usuário. Quanto menos histórias de usuários uma funcionalidade possuir, melhor. 
-
-
-## Template
-
-```
-## Descrição
 (Deve conter toda informação necessária para que a issue possa evoluir dentro do workflow. Não é necessário escrever formalmente e nem enrolar. Ela deve ser sucinta e conter o que realmente é importante)
 
 
