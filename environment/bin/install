@@ -284,6 +284,6 @@ eval $( echo ${WP_BASH} -c "\"
 if ${SET_PRE_COMMIT} ; then
 	[ -d ".git" ] && bash -c "ln -fs ../../environment/bin/lint .git/hooks/pre-commit"
 else
-	[ -d ".git" ] && bash -c "rm .git/hooks/pre-commit"
+	[ -f ".git/hooks/pre-commit" ] && bash -c "rm .git/hooks/pre-commit"
 fi
 
