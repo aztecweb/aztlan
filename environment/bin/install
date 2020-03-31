@@ -281,7 +281,7 @@ eval $( echo ${WP_BASH} -c "\"
 \"" | sed -e '/^#/d;s/[^\/]#.*$//' ) # `sed` removes the comments to run the commands on eval
 
 # if there is a git folder in the project, create a symbolic link to the hooks.
-if [ ${SET_PRE_COMMIT} ]; then
+if [ ${SET_PRE_COMMIT} ] ; then
 	[ -d ".git" ] && bash -c "ln -fs ../../environment/bin/lint .git/hooks/pre-commit"
 else
 	[ -f ".git/hooks/pre-commit" ] && bash -c "rm .git/hooks/pre-commit"
