@@ -14,14 +14,6 @@ host( 'staging' )
 	->set( 'branch', getenv( 'DEP_STG_BRANCH' ) )
 	->set( 'deploy_path', getenv( 'DEP_STG_PATH' ) );
 
-host( 'production' )
-	->hostname( getenv( 'DEP_PROD_HOST' ) )
-	->port( getenv( 'DEP_PROD_PORT' ) )
-	->stage( 'production' )
-	->user( getenv( 'DEP_PROD_USER' ) )
-	->set( 'branch', getenv( 'DEP_PROD_BRANCH' ) )
-	->set( 'deploy_path', getenv( 'DEP_PROD_PATH' ) );
-
 set( 'http_user', getenv( 'DEP_HTTP_USER' ) );
 set( 'repository', getenv( 'DEP_REPOSITORY' ) );
 
