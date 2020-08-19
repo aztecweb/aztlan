@@ -61,6 +61,19 @@ if ( 'true' == getenv( 'WP_DEBUG' ) ) {
 }
 
 /**
+ * Define multisite consts
+ */
+if( 'true' == getenv( 'MULTISITE' ) ) {
+	define( 'WP_ALLOW_MULTISITE', true );
+	define( 'MULTISITE', getenv( 'MULTISITE' ) );
+	define( 'SUBDOMAIN_INSTALL', getenv( 'SUBDOMAIN_INSTALL' ) );
+	define( 'DOMAIN_CURRENT_SITE', getenv( 'DOMAIN_CURRENT_SITE' ) );
+	define( 'PATH_CURRENT_SITE', getenv( 'PATH_CURRENT_SITE' ) );
+	define( 'SITE_ID_CURRENT_SITE', getenv( 'SITE_ID_CURRENT_SITE' ) );
+	define( 'BLOG_ID_CURRENT_SITE', getenv( 'BLOG_ID_CURRENT_SITE' ) );
+}
+
+/**
  * Permite escrever diretamente em disco.
  */
 define( 'FS_METHOD', 'direct' );
