@@ -24,7 +24,7 @@ services:
       - 80:80
     volumes:
       - ../:/app:z
-      - ./docker/nginx/etc/nginx-multisite.conf:/etc/nginx/nginx.conf:z
+      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
 
   # PHP-FPM with WP dependencies
   wordpress:
