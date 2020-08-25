@@ -227,6 +227,8 @@ bash -c "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
 # Get the version installed of the core to be used for download its language package
 CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
 
+[ ${MULTISITE} = true ] && WP_CORE_INSTALL="multisite-install --skip-config" || WP_CORE_INSTALL="install";
+
 set +x
 
 eval $( echo ${WP_BASH} -c "\"
@@ -238,7 +240,7 @@ eval $( echo ${WP_BASH} -c "\"
     wp --path=${WP_ROOT} core is-installed &> /dev/null || bash -c '
         # Download the WordPress with the version set on composer.json to get the core language package
         wp --path=${WP_ROOT} db create &> /dev/null || wp --path=${WP_ROOT} db reset --yes 2> /dev/null;
-        wp --path=${WP_ROOT} core install --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
+        wp --path=${WP_ROOT} core ${WP_CORE_INSTALL} --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email;
     ';
 
     # Install extra plugins

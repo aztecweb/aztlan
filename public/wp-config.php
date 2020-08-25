@@ -63,14 +63,11 @@ if ( 'true' == getenv( 'WP_DEBUG' ) ) {
 /**
  * Define multisite consts
  */
-if( 'true' == getenv( 'MULTISITE' ) ) {
-	define( 'WP_ALLOW_MULTISITE', true );
-	define( 'MULTISITE', getenv( 'MULTISITE' ) );
-	define( 'SUBDOMAIN_INSTALL', getenv( 'SUBDOMAIN_INSTALL' ) );
+if( 'true' === getenv( 'MULTISITE' ) ) {
+	define( 'MULTISITE', 'true' === getenv( 'MULTISITE' ) );
+	define( 'SUBDOMAIN_INSTALL', 'true' === getenv( 'SUBDOMAIN_INSTALL' ) );
 	define( 'DOMAIN_CURRENT_SITE', getenv( 'DOMAIN_CURRENT_SITE' ) );
 	define( 'PATH_CURRENT_SITE', getenv( 'PATH_CURRENT_SITE' ) );
-	define( 'SITE_ID_CURRENT_SITE', getenv( 'SITE_ID_CURRENT_SITE' ) );
-	define( 'BLOG_ID_CURRENT_SITE', getenv( 'BLOG_ID_CURRENT_SITE' ) );
 }
 
 /**
