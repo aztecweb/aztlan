@@ -61,6 +61,16 @@ if ( 'true' == getenv( 'WP_DEBUG' ) ) {
 }
 
 /**
+ * Define multisite consts
+ */
+if( 'true' === getenv( 'MULTISITE' ) ) {
+	define( 'MULTISITE', 'true' === getenv( 'MULTISITE' ) );
+	define( 'SUBDOMAIN_INSTALL', 'true' === getenv( 'SUBDOMAIN_INSTALL' ) );
+	define( 'DOMAIN_CURRENT_SITE', getenv( 'DOMAIN_CURRENT_SITE' ) );
+	define( 'PATH_CURRENT_SITE', getenv( 'PATH_CURRENT_SITE' ) );
+}
+
+/**
  * Permite escrever diretamente em disco.
  */
 define( 'FS_METHOD', 'direct' );
