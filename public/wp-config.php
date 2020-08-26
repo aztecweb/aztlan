@@ -68,6 +68,7 @@ if( 'true' === getenv( 'MULTISITE' ) ) {
 	define( 'SUBDOMAIN_INSTALL', 'true' === getenv( 'SUBDOMAIN_INSTALL' ) );
 	define( 'DOMAIN_CURRENT_SITE', getenv( 'DOMAIN_CURRENT_SITE' ) );
 	define( 'PATH_CURRENT_SITE', getenv( 'PATH_CURRENT_SITE' ) );
+	define( 'COOKIE_DOMAIN', $_SERVER['HTTP_HOST'] );
 }
 
 /**
