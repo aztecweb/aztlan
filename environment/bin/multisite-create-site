@@ -146,6 +146,9 @@ fi
 dotenv ${ENVIRONMENT_DIR}/env/app.env
 dotenv ${ENVIRONMENT_DIR}/env/install.env
 
+# WP core directory
+WP_ROOT=public/wp
+
 eval $( echo ${WP_BASH} -c "\"
 	set -x;
 
