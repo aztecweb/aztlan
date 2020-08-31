@@ -46,29 +46,8 @@ final class Multisite {
 	 * Start the object
 	 */
 	private function __construct() {
-		// \add_filter( 'redirect_network_admin_request', array( $this, 'redirect_network_admin_request' ) );
 		\add_filter( 'network_site_url', array( $this, 'network_site_url' ), 10, 3 );
 	}
-
-	// /**
-	//  * Changes the validation of the redirect_network_admin_request to follow
-	//  * the Aztlan standard that uses / wp in the path
-	//  *
-	//  * @param bool $redirect_network_admin_request
-	//  * @return bool
-	//  */
-	// public function redirect_network_admin_request( $redirect_network_admin_request ) {
-	// 	global $current_blog, $current_site;
-
-	// 	if( 0 !== strcasecmp( $current_blog->domain, $current_site->domain ) ) {
-	// 		return true;
-	// 	}
-
-	// 	$slash_regex = '/(\/+)/';
-	// 	$current_blog_path = preg_replace( $slash_regex, '/', $current_blog->path . PATH_CURRENT_SITE );
-
-	// 	return 0 !== strcasecmp( $current_blog_path, $current_site->path );
-	// }
 
 	/**
 	 * Filters the network site URL.
