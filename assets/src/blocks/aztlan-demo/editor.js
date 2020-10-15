@@ -17,7 +17,6 @@ const blockContent = <p>{ __( 'Aztlan demo block.', 'aztlan_assets' ) }</p>;
  * Every block starts by registering a new block type definition.
  */
 registerBlockType( 'aztlan/demo', {
-
 	/**
 	 * This is the display title for your block, which can be translated with `i18n` functions.
 	 * The block inserter will show this name.
@@ -42,7 +41,6 @@ registerBlockType( 'aztlan/demo', {
 	 * The edit function describes the structure of your block in the context of the editor.
 	 * This represents what the editor will render when the block is used.
 	 *
-	 * @param {Object} [props] Properties passed from the editor.
 	 * @return {Element}       Element to render.
 	 */
 	edit: () => blockContent,

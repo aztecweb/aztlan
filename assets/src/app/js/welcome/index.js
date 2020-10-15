@@ -5,7 +5,10 @@ const __ = wp.i18n.__;
 
 export default class Welcome {
 	constructor() {
-		this.message = __( 'A professional WordPress environment.', 'aztlan_assets' );
+		this.message = __(
+			'A professional WordPress environment.',
+			'aztlan_assets'
+		);
 	}
 
 	hello() {

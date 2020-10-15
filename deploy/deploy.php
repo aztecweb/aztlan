@@ -7,15 +7,15 @@ namespace Deployer;
 require 'recipe/common.php';
 
 host( 'staging' )
-	->hostname( getenv( 'DEP_STG_HOST' ) )
-	->port( getenv( 'DEP_STG_PORT' ) )
+	->hostname( $_ENV[ 'DEP_STG_HOST' ] )
+	->port( $_ENV[ 'DEP_STG_PORT' ] )
 	->stage( 'staging' )
-	->user( getenv( 'DEP_STG_USER' ) )
-	->set( 'branch', getenv( 'DEP_STG_BRANCH' ) )
-	->set( 'deploy_path', getenv( 'DEP_STG_PATH' ) );
+	->user( $_ENV[ 'DEP_STG_USER' ] )
+	->set( 'branch', $_ENV[ 'DEP_STG_BRANCH' ] )
+	->set( 'deploy_path', $_ENV[ 'DEP_STG_PATH' ] );
 
-set( 'http_user', getenv( 'DEP_HTTP_USER' ) );
-set( 'repository', getenv( 'DEP_REPOSITORY' ) );
+set( 'http_user', $_ENV[ 'DEP_HTTP_USER' ] );
+set( 'repository', $_ENV[ 'DEP_REPOSITORY' ] );
 
 set( 'shared_files', array(
 	'environment/env/app.env',

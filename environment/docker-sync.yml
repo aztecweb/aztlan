@@ -9,10 +9,5 @@ syncs:
   ${VOLUME_PREFIX}app_sync:
     src: '.'
     sync_excludes: ['.editorconfig', '.git', '.gitignore', '.vscode', 'build', 'environment']
-
-  # www-data user volume to use on WP-CLI and PHP-FPM
-  ${VOLUME_PREFIX}www_sync:
-    src: '.'
-    sync_excludes: ['.editorconfig', '.git', '.gitignore', '.vscode', 'build', 'node_modules', 'phpqa']
     sync_userid: '82'
     sync_groupid: '82'

@@ -1,4 +1,4 @@
-FROM wordpress:php7.3-fpm-alpine AS base
+FROM wordpress:php7.4-fpm-alpine AS base
 
 # Replace wordpress image dockerfile entrypoint, default by custom configuration
 COPY docker-entrypoint.sh /usr/local/bin/
@@ -6,7 +6,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 WORKDIR /app
 
 
-FROM wordpress:php7.2-fpm-alpine AS development
+FROM wordpress:php7.4-fpm-alpine AS development
 
 RUN set -ex; \
         \

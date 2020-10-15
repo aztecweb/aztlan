@@ -55,7 +55,7 @@ services:
 
   # Node 8.2 with NPM/Yarn/npx
   assets-node:
-    image: node:10
+    image: node:14
     volumes:
       - ../:/app:z
     working_dir: /app/assets
@@ -107,7 +107,6 @@ services:
   smtp:
     image: schickling/mailcatcher
     ports:
-      - 1025
       - 1080:1080
     environment:
       MAILCATCHER_PORT: 1025
@@ -127,7 +126,7 @@ services:
 
   # Xdebug profiling viewer
   webgrind:
-    image: wodby/webgrind:1.5
+    image: wodby/webgrind:1.7
     ports:
       - 8000:8080
     volumes:

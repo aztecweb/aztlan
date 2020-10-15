@@ -43,6 +43,6 @@ abstract class Base {
 	 * @return callable The function to be called.
 	 */
 	public function callback( $function ) {
-		return [ $this->container->get( get_class( $this ) ), $function ];
+		return array( $this->container->get( get_class( $this ) ), $function );
 	}
 }
