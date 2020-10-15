@@ -28,7 +28,7 @@ class Mail extends Base {
 	 */
 	public function set_mail_from( $from_email ) {
 		if ( ! filter_var( $from_email, FILTER_VALIDATE_EMAIL ) ) {
-			$from_email = 'wordpress@localhost';
+			$from_email = 'wordpress@example.com';
 		}
 
 		return $from_email;
