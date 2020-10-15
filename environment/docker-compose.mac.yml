@@ -11,12 +11,12 @@ services:
   # PHP-FPM with WP dependencies
   wordpress:
     volumes:
-      - www:/app:nocopy
+      - app:/app:nocopy
 
   # WP CLI
   wp:
     volumes:
-      - www:/app:nocopy
+      - app:/app:nocopy
 
   # Node 8.2 with NPM/Yarn/npx
   assets-node:
@@ -67,8 +67,4 @@ volumes:
 
   app:
     name: ${VOLUME_PREFIX}app_sync
-    external: true
-
-  www:
-    name: ${VOLUME_PREFIX}www_sync
     external: true

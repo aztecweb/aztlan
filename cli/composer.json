@@ -1,6 +1,6 @@
 {
     "name": "aztecweb/aztlan",
     "require": {
-        "wp-cli/wp-cli-bundle": "^2.1"
+        "wp-cli/wp-cli-bundle": "^2.4"
     }
 }

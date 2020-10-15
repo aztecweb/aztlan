@@ -109,7 +109,7 @@ class Assets extends Base {
 	 * @return string
 	 */
 	public function assets_uri( $path ) {
-		return getenv( 'ASSETS_URL' ) . '/' . trim( $path, '/' );
+		return $_ENV['ASSETS_URL'] . '/' . trim( $path, '/' );
 	}
 
 	/**
@@ -121,8 +121,8 @@ class Assets extends Base {
 		$src           = $this->assets_uri( $this->file . '.js' );
 		$vendor_handle = $this->handle( 'vendor' );
 
-		wp_register_script( $vendor_handle, $this->assets_uri( 'vendor.js' ), [ 'jquery' ], self::VERSION, true );
-		wp_register_script( $this->handle(), $src, [ $vendor_handle ], self::VERSION, true );
+		wp_register_script( $vendor_handle, $this->assets_uri( 'vendor.js' ), array( 'jquery' ), self::VERSION, true );
+		wp_register_script( $this->handle(), $src, array( $vendor_handle ), self::VERSION, true );
 	}
 
 	/**
@@ -131,14 +131,14 @@ class Assets extends Base {
 	public function register_style() {
 		$src = $this->assets_uri( $this->file . '.css' );
 
-		wp_register_style( $this->handle(), $src, [], self::VERSION );
+		wp_register_style( $this->handle(), $src, array(), self::VERSION );
 	}
 
 	/**
 	 * Set translations for editor script
 	 */
 	public function set_script_translations() {
-		wp_set_script_translations( $this->handle(), getenv( 'THEME_ACTIVE' ) . '_assets', $this->language_dir );
+		wp_set_script_translations( $this->handle(), $_ENV['THEME_ACTIVE'] . '_assets', $this->language_dir );
 	}
 
 	/**

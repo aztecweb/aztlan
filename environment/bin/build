@@ -89,6 +89,9 @@ docker_sync start
 # to manage themes.
 mkdir -p ${ENV_ROOT_PATH}/public/packages/themes
 
+# Create plugin directory as builder user to avoid permission issues
+mkdir -p ${ENV_ROOT_PATH}/public/packages/plugins
+
 # Install PHP packages
 docker_compose run --rm cli-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
 docker_compose run --rm inc-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
@@ -98,21 +101,21 @@ docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-int
 WP_VERSION=$(docker_compose run --rm wp-composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages
 mkdir -p ${DEST_DIR}
-wget -qO- https://downloads.wordpress.org/translation/core/${WP_VERSION}/${WP_LANG}.zip | busybox unzip - -d ${DEST_DIR}
+wget -q -O ${ENV_ROOT_PATH}/tmp.zip https://downloads.wordpress.org/translation/core/${WP_VERSION}/${WP_LANG}.zip && unzip -d ${DEST_DIR} ${ENV_ROOT_PATH}/tmp.zip && rm ${ENV_ROOT_PATH}/tmp.zip
 
 # Download the themes language packages
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/themes
 mkdir -p ${DEST_DIR}
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-theme/ ) ) { gsub("wpackagist-theme/", "",$1); print $1, $2 } }' | \
-	xargs -l sh -c 'wget -qO- http://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip | busybox unzip - -d '${DEST_DIR} sh
+	xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip http://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
 
 # Download plugins language packages
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/plugins
 mkdir -p ${DEST_DIR}
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-plugin/ ) ) { gsub("wpackagist-plugin/", "",$1); print $1, $2 } }' | \
-	xargs -l sh -c 'wget -qO- http://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip | busybox unzip - -d '${DEST_DIR} sh
+	xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip http://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
 
 # Generate JSON files for assets with the current user
 docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
@@ -122,7 +125,7 @@ PACKAGES_TYPE=(plugins themes)
 for TYPE in "${PACKAGES_TYPE[@]}"; do
   DEST_DIR=${ENV_ROOT_PATH}/public/packages/${TYPE}
   mkdir -p ${DEST_DIR}
-  find ${ENV_ROOT_PATH}/wp-packages/private/${TYPE} -name *.zip | xargs unzip -od ${DEST_DIR}
+  find ${ENV_ROOT_PATH}/wp-packages/private/${TYPE} -name *.zip -exec unzip -od ${DEST_DIR} {} \;
 done
 
 # Copy mu-plugins files to public directory
