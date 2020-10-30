@@ -16,6 +16,7 @@ host( 'staging' )
 
 set( 'http_user', $_ENV[ 'DEP_HTTP_USER' ] );
 set( 'repository', $_ENV[ 'DEP_REPOSITORY' ] );
+set( 'keep_releases', $_ENV[ 'DEP_KEEP_RELEASES' ] );
 
 set( 'shared_files', array(
 	'environment/env/app.env',
