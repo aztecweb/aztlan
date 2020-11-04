@@ -68,7 +68,7 @@ set -euxo pipefail
 cd ${PROJECT_ROOT_PATH}
 
 # Make sure that build directory is empty and it exists
-sudo rm -rf ${ENV_ROOT_PATH}
+rm -rf ${ENV_ROOT_PATH}
 mkdir -p ${ENV_ROOT_PATH}
 
 # Copy file to execute the build process
