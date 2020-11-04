@@ -68,7 +68,7 @@ set -euxo pipefail
 cd ${PROJECT_ROOT_PATH}
 
 # Make sure that build directory is empty and it exists
-rm -rf ${ENV_ROOT_PATH}
+sudo rm -rf ${ENV_ROOT_PATH}
 mkdir -p ${ENV_ROOT_PATH}
 
 # Copy file to execute the build process
@@ -110,7 +110,7 @@ mkdir -p ${DEST_DIR}
 URL='https://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip'
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-theme/ ) ) { gsub("wpackagist-theme/", "",$1); print $1, $2 } }' | \
-	[[ '200' = $(curl -I -s -o /dev/null -w "%{http_code}" ${URL}) ]] && xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
+	xargs -l sh -c ' [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ] && wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
 
 # Download plugins language packages
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/plugins
@@ -118,7 +118,7 @@ mkdir -p ${DEST_DIR}
 URL='https://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip'
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-plugin/ ) ) { gsub("wpackagist-plugin/", "",$1); print $1, $2 } }' | \
-	[[ '200' = $(curl -I -s -o /dev/null -w "%{http_code}" ${URL}) ]] && xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
+	xargs -l sh -c ' [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ] && wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
 
 # Generate JSON files for assets with the current user
   docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
