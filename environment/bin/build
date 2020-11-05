@@ -154,7 +154,7 @@ CLI_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:cli
 CLI_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-cli
 
 tar -zcf ${CLI_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} cli inc public themes
-docker build --target distribution -t ${CLI_IMAGE} -t ${CLI_IMAGE}-${VERSION} ${CLI_IMAGE_DIR}
+DOCKER_BUILDKIT=1 docker build --target distribution -t ${CLI_IMAGE} -t ${CLI_IMAGE}-${VERSION} ${CLI_IMAGE_DIR}
 docker push ${CLI_IMAGE}
 docker push ${CLI_IMAGE}-${VERSION}
 
@@ -163,7 +163,7 @@ SERVER_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:server
 SERVER_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/nginx
 
 tar -zcf ${SERVER_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets public themes
-docker build -t ${SERVER_IMAGE} -t ${SERVER_IMAGE}-${VERSION} ${SERVER_IMAGE_DIR}
+DOCKER_BUILDKIT=1 docker build --target=distribution -t ${SERVER_IMAGE} -t ${SERVER_IMAGE}-${VERSION} ${SERVER_IMAGE_DIR}
 docker push ${SERVER_IMAGE}
 docker push ${SERVER_IMAGE}-${VERSION}
 
@@ -172,7 +172,7 @@ FPM_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:fpm
 FPM_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-fpm
 
 tar -zcf ${FPM_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets/languages inc public themes
-docker build -t ${FPM_IMAGE} -t ${FPM_IMAGE}-${VERSION} ${FPM_IMAGE_DIR}
+DOCKER_BUILDKIT=1 docker build --target=distribution -t ${FPM_IMAGE} -t ${FPM_IMAGE}-${VERSION} ${FPM_IMAGE_DIR}
 docker push ${FPM_IMAGE}
 docker push ${FPM_IMAGE}-${VERSION}
 
