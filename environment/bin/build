@@ -68,7 +68,6 @@ set -euxo pipefail
 cd ${PROJECT_ROOT_PATH}
 
 # Make sure that build directory is empty and it exists
-sudo rm -rf ${ENV_ROOT_PATH}
 mkdir -p ${ENV_ROOT_PATH}
 
 # Copy file to execute the build process
@@ -80,7 +79,7 @@ rsync -aR ${BUILD_FILES[@]} ${ENV_ROOT_PATH}/
 set +x
 dotenv ${ENVIRONMENT_DIR}/env/app.env
 dotenv ${ENVIRONMENT_DIR}/env/build.env
-set -x
+set -euxo pipefail
 
 # Use Docker Sync to speed up the build process on Mac
 docker_sync start
@@ -101,24 +100,27 @@ docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-int
 WP_VERSION=$(docker_compose run --rm wp-composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages
 mkdir -p ${DEST_DIR}
-wget -q -O ${ENV_ROOT_PATH}/tmp.zip https://downloads.wordpress.org/translation/core/${WP_VERSION}/${WP_LANG}.zip && unzip -d ${DEST_DIR} ${ENV_ROOT_PATH}/tmp.zip && rm ${ENV_ROOT_PATH}/tmp.zip
+URL='https://downloads.wordpress.org/translation/core/'${WP_VERSION}'/'${WP_LANG}'.zip'
+[[ '200' = $(curl -I -s -o /dev/null -w "%{http_code}" ${URL}) ]] && wget -q -O ${ENV_ROOT_PATH}/tmp.zip ${URL} && unzip -d ${DEST_DIR} ${ENV_ROOT_PATH}/tmp.zip && rm ${ENV_ROOT_PATH}/tmp.zip
 
 # Download the themes language packages
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/themes
 mkdir -p ${DEST_DIR}
+URL='https://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip'
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-theme/ ) ) { gsub("wpackagist-theme/", "",$1); print $1, $2 } }' | \
-	xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip http://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
+	xargs -l sh -c ' if [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ]; then wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip; fi' sh
 
 # Download plugins language packages
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/plugins
 mkdir -p ${DEST_DIR}
+URL='https://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip'
 docker_compose run --rm wp-composer info | \
 	awk '{ if ( match($1, /^wpackagist-plugin/ ) ) { gsub("wpackagist-plugin/", "",$1); print $1, $2 } }' | \
-	xargs -l sh -c 'wget -q -O '${ENV_ROOT_PATH}'/tmp.zip http://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip' sh
+	xargs -l sh -c ' if [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ]; then wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip; fi' sh
 
 # Generate JSON files for assets with the current user
-docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
+  docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
 
 # Unpack private plugins and themes in public directory
 PACKAGES_TYPE=(plugins themes)
@@ -146,7 +148,6 @@ docker_sync_wait public/wp
 
 # Cleanup not necessary files after the build
 cd ${ENV_ROOT_PATH}
-sudo rm -rf ${BUILD_CLEAN_FILES[@]}
 cd ${PROJECT_ROOT_PATH}
 
 # Build WP-CLI image
@@ -179,5 +180,3 @@ docker push ${FPM_IMAGE}-${VERSION}
 # Stop Docker Sync because it isn't more necessary
 docker_sync stop
 
-# Cleanup build directory
-sudo rm -rf ${ENV_ROOT_PATH}
