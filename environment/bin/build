@@ -11,6 +11,7 @@ ENV_ROOT=build
 . ${BIN_DIR}/shared/aztlan_variables.sh
 . ${BIN_DIR}/shared/docker_compose.sh
 . ${BIN_DIR}/shared/docker_sync.sh
+. ${BIN_DIR}/shared/docker_utils.sh
 
 ENVIRONMENT_DIR=${ENV_ROOT_PATH}/environment
 
@@ -68,6 +69,7 @@ set -euxo pipefail
 cd ${PROJECT_ROOT_PATH}
 
 # Make sure that build directory is empty and it exists
+cleanup build
 mkdir -p ${ENV_ROOT_PATH}
 
 # Copy file to execute the build process
@@ -147,7 +149,9 @@ docker_sync_wait public/packages
 docker_sync_wait public/wp
 
 # Cleanup not necessary files after the build
-cd ${ENV_ROOT_PATH}
+for DIRECTORY in "${BUILD_CLEAN_FILES[@]}"; do
+	cleanup ${ENV_ROOT_PATH}/${DIRECTORY}
+done
 cd ${PROJECT_ROOT_PATH}
 
 # Build WP-CLI image
@@ -180,3 +184,5 @@ docker push ${FPM_IMAGE}-${VERSION}
 # Stop Docker Sync because it isn't more necessary
 docker_sync stop
 
+# Cleanup build directory
+cleanup build
