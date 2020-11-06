@@ -147,7 +147,7 @@ docker_sync_wait public/wp
 
 # Cleanup not necessary files after the build
 for DIRECTORY in "${BUILD_CLEAN_FILES[@]}"; do
-cleanup ${ENV_ROOT_PATH}/${DIRECTORY}
+	cleanup ${ENV_ROOT_PATH}/${DIRECTORY}
 done
 cd ${PROJECT_ROOT_PATH}
 
