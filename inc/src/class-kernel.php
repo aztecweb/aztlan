@@ -45,6 +45,9 @@ class Kernel {
 
 			// Languages.
 			\Aztec\Setup\Textdomain::class,
+
+			// Setup.
+			\Aztec\Setup\Mail_SMTP::class,
 		);
 
 		foreach ( $init_classes as $class ) {
