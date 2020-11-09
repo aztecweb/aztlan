@@ -122,7 +122,7 @@ docker_compose run --rm wp-composer info | \
 	xargs -l sh -c ' if [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ]; then wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip; fi' sh
 
 # Generate JSON files for assets with the current user
-  docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
+[[ -f assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po ]] && docker_compose run -u $(id -u):$(id -g) --rm wp i18n make-json assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po --no-purge
 
 # Unpack private plugins and themes in public directory
 PACKAGES_TYPE=(plugins themes)
