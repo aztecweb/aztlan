@@ -7,5 +7,5 @@
 #   None
 #######################################
 cleanup() {
-	docker run -it -v ${PROJECT_ROOT_PATH}:/app -w /app alpine sh -c "rm -rf $@"
+	docker run -v ${PROJECT_ROOT_PATH}:/app -w /app alpine sh -c "rm -rf $@"
 }
