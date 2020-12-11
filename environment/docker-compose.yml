@@ -62,7 +62,7 @@ services:
 
   # Composer
   inc-composer:
-    image: composer
+    image: composer:2
     volumes:
       - ../:/app:z
       # Map local user Composer directory with container for cache packages
@@ -71,7 +71,7 @@ services:
 
   # Composer WP packages
   wp-composer:
-    image: composer
+    image: composer:2
     volumes:
       - ../:/app:z
       # Map local user Composer directory with container for cache packages
@@ -80,7 +80,7 @@ services:
 
   # Composer CLI
   cli-composer:
-    image: composer
+    image: composer:2
     volumes:
       - ../:/app:z
       # Map local user Composer directory with container for cache packages
@@ -89,7 +89,7 @@ services:
 
   # Composer CLI
   phpqa-composer:
-    image: composer
+    image: composer:2
     volumes:
       - ../:/app
       # Map local user Composer directory with container for cache packages
