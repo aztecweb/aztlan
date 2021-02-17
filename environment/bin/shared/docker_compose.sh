@@ -16,11 +16,13 @@ docker_compose() {
     return
   fi
 
-  COMPOSE="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment/docker-compose.yml"
+  COMPOSE_BASE_COMMAND="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment"
+
+  COMPOSE="${COMPOSE_BASE_COMMAND}/docker-compose.yml"
 
   if [ $1 == "tests" ]; then
     shift
-    COMPOSE="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment/docker-compose.tests.yml"
+    COMPOSE="${COMPOSE_BASE_COMMAND}/docker-compose.tests.yml"
   fi
 
   [ 'Darwin' = ${OS} ] && COMPOSE+=" -f ${ENV_ROOT_PATH}/environment/docker-compose.mac.yml"
