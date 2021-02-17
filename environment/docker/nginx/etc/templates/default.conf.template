@@ -1,0 +1,50 @@
+server {
+    listen 80;
+    server_name _;
+
+    charset utf-8;
+
+    root /app/public;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    # permite o acesso ao diretório de distribuição dos assets através da
+    # URL /assets
+    location ~ ^/assets/(.*) {
+        alias /app/assets/dist/$1;
+    }
+
+    # permite o acesso ao diretório de temas do projeto através da URL
+    # /wp/themes
+    location ~ ^/wp/themes/(.*) {
+        alias /app/themes/$1;
+    }
+
+    location ~ \.php$ {
+        try_files     $fastcgi_script_name =404;
+        fastcgi_pass  ${WORDPRESS}:9000;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include       fastcgi_params;
+    }
+
+    location ~ ^/packages/uploads/(.*\.(png|jpg|jpeg|gif))$ {
+        try_files $uri @prodfallback;
+    }
+
+    location @prodfallback {
+        return 301 https://makadu.live/packages/uploads/$1;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        log_not_found off;
+        add_header    'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+        expires       off;
+    }
+
+    location ~ /\.ht {
+        deny  all;
+    }
+}

@@ -17,6 +17,12 @@ docker_compose() {
   fi
 
   COMPOSE="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment/docker-compose.yml"
+
+  if [ $1 == "tests" ]; then
+    shift
+    COMPOSE="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment/docker-compose.tests.yml"
+  fi
+
   [ 'Darwin' = ${OS} ] && COMPOSE+=" -f ${ENV_ROOT_PATH}/environment/docker-compose.mac.yml"
 
   VOLUME_PREFIX=${VOLUME_PREFIX} ${COMPOSE} $@
@@ -34,7 +40,7 @@ docker_compose_dist() {
 	. $(dirname $BASH_SOURCE)/aztlan_variables.sh
 
   . ./environment/env/build.env
-  
+
   REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} REPOSITORY_NAME=${REPOSITORY_NAME} \
     docker-compose -p ${PROJECT}_dist -f environment/docker-compose.dist.yml $@
 }

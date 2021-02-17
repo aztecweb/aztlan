@@ -78,5 +78,11 @@ RUN { \
 	echo 'xdebug.max_nesting_level = ${PHP_XDEBUG_MAX_NESTING_LEVEL}'; \
 } > /usr/local/etc/php/conf.d/xdebug.ini
 
+# Bypass issues to run the tests
+RUN { \
+	echo 'memory_limit = -1'; \
+	echo 'max_execution_time = 0'; \
+} > /usr/local/etc/php/conf.d/tests-bypass.ini
+
 FROM base AS distribution
 ADD dist.tar.gz /app
