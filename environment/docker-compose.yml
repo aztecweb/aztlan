@@ -25,6 +25,9 @@ services:
     volumes:
       - ../:/app:z
       - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
+      - ./docker/nginx/etc/templates:/etc/nginx/templates:z
+    env_file:
+      - ./env/nginx.env
 
   # PHP-FPM with WP dependencies
   wordpress:
@@ -98,7 +101,8 @@ services:
 
   # PHPQA
   phpqa:
-    image: jakzal/phpqa:alpine
+    build:
+      context: ./docker/phpqa
     volumes:
       - ../:/app
     working_dir: /app/phpqa
