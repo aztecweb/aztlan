@@ -37,6 +37,7 @@ alias stylint="node npm run lint:style"
 
 # PHPQA
 alias phpqa="docker_compose run --rm phpqa"
+alias codecept="docker_compose tests run --rm codecept"
 
 ## Composer
 alias cli-composer="docker_compose run --rm cli-composer"
