@@ -16,16 +16,18 @@ docker_compose() {
     return
   fi
 
-  COMPOSE_BASE_COMMAND="docker-compose -p ${PROJECT} -f ${ENV_ROOT_PATH}/environment"
+  ENVIRONMENT_DIR="${ENV_ROOT_PATH}/environment"
 
-  COMPOSE="${COMPOSE_BASE_COMMAND}/docker-compose.yml"
+  MAIN_COMPOSE_FILE="${ENVIRONMENT_DIR}/docker-compose.yml"
 
   if [ $1 == "tests" ]; then
     shift
-    COMPOSE="${COMPOSE_BASE_COMMAND}/docker-compose.tests.yml"
+    MAIN_COMPOSE_FILE="${ENVIRONMENT_DIR}/docker-compose.tests.yml"
   fi
 
-  [ 'Darwin' = ${OS} ] && COMPOSE+=" -f ${ENV_ROOT_PATH}/environment/docker-compose.mac.yml"
+  COMPOSE="docker-compose -p ${PROJECT} -f ${MAIN_COMPOSE_FILE}"
+
+  [ 'Darwin' = ${OS} ] && COMPOSE+=" -f ${ENVIRONMENT_DIR}/docker-compose.mac.yml"
 
   VOLUME_PREFIX=${VOLUME_PREFIX} ${COMPOSE} $@
 }
