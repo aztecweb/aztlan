@@ -14,9 +14,9 @@ alias project-docker-compose-dist="docker_compose_dist"
 ## WP CLI
 function wp() {
 	if [ "$1" != "bash" ]; then
-		eval $(echo docker_compose run --rm wp --path=public/wp $@)
+		eval $(echo docker_compose run --rm wp --path=public/wp "$@")
 	else
-		eval $(echo docker_compose run --rm wp $@)
+		eval $(echo docker_compose run --rm wp "$@")
 	fi
 }
 
