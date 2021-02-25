@@ -26,12 +26,6 @@ server {
 
     # permite o acesso ao diretório de temas do projeto através da URL
     # /wp/themes
-    location ~ ^/wp/themes/(.*) {
-        alias /app/themes/$1;
-    }
-
-    # permite o acesso ao diretório de temas do projeto através da URL
-    # /wp/themes
     # Adicionado rejex para (/[^/]+)? os assets funcionar com multisite
     # utilisando o segundo grupo captado pelo regex
     location ~ ^(/[^/]+)?/wp/themes/(.*) {
