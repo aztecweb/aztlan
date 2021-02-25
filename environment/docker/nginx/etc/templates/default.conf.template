@@ -7,6 +7,13 @@ server {
     root /app/public;
     index index.php;
 
+    # Adicionado /wp ao regex para respeitar o padrão que utilizamos no
+    # Aztlan
+    if (!-e $request_filename) {
+        rewrite ^(/[^/]+)?(/wp/wp-.*) $2 last;
+        rewrite ^(/[^/]+)?(/wp/.*\.php) $2 last;
+    }
+
     location / {
         try_files $uri $uri/ /index.php$is_args$args;
     }
@@ -19,8 +26,10 @@ server {
 
     # permite o acesso ao diretório de temas do projeto através da URL
     # /wp/themes
-    location ~ ^/wp/themes/(.*) {
-        alias /app/themes/$1;
+    # Adicionado rejex para (/[^/]+)? os assets funcionar com multisite
+    # utilisando o segundo grupo captado pelo regex
+    location ~ ^(/[^/]+)?/wp/themes/(.*) {
+        alias /app/themes/$2;
     }
 
     location ~ \.php$ {
@@ -28,14 +37,6 @@ server {
         fastcgi_pass  ${WORDPRESS}:9000;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include       fastcgi_params;
-    }
-
-    location ~ ^/packages/uploads/(.*\.(png|jpg|jpeg|gif))$ {
-        try_files $uri @prodfallback;
-    }
-
-    location @prodfallback {
-        return 301 https://makadu.live/packages/uploads/$1;
     }
 
     location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
