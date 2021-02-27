@@ -6,6 +6,7 @@
 # Import shell helpers
 . environment/bin/shared/docker_compose.sh
 . environment/bin/shared/aztlan_variables.sh
+. environment/bin/shared/utils.sh
 
 # docker-compose
 alias project-docker-compose="docker_compose"
@@ -14,10 +15,12 @@ alias project-docker-compose-dist="docker_compose_dist"
 ## WP CLI
 function wp() {
 	if [ "$1" != "bash" ]; then
-		eval $(echo docker_compose run --rm wp --path=public/wp "$@")
+		cmd=(docker_compose run --rm wp --path=public/wp "$@")
 	else
-		eval $(echo docker_compose run --rm wp "$@")
+		cmd=(docker_compose run --rm wp "$@")
 	fi
+
+	eval "$( keep_args_consistent "${cmd[@]}")"
 }
 
 ## Server
