@@ -47,10 +47,9 @@ $table_prefix = 'wp_';
 if ( 'true' == $_ENV[ 'WP_DEBUG' ] ) {
 	// Enable WP_DEBUG mode
 	define( 'WP_DEBUG', true );
-	define( 'WCS_DEBUG', $_ENV[ 'WCS_DEBUG' ] );
 
-	// Enable Debug logging to the /wp-content/debug.log file
-	define( 'WP_DEBUG_LOG', '/dev/stdout' );
+	// Enable Debug logging to the defined file
+	define( 'WP_DEBUG_LOG', $_ENV[ 'WP_DEBUG_LOG_PATH' ] );
 
 	// Disable display of errors and warnings
 	define( 'WP_DEBUG_DISPLAY', false );
