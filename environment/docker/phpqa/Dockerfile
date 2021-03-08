@@ -11,7 +11,13 @@ RUN set -ex; \
         docker-php-ext-install pdo_mysql; \
         \
         # Remove build dependencies
-        apk del .build-deps
+        apk del .build-deps; \
+		\
+        # Install iconv library
+		apk add --no-cache gnu-libiconv
+
+# Preload iconv before command calls
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 RUN { \
 	echo 'memory_limit = -1'; \
