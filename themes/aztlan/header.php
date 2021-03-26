@@ -5,6 +5,8 @@
  * @package Aztec
  */
 
+declare(strict_types = 1);
+
 ?><!doctype html>
 <html <?php language_attributes(); ?>>
 <head>

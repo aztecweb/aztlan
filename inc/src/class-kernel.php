@@ -5,6 +5,8 @@
  * @package Aztec
  */
 
+declare(strict_types = 1);
+
 namespace Aztec;
 
 use DI\Container;
@@ -33,7 +35,7 @@ class Kernel {
 	/**
 	 * Load classes that add or remove hooks
 	 */
-	public function init() {
+	public function init() : void {
 		$init_classes = array(
 			// Aztlan.
 			\Aztec\Aztlan\Integration\Mail::class,

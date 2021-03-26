@@ -11,6 +11,8 @@
  * @package Aztec
  */
 
+declare(strict_types = 1);
+
 use Aztec\Kernel;
 
 /**

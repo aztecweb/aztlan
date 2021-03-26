@@ -1,0 +1,9 @@
+parameters:
+	level: 8
+	paths:
+		- acceptance
+		- functional
+	bootstrapFiles:
+		- ../vendor/autoload.php
+	scanDirectories:
+		- _support

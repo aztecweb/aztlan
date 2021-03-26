@@ -11,6 +11,8 @@
      -->
     <rule ref="WordPress" />
 
+	<rule ref="Generic.PHP.RequireStrictTypes" />
+
     <!-- Sniff the template and files -->
     <file>/app/inc/src</file>
     <file>/app/themes</file>

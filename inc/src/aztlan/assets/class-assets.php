@@ -5,6 +5,8 @@
  * @package Aztec
  */
 
+declare(strict_types = 1);
+
 namespace Aztec\Aztlan\Assets;
 
 use Aztec\Base;
@@ -24,28 +26,28 @@ class Assets extends Base {
 	 *
 	 * @var string
 	 */
-	private $handle_base = 'aztlan';
+	private string $handle_base = 'aztlan';
 
 	/**
 	 * The name of the file for the CSS and JS
 	 *
 	 * @var string
 	 */
-	private $file;
+	private string $file;
 
 	/**
 	 * The path of the language directory
 	 *
 	 * @var string
 	 */
-	private $language_dir;
+	private string $language_dir;
 
 	/**
 	 * The action hook used to enqueue the scripts
 	 *
-	 * @var strint
+	 * @var string
 	 */
-	private $enqueue_hook;
+	private string $enqueue_hook;
 
 	/**
 	 * Constructor
@@ -63,7 +65,7 @@ class Assets extends Base {
 	 *
 	 * @param string $hook The enqueue hook.
 	 */
-	protected function set_enqueue_hook( $hook ) {
+	protected function set_enqueue_hook( string $hook ) : void {
 		$this->enqueue_hook = $hook;
 	}
 
@@ -72,18 +74,18 @@ class Assets extends Base {
 	 *
 	 * @param string $file The file base name to css and js.
 	 */
-	protected function set_file( $file ) {
+	protected function set_file( $file ) : void {
 		$this->file = $file;
 	}
 
 	/**
 	 * Generate a handle for the assets
 	 *
-	 * @param boolean $suffix An optional suffix. Default: The asset file name.
+	 * @param string $suffix An optional suffix. Default: The asset file name.
 	 * @return string The handle.
 	 */
-	private function handle( $suffix = false ) {
-		if ( false === $suffix ) {
+	private function handle( string $suffix = '' ) : string {
+		if ( '' === $suffix ) {
 			$suffix = $this->file;
 		}
 
@@ -93,7 +95,7 @@ class Assets extends Base {
 	/**
 	 * Add the hooks to WordPress
 	 */
-	protected function add_hooks() {
+	protected function add_hooks() : void {
 		add_action( 'init', $this->callback( 'register_script' ) );
 		add_action( 'init', $this->callback( 'register_style' ) );
 		add_action( 'init', $this->callback( 'set_script_translations' ) );
@@ -108,7 +110,7 @@ class Assets extends Base {
 	 * @param  string $path File path.
 	 * @return string
 	 */
-	public function assets_uri( $path ) {
+	public function assets_uri( $path ) : string {
 		return $_ENV['ASSETS_URL'] . '/' . trim( $path, '/' );
 	}
 
@@ -117,7 +119,7 @@ class Assets extends Base {
 	 *
 	 * Ensure that the vendor is registered too.
 	 */
-	public function register_script() {
+	public function register_script() : void {
 		$src           = $this->assets_uri( $this->file . '.js' );
 		$vendor_handle = $this->handle( 'vendor' );
 
@@ -128,7 +130,7 @@ class Assets extends Base {
 	/**
 	 * Register the style
 	 */
-	public function register_style() {
+	public function register_style() : void {
 		$src = $this->assets_uri( $this->file . '.css' );
 
 		wp_register_style( $this->handle(), $src, array(), self::VERSION );
@@ -137,7 +139,7 @@ class Assets extends Base {
 	/**
 	 * Set translations for editor script
 	 */
-	public function set_script_translations() {
+	public function set_script_translations() : void {
 		wp_set_script_translations( $this->handle(), $_ENV['THEME_ACTIVE'] . '_assets', $this->language_dir );
 	}
 
@@ -152,7 +154,7 @@ class Assets extends Base {
 	 * @param string $domain The translation domain.
 	 * @return string The translation file for the script.
 	 */
-	public function load_script_translation_file( $file, $handle, $domain ) {
+	public function load_script_translation_file( string $file, string $handle, string $domain ) : string {
 		if ( $this->handle() !== $handle ) {
 			return $file;
 		}
@@ -167,7 +169,7 @@ class Assets extends Base {
 	/**
 	 * Enqueue assets on the page
 	 */
-	public function enqueue() {
+	public function enqueue() : void {
 		wp_enqueue_script( $this->handle() );
 		wp_enqueue_style( $this->handle() );
 	}

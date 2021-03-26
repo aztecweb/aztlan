@@ -1,0 +1,7 @@
+parameters:
+	level: 8
+	paths:
+		- ../inc/src
+		- ../themes
+	bootstrapFiles:
+		- ../inc/vendor/autoload.php
