@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="land-agency">
+<ruleset name="aztlan">
     <description>The PHP coding standard.</description>
 
     <config name="installed_paths" value="/app/phpqa/vendor/wp-coding-standards/wpcs,/app/phpqa/vendor/phpcompatibility/php-compatibility" />
@@ -11,10 +11,13 @@
      -->
     <rule ref="WordPress" />
 
+    <!-- Force declare(strict_types = 1) use -->
+    <rule ref="Generic.PHP.RequireStrictTypes" />
+
     <!-- Sniff the template and files -->
     <file>/app/inc/src</file>
     <file>/app/themes</file>
 
-	 <!-- Non sniff assets files -->
+    <!-- No sniff assets files -->
     <exclude-pattern>*.(js|css)</exclude-pattern>
 </ruleset>
