@@ -11,13 +11,9 @@ trim_trailing_whitespace = true
 [*.md]
 trim_trailing_whitespace = false
 
-[*.yml]
+[*.{sh,yml}]
 indent_size = 2
 indent_style = spaces
 
-[*.styl]
-indent_size = 4
-
-[*.sh]
-indent_size = 2
+[*.xml.dist]
 indent_style = spaces

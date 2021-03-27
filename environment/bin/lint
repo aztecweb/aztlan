@@ -45,6 +45,28 @@ function run_phpcbf() {
 	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
 }
 
+function run_phpstan() {
+	printf "Running PHPSTAN\t........... ";
+	PHPSTAN=$(eval "bash -c '${COMPOSE} run --rm phpqa phpstan analyse 2> /dev/null'")
+	if [ $? -eq 0 ]
+	then
+		print_success
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+
+	printf "Running PHPSTAN (TESTS)\t... ";
+	PHPSTANTESTS=$(eval "bash -c '${COMPOSE} run --rm phpqa phpstan analyse -c tests/phpstan.neon.dist 2> /dev/null'")
+	if [ $? -eq 0 ]
+	then
+		print_success
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+}
+
 function run_stylint() {
 	printf "Running STYLINT\t........... ";
 	STYLINT=$(eval "bash -c '${COMPOSE} run --rm assets-node npm run lint:style'")
@@ -77,6 +99,7 @@ source environment/bin/docker-compose.sh
 # Run code standards functions
 run_phpcbf
 run_phpcs
+run_phpstan
 run_stylint
 run_eslint
 
@@ -86,6 +109,8 @@ then
 else
 	return_run "PHPCBF" "$PHPCBF"
 	return_run "PHPCS" "$PHPCS"
+	return_run "PHPSTAN" "$PHPSTAN"
+	return_run "PHPSTAN (TESTS)" "$PHPSTANTESTS"
 	return_run "STYLINT" "$STYLINT"
 	return_run "ESLINT" "$ESLINT"
 fi

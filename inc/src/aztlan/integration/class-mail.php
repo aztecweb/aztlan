@@ -5,6 +5,8 @@
  * @package Aztec
  */
 
+declare(strict_types = 1);
+
 namespace Aztec\Aztlan\Integration;
 
 use Aztec\Base;
@@ -16,7 +18,7 @@ class Mail extends Base {
 	/**
 	 * Add hooks and filters
 	 */
-	public function init() {
+	public function init() : void {
 		add_action( 'wp_mail_from', $this->callback( 'set_mail_from' ) );
 	}
 
@@ -26,8 +28,8 @@ class Mail extends Base {
 	 * @param  string $from_email From e-mail address.
 	 * @return string
 	 */
-	public function set_mail_from( $from_email ) {
-		if ( ! filter_var( $from_email, FILTER_VALIDATE_EMAIL ) ) {
+	public function set_mail_from( $from_email ) : string {
+		if ( false === filter_var( $from_email, FILTER_VALIDATE_EMAIL ) ) {
 			$from_email = 'wordpress@example.com';
 		}
 
