@@ -9,7 +9,12 @@
          https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards
          https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/
      -->
-    <rule ref="WordPress" />
+    <rule ref="WordPress">
+        <exclude name="Squiz.Commenting.ClassComment" />
+        <exclude name="Squiz.Commenting.FileComment" />
+        <exclude name="Squiz.Commenting.FunctionComment" />
+        <exclude name="Squiz.Commenting.VariableComment" />
+    </rule>
 
     <!-- Force declare(strict_types = 1) use -->
     <rule ref="Generic.PHP.RequireStrictTypes" />

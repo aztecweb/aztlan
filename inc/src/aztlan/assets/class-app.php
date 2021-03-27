@@ -1,17 +1,9 @@
 <?php
-/**
- * App assets class
- *
- * @package Aztec
- */
 
 declare(strict_types = 1);
 
 namespace Aztec\Aztlan\Assets;
 
-/**
- * Load application assets
- */
 class App extends Assets {
 
 	/**

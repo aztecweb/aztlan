@@ -1,9 +1,4 @@
 <?php
-/**
- * Init class
- *
- * @package Aztec
- */
 
 declare(strict_types = 1);
 
@@ -11,30 +6,14 @@ namespace Aztec;
 
 use DI\Container;
 
-/**
- * Main theme class
- */
 class Kernel {
 
-	/**
-	 * The dependency injection container
-	 *
-	 * @var Container
-	 */
-	protected $container;
+	protected Container $container;
 
-	/**
-	 * Initialize the container
-	 *
-	 * @param Container $container The application container.
-	 */
 	public function __construct( Container $container ) {
 		$this->container = $container;
 	}
 
-	/**
-	 * Load classes that add or remove hooks
-	 */
 	public function init() : void {
 		$init_classes = array(
 			// Aztlan.
