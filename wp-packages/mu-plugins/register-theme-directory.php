@@ -47,7 +47,7 @@ final class Register_Theme_Directory {
      * Prevent from being unserialized (which would create a second instance of
 	 * it)
      */
-    public function __wakeup() {}
+    private function __wakeup() {}
 
 	/**
 	 * Start the object

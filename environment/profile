@@ -9,15 +9,15 @@
 . environment/bin/shared/utils.sh
 
 # docker-compose
-alias project-docker-compose="docker_compose_run_with_host_user"
+alias project-docker-compose="docker_compose"
 alias project-docker-compose-dist="docker_compose_dist"
 
 ## WP CLI
 function wp() {
 	if [ "$1" != "bash" ]; then
-		cmd=(docker_compose_run_with_host_user run --rm wp --path=public/wp "$@")
+		cmd=(docker_compose_run_with_host_user wp --path=public/wp "$@")
 	else
-		cmd=(docker_compose_run_with_host_user run --rm wp "$@")
+		cmd=(docker_compose_run_with_host_user wp "$@")
 	fi
 
 	eval "$( keep_args_consistent "${cmd[@]}")"
@@ -30,7 +30,7 @@ alias server="docker_compose up -d server"
 alias livereload="docker_compose up -d livereload"
 
 ## Node
-alias node="docker_compose_run_with_host_user assets-node"
+alias node="docker_compose run --rm assets-node"
 alias assets-watch="node npm run watch"
 alias assets-build="node npm run build"
 
@@ -43,11 +43,11 @@ alias phpqa="docker_compose_run_with_host_user phpqa"
 alias codecept="docker_compose tests run --rm codecept"
 
 ## Composer
-alias cli-composer="docker_compose_run_with_host_user -w /app/cli composer"
+alias cli-composer="docker_compose_run_with_host_user -w /app/cli run --rm composer"
 alias inc-composer="docker_compose_run_with_host_user -w /app/inc composer"
-alias wp-composer="docker_compose_run_with_host_user -w /app/wp-packages composer"
-alias phpqa-composer="docker_compose_run_with_host_user -w /app/phpqa composer"
-alias deploy-composer="docker_compose_run_with_host_user -w /app/deploy composer"
+alias wp-composer="docker_compose_run_with_host_user -w /app/wp-packages run --rm composer"
+alias phpqa-composer="docker_compose_run_with_host_user -w /app/phpqa run --rm composer"
+alias deploy-composer="docker_compose_run_with_host_user -w /app/deploy run --rm composer"
 
 # Database export
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"

@@ -1,5 +1,5 @@
 # =========================build deps=========================
-FROM php:8.0-alpine AS build-deps
+FROM php:7.4-alpine AS build-deps
 
 RUN set -ex; \
 	\
@@ -38,7 +38,7 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/xdebug.ini
 
 # =========================msmtp=========================
-FROM php:8.0-alpine AS msmtp
+FROM php:7.4-alpine AS msmtp
 
 RUN set -ex; \
 	apk add --no-cache msmtp;
@@ -70,7 +70,7 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/smtp.ini
 
 # =========================WordPress CLI=========================
-FROM wordpress:cli-php8.0 AS cli-base
+FROM wordpress:cli-php7.4 AS cli-base
 ENV PATH=/app/cli/vendor/bin:$PATH
 WORKDIR /app
 
@@ -93,7 +93,7 @@ COPY aztlan-install /usr/local/bin/
 ADD dist.tar.gz /app
 
 # =========================WordPress FPM=========================
-FROM wordpress:php8.0-fpm-alpine AS fpm-base
+FROM wordpress:php7.4-fpm-alpine AS fpm-base
 COPY docker-entrypoint.sh /usr/local/bin/
 WORKDIR /app
 
@@ -118,7 +118,7 @@ FROM fpm-base AS fpm-distribution
 ADD dist.tar.gz /app
 
 # =========================pdo-mysql=========================
-FROM php:8.0-alpine AS pdo-mysql
+FROM php:7.4-alpine AS pdo-mysql
 RUN { \
 	# Install Codeception DB dependencies
 	docker-php-ext-install pdo_mysql; \
@@ -136,7 +136,7 @@ RUN { \
 	}
 
 # =========================iconv=========================
-FROM php:8.0-alpine AS iconv
+FROM php:7.4-alpine AS iconv
 RUN { \
 	# Install iconv library
 	apk add --no-cache gnu-libiconv; \
@@ -149,7 +149,7 @@ RUN { \
 	} > $PHP_INI_DIR/conf.d/memory.ini
 
 # =========================PHPQA=========================
-FROM php:8.0-alpine AS phpqa
+FROM php:7.4-alpine AS phpqa
 
 # Copy Xdebug files
 COPY --from=xdebug /usr/local/etc/php/ /usr/local/etc/php/
@@ -182,7 +182,7 @@ RUN { \
 	}
 
 # =========================Deployer=========================
-FROM php:8.0-alpine AS deployer
+FROM php:7.4-alpine AS deployer
 
 # Copy OpenSSH to image
 COPY --from=openssh /etc/ssh/ /etc/ssh/
