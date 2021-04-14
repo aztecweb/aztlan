@@ -32,13 +32,15 @@ services:
   # PHP-FPM with WP dependencies
   wordpress:
     build:
-      context: ./docker/wp-fpm
-      target: development
+      context: ./docker/php
+      target: fpm-development
     volumes:
       - ../:/app:z
     env_file:
       - ./env/app.env
       - ./env/xdebug.env
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
     depends_on:
       - db
       - smtp
@@ -46,63 +48,30 @@ services:
   # WP CLI
   wp:
     build:
-      context: ./docker/wp-cli
-      target: development
+      context: ./docker/php
+      target: cli-development
     env_file:
       - ./env/app.env
       - ./env/install.env
       - ./env/xdebug.env
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
     volumes:
       - ../:/app:z
-      - ./docker/wp-cli/aztlan-install:/usr/local/bin/aztlan-install:z
+      - ./docker/php/aztlan-install:/usr/local/bin/aztlan-install:z
 
-  # Node 8.2 with NPM/Yarn/npx
+  # Node 14 with NPM/Yarn/npx
   assets-node:
     image: node:14
     volumes:
       - ../:/app:z
     working_dir: /app/assets
 
-  # Composer
-  inc-composer:
-    image: composer
-    volumes:
-      - ../:/app:z
-      # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache:z
-    working_dir: /app/inc
-
-  # Composer WP packages
-  wp-composer:
-    image: composer
-    volumes:
-      - ../:/app:z
-      # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache
-    working_dir: /app/wp-packages
-
-  # Composer CLI
-  cli-composer:
-    image: composer
-    volumes:
-      - ../:/app:z
-      # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache
-    working_dir: /app/cli
-
-  # Composer CLI
-  phpqa-composer:
-    image: composer
-    volumes:
-      - ../:/app
-      # Map local user Composer directory with container for cache packages
-      - ~/.docker_cache/composer:/tmp/cache
-    working_dir: /app/phpqa
-
   # PHPQA
   phpqa:
     build:
-      context: ./docker/phpqa
+      context: ./docker/php
+      target: phpqa
     volumes:
       - ../:/app
     working_dir: /app/phpqa
@@ -118,10 +87,8 @@ services:
   # Deployer
   deployer:
     build:
-      context: ./docker/deployer
-      args:
-        - PHP_VERSION=7
-        - DEPLOYER_VERSION=latest
+      context: ./docker/php
+      target: deployer
     volumes:
       - ../:/app:z
       - ../deploy/.ssh:/root/.ssh:z
@@ -130,11 +97,11 @@ services:
 
   # Xdebug profiling viewer
   webgrind:
-    image: wodby/webgrind:1.7
+    image: wodby/webgrind:1.8
     ports:
       - 8000:8080
     volumes:
-      - ../xdebug/profiler:/tmp:z
+      - ../xdebug:/tmp:z
       - ../:/app:z
 
   # Live reload
@@ -144,8 +111,16 @@ services:
     ports:
       - 35729:35729
     volumes:
-      - ../xdebug/profiler:/tmp:z
+      - ../xdebug:/tmp:z
       - ../:/app:z
+
+  # Composer
+  composer:
+    image: composer
+    volumes:
+      - ../:/app:z
+      # Map local user Composer directory with container for cache packages
+      - ~/.docker_cache/composer:/tmp/cache
 
 volumes:
   mysql_data:

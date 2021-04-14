@@ -1,3 +1,4 @@
 deploy.log
 .ssh/*
 !.ssh/.gitkeep
+vendor
