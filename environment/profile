@@ -43,11 +43,11 @@ alias phpqa="docker_compose_run_with_host_user phpqa"
 alias codecept="docker_compose tests run --rm codecept"
 
 ## Composer
-alias cli-composer="docker_compose_run_with_host_user -w /app/cli run --rm composer"
+alias cli-composer="docker_compose_run_with_host_user -w /app/cli composer"
 alias inc-composer="docker_compose_run_with_host_user -w /app/inc composer"
-alias wp-composer="docker_compose_run_with_host_user -w /app/wp-packages run --rm composer"
-alias phpqa-composer="docker_compose_run_with_host_user -w /app/phpqa run --rm composer"
-alias deploy-composer="docker_compose_run_with_host_user -w /app/deploy run --rm composer"
+alias wp-composer="docker_compose_run_with_host_user -w /app/wp-packages composer"
+alias phpqa-composer="docker_compose_run_with_host_user -w /app/phpqa composer"
+alias deploy-composer="docker_compose_run_with_host_user -w /app/deploy composer"
 
 # Database export
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
