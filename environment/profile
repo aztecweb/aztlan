@@ -40,7 +40,7 @@ alias stylint="node npm run lint:style"
 
 # PHPQA
 alias phpqa="docker_compose_run_with_host_user phpqa"
-alias codecept="docker_compose tests run --rm codecept"
+alias codecept="docker_compose tests run -u $(id -u):$(id -g) --rm codecept"
 
 ## Composer
 alias cli-composer="docker_compose_run_with_host_user -w /app/cli composer"
