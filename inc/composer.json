@@ -6,6 +6,7 @@
     },
     "require": {
         "php-di/php-di": "^6.3",
-		"vlucas/phpdotenv": "^5.2.0"
+		"vlucas/phpdotenv": "^5.2.0",
+        "monolog/monolog": "^2.2"
     }
 }

@@ -48,16 +48,14 @@ if ( 'true' == $_ENV[ 'WP_DEBUG' ] ) {
 	// Enable WP_DEBUG mode
 	define( 'WP_DEBUG', true );
 
-	// Enable Debug logging to the defined file
-	define( 'WP_DEBUG_LOG', $_ENV[ 'WP_DEBUG_LOG_PATH' ] );
-
-	// Disable display of errors and warnings
-	define( 'WP_DEBUG_DISPLAY', false );
-	@ini_set( 'display_errors', 0 );
-
 	// Use dev versions of core JS and CSS files (only needed if you are modifying these core files)
 	define( 'SCRIPT_DEBUG', true );
 }
+
+/**
+ * Define WP_DEBUG_DISPLAY to WordPress don't change display_errors ini settings
+ */
+define( 'WP_DEBUG_DISPLAY', null );
 
 /**
  * Define multisite consts
