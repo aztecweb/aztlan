@@ -38,8 +38,14 @@ define( 'NONCE_SALT', $_ENV[ 'NONCE_SALT' ] );
 
 /**
  * WordPress Database Table prefix.
+ *
+ * You can have multiple installations in one database if you give each
+ * a unique prefix. Only numbers, letters, and underscores please!
  */
 $table_prefix = 'wp_';
+if ( true === isset( $_ENV[ 'DB_TABLE_PREFIX' ] ) ) {
+	$table_prefix = $_ENV[ 'DB_TABLE_PREFIX' ];
+}
 
 /**
  * WordPress debugging mode.
