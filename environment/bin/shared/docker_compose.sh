@@ -48,3 +48,15 @@ docker_compose_dist() {
   REGISTRY_ENDPOINT=${REGISTRY_ENDPOINT} REPOSITORY_NAME=${REPOSITORY_NAME} \
     docker-compose -p ${PROJECT}_dist -f environment/docker-compose.dist.yml "$@"
 }
+
+#######################################
+# Run docker-compose command as host
+# user
+# Arguments:
+#   The docker-compose command
+# Returns:
+#   None
+#######################################
+docker_compose_run_with_host_user(){
+    docker_compose run --rm -u $(id -u):$(id -g) $@
+}

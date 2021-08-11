@@ -24,28 +24,7 @@ services:
       - app:/app:nocopy
 
   # Composer
-  inc-composer:
-    volumes:
-      - app:/app:nocopy
-      # Map local user Composer directory with container for cache packages
-      - composer_cache:/tmp/cache:nocopy
-
-  # Composer WP packages
-  wp-composer:
-    volumes:
-      - app:/app:nocopy
-      # Map local user Composer directory with container for cache packages
-      - composer_cache:/tmp/cache:nocopy
-
-  # Composer CLI
-  cli-composer:
-    volumes:
-      - app:/app:nocopy
-      # Map local user Composer directory with container for cache packages
-      - composer_cache:/tmp/cache:nocopy
-
-  # Composer CLI
-  phpqa-composer:
+  composer:
     volumes:
       - app:/app:nocopy
       # Map local user Composer directory with container for cache packages

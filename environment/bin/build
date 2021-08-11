@@ -94,12 +94,12 @@ mkdir -p ${ENV_ROOT_PATH}/public/packages/themes
 mkdir -p ${ENV_ROOT_PATH}/public/packages/plugins
 
 # Install PHP packages
-docker_compose run --rm cli-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-docker_compose run --rm inc-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-docker_compose run --rm wp-composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run -u 0:0 -w /app/cli --rm composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run -w /app/inc --rm composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
+docker_compose run -w /app/wp-packages --rm composer install --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
 
 # Download core languange pack
-WP_VERSION=$(docker_compose run --rm wp-composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
+WP_VERSION=$(docker_compose run -w /app/wp-packages --rm composer info | awk '{ if ($1 == "johnpbloch/wordpress-core") { print $2 } }')
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages
 mkdir -p ${DEST_DIR}
 URL='https://downloads.wordpress.org/translation/core/'${WP_VERSION}'/'${WP_LANG}'.zip'
@@ -109,7 +109,7 @@ URL='https://downloads.wordpress.org/translation/core/'${WP_VERSION}'/'${WP_LANG
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/themes
 mkdir -p ${DEST_DIR}
 URL='https://downloads.wordpress.org/translation/theme/$1/$2/'${WP_LANG}'.zip'
-docker_compose run --rm wp-composer info | \
+docker_compose run -w /app/wp-packages --rm composer info | \
 	awk '{ if ( match($1, /^wpackagist-theme/ ) ) { gsub("wpackagist-theme/", "",$1); print $1, $2 } }' | \
 	xargs -l sh -c ' if [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ]; then wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip; fi' sh
 
@@ -117,7 +117,7 @@ docker_compose run --rm wp-composer info | \
 DEST_DIR=${ENV_ROOT_PATH}/public/packages/languages/plugins
 mkdir -p ${DEST_DIR}
 URL='https://downloads.wordpress.org/translation/plugin/$1/$2/'${WP_LANG}'.zip'
-docker_compose run --rm wp-composer info | \
+docker_compose run -w /app/wp-packages --rm composer info | \
 	awk '{ if ( match($1, /^wpackagist-plugin/ ) ) { gsub("wpackagist-plugin/", "",$1); print $1, $2 } }' | \
 	xargs -l sh -c ' if [ "200" = $(curl -I -s -o /dev/null -w "%{http_code}" '${URL}') ]; then wget -q -O '${ENV_ROOT_PATH}'/tmp.zip '${URL}' && unzip -d '${DEST_DIR}' '${ENV_ROOT_PATH}'/tmp.zip && rm '${ENV_ROOT_PATH}'/tmp.zip; fi' sh
 
@@ -156,10 +156,10 @@ cd ${PROJECT_ROOT_PATH}
 
 # Build WP-CLI image
 CLI_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:cli
-CLI_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-cli
+PHP_IMAGES_DIR=${ENVIRONMENT_DIR}/docker/php
 
-tar -zcf ${CLI_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} cli inc public themes
-DOCKER_BUILDKIT=1 docker build --target distribution -t ${CLI_IMAGE} -t ${CLI_IMAGE}-${VERSION} ${CLI_IMAGE_DIR}
+tar -zcf ${PHP_IMAGES_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} cli inc public themes
+DOCKER_BUILDKIT=1 docker build --target cli-distribution -t ${CLI_IMAGE} -t ${CLI_IMAGE}-${VERSION} ${PHP_IMAGES_DIR}
 docker push ${CLI_IMAGE}
 docker push ${CLI_IMAGE}-${VERSION}
 
@@ -174,10 +174,9 @@ docker push ${SERVER_IMAGE}-${VERSION}
 
 # Build WordPress PHP-FPM image
 FPM_IMAGE=${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:fpm
-FPM_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/wp-fpm
 
-tar -zcf ${FPM_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets/languages inc public themes
-DOCKER_BUILDKIT=1 docker build --target=distribution -t ${FPM_IMAGE} -t ${FPM_IMAGE}-${VERSION} ${FPM_IMAGE_DIR}
+tar -zcf ${PHP_IMAGES_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets/languages inc public themes
+DOCKER_BUILDKIT=1 docker build --target fpm-distribution -t ${FPM_IMAGE} -t ${FPM_IMAGE}-${VERSION} ${PHP_IMAGES_DIR}
 docker push ${FPM_IMAGE}
 docker push ${FPM_IMAGE}-${VERSION}
 
