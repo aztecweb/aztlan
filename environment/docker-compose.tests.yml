@@ -28,8 +28,8 @@ services:
   # PHP-FPM with WP dependencies
   testwordpress:
     build:
-      context: ./docker/wp-fpm
-      target: development
+      context: ./docker/php
+      target: fpm-development
     volumes:
       - ../:/app:z
     env_file:
@@ -42,7 +42,8 @@ services:
   # Codecept
   codecept:
     build:
-      context: ./docker/phpqa
+      context: ./docker/php
+      target: phpqa
     depends_on:
       - chrome
     volumes:

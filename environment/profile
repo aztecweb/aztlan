@@ -15,9 +15,9 @@ alias project-docker-compose-dist="docker_compose_dist"
 ## WP CLI
 function wp() {
 	if [ "$1" != "bash" ]; then
-		cmd=(docker_compose run --rm wp --path=public/wp "$@")
+		cmd=(docker_compose_run_with_host_user wp --path=public/wp "$@")
 	else
-		cmd=(docker_compose run --rm wp "$@")
+		cmd=(docker_compose_run_with_host_user wp "$@")
 	fi
 
 	eval "$( keep_args_consistent "${cmd[@]}")"
@@ -39,14 +39,15 @@ alias jslint="node npm run lint:js"
 alias stylint="node npm run lint:style"
 
 # PHPQA
-alias phpqa="docker_compose run --rm phpqa"
-alias codecept="docker_compose tests run --rm codecept"
+alias phpqa="docker_compose_run_with_host_user phpqa"
+alias codecept="docker_compose tests run -u $(id -u):$(id -g) --rm codecept"
 
 ## Composer
-alias cli-composer="docker_compose run --rm cli-composer"
-alias inc-composer="docker_compose run --rm inc-composer"
-alias wp-composer="docker_compose run --rm wp-composer"
-alias phpqa-composer="docker_compose run --rm phpqa-composer"
+alias cli-composer="docker_compose_run_with_host_user -w /app/cli composer"
+alias inc-composer="docker_compose_run_with_host_user -w /app/inc composer"
+alias wp-composer="docker_compose_run_with_host_user -w /app/wp-packages composer"
+alias phpqa-composer="docker_compose_run_with_host_user -w /app/phpqa composer"
+alias deploy-composer="docker_compose_run_with_host_user -w /app/deploy composer"
 
 # Database export
 alias db-export="wp db export - | gzip > environment/initdb/initdb.sql.gz"
@@ -79,7 +80,7 @@ alias down="docker_compose down"
 alias deploy-ssh-keygen="mkdir -p deploy/.ssh && ssh-keygen -f deploy/.ssh/id_ed25519 -t ed25519 -N ''"
 alias deploy-ssh-key="cat deploy/.ssh/id_ed25519.pub"
 function dep() {
-	eval $(echo docker_compose run --rm deployer $@ --log deploy.log | tr -d \')
+	eval $(echo docker_compose_run_with_host_user deployer $@ --log deploy.log | tr -d \')
 }
 
 # Webgrind (Xdebug profiling viewer)
@@ -95,7 +96,7 @@ function i18n() {
 	USER_ARGS=''
 	[ 'Darwin' = ${OS} ] || USER_ARGS=" -u $(id -u ${USER}):$(id -g ${USER})"
 
-	eval $(echo docker_compose run --rm${USER_ARGS} wp i18n make-pot --domain=${THEME_ACTIVE}_assets assets/dist assets/languages/${THEME_ACTIVE}_assets.pot)
-	eval $(echo docker_compose run --rm${USER_ARGS} wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
-	eval $(echo docker_compose run --rm${USER_ARGS} wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
+	eval $(echo docker_compose_run_with_host_user wp i18n make-pot --domain=${THEME_ACTIVE}_assets assets/dist assets/languages/${THEME_ACTIVE}_assets.pot)
+	eval $(echo docker_compose_run_with_host_user wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
+	eval $(echo docker_compose_run_with_host_user wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
 }
