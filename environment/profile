@@ -80,7 +80,7 @@ alias down="docker_compose down"
 alias deploy-ssh-keygen="mkdir -p deploy/.ssh && ssh-keygen -f deploy/.ssh/id_ed25519 -t ed25519 -N ''"
 alias deploy-ssh-key="cat deploy/.ssh/id_ed25519.pub"
 function dep() {
-	eval $(echo docker_compose_run_with_host_user deployer $@ --log deploy.log | tr -d \')
+	eval $(echo docker_compose run --rm deployer $@ --log deploy.log | tr -d \')
 }
 
 # Webgrind (Xdebug profiling viewer)
