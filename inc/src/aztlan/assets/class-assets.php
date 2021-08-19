@@ -56,7 +56,9 @@ class Assets extends Base {
 	}
 
 	public function assets_uri( string $path ) : string {
-		return $_ENV['ASSETS_URL'] . '/' . trim( $path, '/' );
+		$assets_url = isset( $_SERVER['ASSETS_URL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['ASSETS_URL'] ) ) : 'http://localhost';
+
+		return $assets_url . '/' . trim( $path, '/' );
 	}
 
 	public function register_script() : void {
@@ -74,7 +76,9 @@ class Assets extends Base {
 	}
 
 	public function set_script_translations() : void {
-		wp_set_script_translations( $this->handle(), $_ENV['THEME_ACTIVE'] . '_assets', $this->language_dir );
+		$theme_active = isset( $_SERVER['THEME_ACTIVE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['THEME_ACTIVE'] ) ) : 'aztlan';
+
+		wp_set_script_translations( $this->handle(), $theme_active . '_assets', $this->language_dir );
 	}
 
 	/**

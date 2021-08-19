@@ -16,7 +16,9 @@ class Livereload extends Base {
 	 * Add Livereload JS on development environment
 	 */
 	public function enqueue_script() : void {
-		if ( 'development' === $_ENV['ENV'] ) {
+		$env = isset( $_SERVER['ENV'] ) ? sanitize_text_field( wp_unslash( $_SERVER['ENV'] ) ) : 'development';
+
+		if ( 'development' === $env ) {
 			wp_enqueue_script( 'aztec-env-livereload', 'http://localhost:35729/livereload.js?snipver=1', array(), self::VERSION, true );
 		}
 	}
