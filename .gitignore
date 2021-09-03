@@ -2,3 +2,4 @@
 build/
 xdebug/
 themes/*/languages/*
+!themes/*/languages/.gitkeep
