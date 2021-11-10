@@ -36,7 +36,7 @@ alias assets-build="node npm run build"
 
 # Lint
 alias jslint="node npm run lint:js"
-alias stylint="node npm run lint:style"
+alias stylelint="node npm run lint:style"
 
 # PHPQA
 alias phpqa="docker_compose_run_with_host_user phpqa"

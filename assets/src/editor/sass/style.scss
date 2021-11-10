@@ -1,0 +1,5 @@
+// Apply stylus layout into post editor
+.edit-post-layout {
+  @import '../../blocks/aztlan-demo/front.scss'; // stylelint-disable-line no-invalid-position-at-import-rule
+  @import '../../blocks/aztlan-demo/editor.scss'; // stylelint-disable-line no-invalid-position-at-import-rule
+}
