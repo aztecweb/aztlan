@@ -12,5 +12,5 @@
 import './blocks/*/editor.js';
 import './blocks/*/front.js';
 
-// Import all Styles from all blocks
-import './editor/stylus/style.styl';
+// Import all Sass from all blocks
+import './editor/sass/style.scss';

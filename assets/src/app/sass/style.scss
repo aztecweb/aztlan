@@ -1,10 +1,10 @@
-$white    = #ffffff
-$piper    = #cb4a23
-$daintree = #002d3c
+$white: #fff;
+$piper: #cb4a23;
+$daintree: #002d3c;
 
 body {
-  background $daintree
-  color $white
+  background: $daintree;
+  color: $white;
 }
 
 .welcome {
@@ -17,8 +17,8 @@ body {
 
   &__links {
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
 
     li {
       display: inline-block;
@@ -28,11 +28,11 @@ body {
       background: $piper;
       color: $white;
       display: block;
-      padding: .5rem 1rem;
+      padding: 0.5rem 1rem;
       text-decoration: none;
 
       &:hover {
-        background: darken( $piper, 10% )
+        background: darken($piper, 10%);
       }
     }
   }

@@ -12,6 +12,6 @@
 import './app/js/app.js';
 import './blocks/*/front.js';
 
-// Styles
-import './app/stylus/style.styl';
-import './blocks/*/front.styl';
+// Sass
+import './app/sass/style.scss';
+import './blocks/*/front.scss';
