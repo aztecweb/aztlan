@@ -9,8 +9,8 @@
  */
 
 // Import all Scripts from all blocks
-import './blocks/*/editor.js';
-import './blocks/*/front.js';
+import 'glob:./blocks/*/editor.js';
+import 'glob:./blocks/*/front.js';
 
 // Import all Sass from all blocks
 import './editor/sass/style.scss';

@@ -5,8 +5,13 @@
         "files": ["autoload.php"]
     },
     "require": {
-        "php-di/php-di": "^6.3",
-		"vlucas/phpdotenv": "^5.2.0",
-        "monolog/monolog": "^2.2"
-    }
+        "php-di/php-di": "^6.3.5",
+		"vlucas/phpdotenv": "^5.4.0",
+        "monolog/monolog": "^2.3.5"
+    },
+	"config": {
+		"platform": {
+			"php": "7.4"
+		}
+	}
 }

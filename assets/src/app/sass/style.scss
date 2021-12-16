@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $white: #fff;
 $piper: #cb4a23;
 $daintree: #002d3c;
@@ -32,7 +34,7 @@ body {
       text-decoration: none;
 
       &:hover {
-        background: darken($piper, 10%);
+        background: color.adjust($piper, $lightness: -10%);
       }
     }
   }

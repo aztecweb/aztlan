@@ -10,8 +10,8 @@
 
 // Scripts
 import './app/js/app.js';
-import './blocks/*/front.js';
+import 'glob:./blocks/*/front.js';
 
 // Sass
 import './app/sass/style.scss';
-import './blocks/*/front.scss';
+import 'glob:./blocks/*/front.scss';
