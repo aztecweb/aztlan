@@ -1,5 +1,13 @@
 module.exports = {
 	extends: [ 'plugin:@wordpress/eslint-plugin/recommended' ],
+	rules: {
+		'import/no-unresolved': [
+			'error',
+			{
+				ignore: [ '^glob:' ],
+			},
+		],
+	},
 	globals: {
 		wp: true,
 		window: true,

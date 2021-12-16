@@ -28,9 +28,11 @@ class Kernel {
 	private function create_logger() : LoggerInterface {
 		$log_stream = isset( $_SERVER['LOG_STREAM'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LOG_STREAM'] ) ) : 'php://stdout';
 		$log_level  = isset( $_SERVER['LOG_LEVEL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LOG_LEVEL'] ) ) : 'debug';
-		$handler    = new StreamHandler( $log_stream, $log_level );
-		$logger     = ( new Logger_Factory() )->create( $handler );
-		$log        = new Log( $logger );
+
+		/* @phpstan-ignore-next-line */
+		$handler = new StreamHandler( $log_stream, $log_level );
+		$logger  = ( new Logger_Factory() )->create( $handler );
+		$log     = new Log( $logger );
 
 		// Show PHP errors on log stream.
 		ErrorHandler::register( $logger );
