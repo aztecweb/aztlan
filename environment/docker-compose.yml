@@ -97,7 +97,7 @@ services:
 
   # Xdebug profiling viewer
   webgrind:
-    image: wodby/webgrind:1.8
+    image: wodby/webgrind:1.9
     ports:
       - 8000:8080
     volumes:
