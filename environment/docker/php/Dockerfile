@@ -162,8 +162,7 @@ COPY --from=pdo-mysql /usr/local/lib/php/ /usr/local/lib/php/
 # Copy zip files
 COPY --from=zip /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 COPY --from=zip /usr/local/lib/php/ /usr/local/lib/php/
-COPY --from=zip /usr/lib/libzip.so.5  /usr/lib/
-COPY --from=zip /usr/lib/libzip.so.5.3   /usr/lib/
+COPY --from=zip /usr/lib/ /usr/lib/
 
 # Copy iconv files
 COPY --from=iconv /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
