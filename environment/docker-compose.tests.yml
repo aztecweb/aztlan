@@ -51,10 +51,10 @@ services:
     entrypoint: ["/app/phpqa/vendor/bin/codecept"]
 
   selenium-hub:
-    image: selenium/hub
+    image: selenium/hub:3.141.59
 
   chrome:
-    image: selenium/node-chrome
+    image: selenium/node-chrome:3.141.59
     volumes:
       - /dev/shm:/dev/shm
     depends_on:

@@ -5,10 +5,10 @@
 		"phpcompatibility/php-compatibility": "^9.1",
         "squizlabs/php_codesniffer": "^3.6.2",
         "lucatume/wp-browser": "3.0.14",
-        "codeception/module-db": "^1.0",
-        "codeception/module-webdriver": "^1.4.0",
-        "codeception/module-phpbrowser": "^1.0",
-        "codeception/module-asserts": "^1.3",
+        "codeception/module-db": "^1.2.0",
+        "codeception/module-webdriver": "^2.0.2",
+        "codeception/module-phpbrowser": "^2.0.2",
+        "codeception/module-asserts": "^2.0.1",
         "phpstan/phpstan": "^1.3.0",
         "phpstan/extension-installer": "^1.1",
         "szepeviktor/phpstan-wordpress": "^1.0.2",
@@ -17,6 +17,9 @@
 	"config": {
 		"platform": {
 			"php": "7.4"
-		}
+		},
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
 	}
 }
