@@ -5,7 +5,7 @@
 		"url": "https://wpackagist.org"
 	}],
 	"require": {
-		"johnpbloch/wordpress": "^5.8.3"
+		"johnpbloch/wordpress": "^6.0.2"
 	},
 	"extra": {
 		"wordpress-install-dir": "../public/wp",
