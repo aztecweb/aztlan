@@ -285,7 +285,10 @@ eval $( echo ${WP_BASH} -c "\"
     ';
 
 	# Update permalink structure according to install.env
-	wp --path=${WP_ROOT} rewrite structure ${PERMALINK}
+	wp --path=${WP_ROOT} rewrite structure ${PERMALINK};
+
+	# Deactivate plugins set to be deactivated on this environment
+	[ -n \\\"${DEACTIVATE_PLUGINS}\\\" ] && wp --path=${WP_ROOT} plugin deactivate `echo ${DEACTIVATE_PLUGINS}` --skip-plugins || : echo NOOP;
 
 \"" | sed -e '/^#/d;s/[^\/]#.*$//' ) # `sed` removes the comments to run the commands on eval
 
