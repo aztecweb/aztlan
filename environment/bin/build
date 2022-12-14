@@ -3,7 +3,7 @@
 # General variables
 BIN_DIR=$( dirname $0 )
 
-# Set build dir as environment root to run the docker-compose commands
+# Set build dir as environment root to run the Docker Compose commands
 ENV_ROOT=build
 
 # Include helper scripts

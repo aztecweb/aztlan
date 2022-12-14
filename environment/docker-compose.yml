@@ -8,7 +8,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - mysql_data:/var/lib/mysql:z
+      - mysql_data:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d:z
     env_file:
       - ./env/mysql.env

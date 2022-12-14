@@ -8,7 +8,7 @@
 . environment/bin/shared/aztlan_variables.sh
 . environment/bin/shared/utils.sh
 
-# docker-compose
+# Docker Compose
 alias project-docker-compose="docker_compose"
 alias project-docker-compose-dist="docker_compose_dist"
 
