@@ -47,42 +47,13 @@ check_prerequisites()
 		return 0
 	fi
 
-	EXIT_CODE=0
-	DOCKER_COMPOSE_VERSION="1.23"
-	DOCKER_COMPOSE_MAJOR=$(echo $DOCKER_COMPOSE_VERSION| cut -d'.' -f 1)
-	DOCKER_COMPOSE_MINOR=$(echo $DOCKER_COMPOSE_VERSION| cut -d'.' -f 2)
-
-	# Docker
-	# DOCKER=$(eval hash docker 2> /dev/null)
 	if ! hash docker 2>/dev/null
 	then
-		EXIT_CODE=1
 		echo "'docker' was not found"
+		return 1
 	fi
 
-	if ! hash docker-compose 2>/dev/null
-	then
-		EXIT_CODE=1
-		echo "'docker-compose' was not found"
-	else
-		DOCKER_COMPOSE_VERSION=$(eval docker-compose --version 2> /dev/null)
-		VERSION=$(echo $DOCKER_COMPOSE_VERSION| cut -d' ' -f 3)
-
-		VERSION_MAJOR=$(echo $VERSION| cut -d'.' -f 1)
-		VERSION_MINOR=$(echo $VERSION| cut -d'.' -f 2)
-
-		if [[ ${VERSION_MAJOR} < ${DOCKER_COMPOSE_MAJOR} ]]; then
-			EXIT_CODE=1
-			echo "The version of docker-compose has to be ${DOCKER_COMPOSE_VERSION} or above"
-		else
-			if [[ ${VERSION_MINOR} < ${DOCKER_COMPOSE_MINOR} ]]; then
-				EXIT_CODE=1
-				echo "The version of docker-compose has to be ${DOCKER_COMPOSE_VERSION} or above"
-			fi
-		fi
-	fi
-
-	[ ${EXIT_CODE} == 1 ] && exit
+	return 0
 }
 
 default_parameters_values
@@ -109,20 +80,15 @@ ENVIRONMENT_DIR=environment
 PROJECT=$(basename $(pwd))
 OS=$(uname -s)
 
-# Docker Compose base command
-#
-# It must be executed before load environment variables because can be used for
-# them.
-COMPOSE="VOLUME_PREFIX=${PROJECT}_ docker-compose -p ${PROJECT} -f ${ENVIRONMENT_DIR}/docker-compose.yml"
-if [ 'Darwin' = ${OS} ]; then
-    COMPOSE+=" -f ${ENVIRONMENT_DIR}/docker-compose.mac.yml"
-fi
+# Load environment
+BIN_DIR=$( dirname $0 )
+. ${BIN_DIR}/shared/docker_compose.sh
 
 # Load project environment variables
 dotenv ${ENVIRONMENT_DIR}/env/app.env
 dotenv ${ENVIRONMENT_DIR}/env/install.env
 
-check_prerequisites
+check_prerequisites || exit
 
 # Xdebug
 XDEBUG_DATA_DIR=xdebug
@@ -204,12 +170,14 @@ ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES
 # Install plugins languages
 ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
-# Update Docker Compose images if command exists
-[ ${UPDATE} = true ] && bash -c "${COMPOSE} pull"
-[ -z ${COMPOSE+x} ] || bash -c "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 ${COMPOSE} build"
+if [[ -n ${DOCKER_COMPOSE+x} && ${DOCKER_COMPOSE} = true ]]; then
+	[[ ${UPDATE} = true ]] && docker_compose pull
 
-# To prevent connection problems, the db container will be initialized
-[ -z ${COMPOSE+x} ] || bash -c "${COMPOSE} up -d db"
+	docker_compose build
+
+	# To prevent connection problems, the db container will be initialized
+	docker_compose up -d db
+fi
 
 # Set subcomand for install or update
 [ ${UPDATE} = true ] && COMPOSER_SUBCOMAND="update" || COMPOSER_SUBCOMAND="install";
@@ -218,18 +186,20 @@ ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAG
 
 [ ${UPDATE} = true -a ${ENV_STAGE} = "develop" ] && NPM_SUBCOMAND="update" || NPM_SUBCOMAND="ci";
 
+AZTLAN_CMD="${ENVIRONMENT_DIR}/bin/aztlan-cmd"
+
 # Composer
-bash -c "${CLI_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
-bash -c "${INC_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
-bash -c "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
-bash -c "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
-bash -c "${DEPLOY_COMPOSER} ${COMPOSER_SUBCOMAND}"
+${AZTLAN_CMD} "${CLI_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+${AZTLAN_CMD} "${INC_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+${AZTLAN_CMD} "${WP_COMPOSER} ${COMPOSER_SUBCOMAND} ${COMPOSER_SUBCOMAND_ARGS}"
+${AZTLAN_CMD} "${PHPQA_COMPOSER} ${COMPOSER_SUBCOMAND}"
+${AZTLAN_CMD} "${DEPLOY_COMPOSER} ${COMPOSER_SUBCOMAND}"
 
 # NPM
-bash -c "${NPM} ${NPM_SUBCOMAND}"
+${AZTLAN_CMD} "${NPM} ${NPM_SUBCOMAND}"
 [ ${ENV} = 'development' ] && WEBPACK_ENVIRONMENT="dev" || WEBPACK_ENVIRONMENT="build"
 
-[ ${UPDATE} = true ] || bash -c "${NPM} run ${WEBPACK_ENVIRONMENT}";
+[ ${UPDATE} = true ] || ${AZTLAN_CMD} "${NPM} run ${WEBPACK_ENVIRONMENT}"
 
 # Get the version installed of the core to be used for download its language package
 CORE_VERSION=$(eval "${WP_BASH} -c 'wp --path=${WP_ROOT} core version'")
@@ -299,3 +269,4 @@ else
 	[ -f ".git/hooks/pre-commit" ] && bash -c "rm .git/hooks/pre-commit"
 fi
 
+exit 0
