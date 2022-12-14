@@ -3,6 +3,7 @@
 # Go to project root
 cd $( dirname $0 )/../..
 
-source environment/bin/docker-compose.sh
+BIN_DIR=$( dirname $0 )
+source ${BIN_DIR}/shared/docker_compose.sh
 
-eval "bash -c '${COMPOSE} run --rm phpqa phpcs $@'"
+docker_compose run --rm phpqa phpcs $@
