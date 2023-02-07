@@ -4,21 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ba345542c674ecd3e55f2add26861d1",
+    "content-hash": "6c6c6d614e45118a98b7bd419b7fe97d",
     "packages": [
         {
             "name": "deployer/deployer",
-            "version": "v7.1.1",
+            "version": "v6.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/deployphp/deployer.git",
-                "reference": "28934ad0af2b70dbd9cc60b33c5454778b3dd6c1"
+                "reference": "c4380effdc9f6d9c6ae549bb76f0a22bcb1d31d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/deployphp/deployer/zipball/28934ad0af2b70dbd9cc60b33c5454778b3dd6c1",
-                "reference": "28934ad0af2b70dbd9cc60b33c5454778b3dd6c1",
+                "url": "https://api.github.com/repos/deployphp/deployer/zipball/c4380effdc9f6d9c6ae549bb76f0a22bcb1d31d2",
+                "reference": "c4380effdc9f6d9c6ae549bb76f0a22bcb1d31d2",
                 "shasum": ""
+            },
+            "require": {
+                "deployer/phar-update": "~2.2",
+                "php": "^7.2 || ^8.0",
+                "pimple/pimple": "~3.0",
+                "symfony/console": "~2.7|~3.0|~4.0|~5.0",
+                "symfony/process": "~2.7|~3.0|~4.0|~5.0",
+                "symfony/yaml": "~2.7|~3.0|~4.0|~5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8"
             },
             "bin": [
                 "dep"
@@ -47,7 +58,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-04-25T16:05:31+00:00"
+            "time": "2022-08-03T18:09:01+00:00"
         },
         {
             "name": "deployer/phar-update",
