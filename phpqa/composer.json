@@ -9,9 +9,9 @@
         "codeception/module-webdriver": "^2.0.4",
         "codeception/module-phpbrowser": "^2.0.3",
         "codeception/module-asserts": "^2.0.1",
-        "phpstan/phpstan": "^1.9.9",
+        "phpstan/phpstan": "^1.9.16",
         "phpstan/extension-installer": "^1.2.0",
-        "szepeviktor/phpstan-wordpress": "^1.1.6",
+        "szepeviktor/phpstan-wordpress": "^1.1.7",
         "phpstan/phpstan-strict-rules": "^1.4.5"
     },
 	"config": {

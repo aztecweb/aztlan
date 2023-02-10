@@ -20,7 +20,7 @@ FROM build-deps AS xdebug
 
 RUN set -ex; \
 	# Install Xdebug extension
-	pecl install xdebug; \
+	pecl install xdebug-3.1.6; \
 	docker-php-ext-enable xdebug;
 
 # Install, enable and configure Xdebug
