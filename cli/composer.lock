@@ -98,7 +98,6 @@
             },
             "require": {
                 "composer/ca-bundle": "^1.0",
-                "composer/class-map-generator": "^1.0",
                 "composer/metadata-minifier": "^1.0",
                 "composer/pcre": "^1.0",
                 "composer/semver": "^3.0",
