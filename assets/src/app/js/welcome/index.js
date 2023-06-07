@@ -12,10 +12,10 @@ export default class Welcome {
 	}
 
 	hello() {
-		const p = document.createElement( 'p' );
-		const title = document.querySelector( '.welcome__title' );
+		const p = document.createElement('p');
+		const title = document.querySelector('.welcome__title');
 
 		p.innerText = this.message;
-		title.parentNode.insertBefore( p, title.nextSibling );
+		title.parentNode.insertBefore(p, title.nextSibling);
 	}
 }
