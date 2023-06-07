@@ -171,7 +171,7 @@ ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES
 ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/
 
 if [[ -n ${DOCKER_COMPOSE+x} && ${DOCKER_COMPOSE} = true ]]; then
-	[[ ${UPDATE} = true ]] && docker_compose pull --no-cache
+	[[ ${UPDATE} = true ]] && docker_compose pull
 
 	docker_compose build
 

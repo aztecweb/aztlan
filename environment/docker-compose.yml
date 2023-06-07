@@ -62,7 +62,7 @@ services:
 
   # Node 14 with NPM/Yarn/npx
   assets-node:
-    image: node:14
+    image: node:18
     volumes:
       - ../:/app:z
     working_dir: /app/assets

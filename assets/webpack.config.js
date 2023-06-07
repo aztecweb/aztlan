@@ -1,9 +1,9 @@
-const path = require( 'path' );
-const TerserPlugin = require( 'terser-webpack-plugin' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const CssMinimizerPlugin = require( 'css-minimizer-webpack-plugin' );
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
-module.exports = ( env ) => {
+module.exports = (env) => {
 	return {
 		mode: env.production ? 'production' : 'development',
 		entry: {
@@ -12,7 +12,7 @@ module.exports = ( env ) => {
 		},
 		output: {
 			filename: '[name].js',
-			path: path.resolve( __dirname, 'dist' ),
+			path: path.resolve(__dirname, 'dist'),
 		},
 		devtool: 'source-map',
 		module: {
@@ -20,7 +20,7 @@ module.exports = ( env ) => {
 				{
 					test: /\.(js|jsx)$/,
 					exclude: /(node_modules)/,
-					use: [ 'babel-loader' ],
+					use: ['babel-loader'],
 				},
 				{
 					test: /\.s[ca]ss$/,
@@ -59,18 +59,18 @@ module.exports = ( env ) => {
 				},
 				{
 					test: /\.(png|jp(e*)g|gif)$/,
-					use: [ 'file-loader' ],
+					use: ['file-loader'],
 				},
 				{
 					test: /\.(woff|woff2|svg|eot|ttf|otf)$/,
-					use: [ 'file-loader' ],
+					use: ['file-loader'],
 				},
 			],
 		},
 		plugins: [
-			new MiniCssExtractPlugin( {
+			new MiniCssExtractPlugin({
 				filename: '[name].css',
-			} ),
+			}),
 		],
 		optimization: {
 			splitChunks: {
@@ -83,7 +83,7 @@ module.exports = ( env ) => {
 					},
 				},
 			},
-			minimizer: [ new TerserPlugin(), new CssMinimizerPlugin() ],
+			minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
 		},
 		externals: {
 			jquery: 'jQuery',

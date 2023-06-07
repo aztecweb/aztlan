@@ -11,17 +11,17 @@ const __ = wp.i18n.__;
 /**
  * The block content to be rendered on editor and frontend
  */
-const blockContent = <p>{ __( 'Aztlan demo block.', 'aztlan_assets' ) }</p>;
+const blockContent = <p>{__('Aztlan demo block.', 'aztlan_assets')}</p>;
 
 /**
  * Every block starts by registering a new block type definition.
  */
-registerBlockType( 'aztlan/demo', {
+registerBlockType('aztlan/demo', {
 	/**
 	 * This is the display title for your block, which can be translated with `i18n` functions.
 	 * The block inserter will show this name.
 	 */
-	title: __( 'Aztlan Demo', 'aztlan_assets' ),
+	title: __('Aztlan Demo', 'aztlan_assets'),
 
 	/**
 	 * Blocks are grouped into categories to help users browse and discover them.
@@ -52,4 +52,4 @@ registerBlockType( 'aztlan/demo', {
 	 * @return {Element}       Element to render.
 	 */
 	save: () => blockContent,
-} );
+});
