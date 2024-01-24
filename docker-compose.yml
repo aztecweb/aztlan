@@ -1,0 +1,87 @@
+# Development project infrastructure generated over the Docker
+version: "3.8"
+
+services:
+  # Base
+  base:
+    extends:
+      file: common-services.yml
+      service: base
+    working_dir: /app
+
+  wordpress-base:
+    extends:
+      file: common-services.yml
+      service: wordpress-base
+    working_dir: /app
+
+  installer:
+    extends:
+      file: common-services.yml
+      service: installer
+
+  # MySQL
+  db:
+    extends:
+      file: common-services.yml
+      service: db
+
+  # NGINX
+  server:
+    extends:
+      file: common-services.yml
+      service: server
+
+  # PHP-FPM with WP dependencies
+  wordpress:
+    extends:
+      file: common-services.yml
+      service: wordpress
+    depends_on:
+      - db
+      - smtp
+
+  # WP CLI
+  wp:
+    extends:
+      file: common-services.yml
+      service: cli
+
+  # Node 14 with NPM/Yarn/npx
+  assets-node:
+    extends:
+      file: common-services.yml
+      service: assets-node
+
+  # PHPQA
+  phpqa:
+    extends:
+      file: common-services.yml
+      service: phpqa
+
+  # Test SMTP server
+  smtp:
+    extends:
+      file: common-services.yml
+      service: smtp
+
+  # Deployer
+  deployer:
+    extends:
+      file: common-services.yml
+      service: deployer
+
+  # Xdebug profiling viewer
+  webgrind:
+    extends:
+      file: common-services.yml
+      service: webgrind
+
+  # Composer
+  composer:
+    extends:
+      file: common-services.yml
+      service: composer
+
+volumes:
+  mysql_data:

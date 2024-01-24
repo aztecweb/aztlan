@@ -1,54 +1,47 @@
 # Development project infrastructure generated over the Docker
-version: "3.7"
+version: "3.8"
 
 services:
   # MySQL
   testdb:
-    image: mariadb
+    extends:
+      file: common-services.yml
+      service: db
     volumes:
       - test_mysql_data:/var/lib/mysql:z
-    env_file:
-      - ./env/mysql.env
 
   # Nginx
   testserver:
-    build:
-      context: ./docker/nginx
-      target: development
+    extends:
+      file: common-services.yml
+      service: server
+    environment:
+      WORDPRESS: testwordpress
     links:
       - testwordpress
     volumes:
-      - ../:/app:z
-      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
-      - ./docker/nginx/etc/templates:/etc/nginx/templates:z
-    env_file:
-      - ./env/nginx.env
-      - ./env/tests.env
+      - ./environment/docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
+      - ./environment/docker/nginx/etc/templates:/etc/nginx/templates:z
 
   # PHP-FPM with WP dependencies
   testwordpress:
-    build:
-      context: ./docker/php
-      target: fpm-development
-    volumes:
-      - ../:/app:z
-    env_file:
-      - ./env/app.env
-      - ./env/xdebug.env
-      - ./env/tests.env
+    extends:
+      file: common-services.yml
+      service: wordpress
+    environment:
+      DB_HOST: testdb
+      WP_HOME: http://testserver
+      WP_SITEURL: http://testserver/wp
     depends_on:
       - testdb
 
   # Codecept
   codecept:
-    build:
-      context: ./docker/php
-      target: phpqa
+    extends:
+      file: common-services.yml
+      service: codecept
     depends_on:
       - chrome
-    volumes:
-      - ../:/app
-    entrypoint: ["/app/phpqa/vendor/bin/codecept"]
 
   selenium-hub:
     image: selenium/hub:3.141.59

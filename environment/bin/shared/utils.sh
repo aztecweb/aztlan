@@ -21,3 +21,11 @@ keep_args_consistent() {
     done
     printf '%s\n' "${allargs[*]}"
 }
+
+# WP CLI
+function wp() {
+		cmd=(docker_compose_run_with_host_user wp "$@")
+
+	eval "$( keep_args_consistent "${cmd[@]}")"
+}
+

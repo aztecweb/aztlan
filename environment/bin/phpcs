@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# Go to project root
-cd $( dirname $0 )/../..
-
-BIN_DIR=$( dirname $0 )
-source ${BIN_DIR}/shared/docker_compose.sh
-
-docker_compose run --rm phpqa phpcs $@

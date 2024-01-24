@@ -1,51 +1,15 @@
 server {
     listen 80;
-    server_name _;
+	server_name _;
 
-    charset utf-8;
-
+    # Directory settings
     root /app/public;
-    index index.php;
+	index index.php;
 
-    # Adicionado /wp ao regex para respeitar o padrão que utilizamos no
-    # Aztlan
-    if (!-e $request_filename) {
-        rewrite ^(/[^/]+)?(/wp/wp-.*) $2 last;
-        rewrite ^(/[^/]+)?(/wp/.*\.php) $2 last;
-    }
+	add_header    'Cache-Control' '${CACHE_CONTROL}';
+	expires       off;
 
-    location / {
-        try_files $uri $uri/ /index.php$is_args$args;
-    }
-
-    # permite o acesso ao diretório de distribuição dos assets através da
-    # URL /assets
-    location ~ ^/assets/(.*) {
-        alias /app/assets/dist/$1;
-    }
-
-    # permite o acesso ao diretório de temas do projeto através da URL
-    # /wp/themes
-    # Adicionado rejex para (/[^/]+)? os assets funcionar com multisite
-    # utilisando o segundo grupo captado pelo regex
-    location ~ ^(/[^/]+)?/wp/themes/(.*) {
-        alias /app/themes/$2;
-    }
-
-    location ~ \.php$ {
-        try_files     $fastcgi_script_name =404;
-        fastcgi_pass  ${WORDPRESS}:9000;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include       fastcgi_params;
-    }
-
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-        log_not_found off;
-        add_header    'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-        expires       off;
-    }
-
-    location ~ /\.ht {
-        deny  all;
-    }
+    # Load shared global settings
+    include conf.d/server/*.conf;
+	include conf.d-from-template/server/*.conf;
 }

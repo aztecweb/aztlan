@@ -28,7 +28,7 @@ function return_run() {
 # Code standards functions
 function run_phpcs() {
 	printf "Running PHPCS\t........... ";
-	PHPCS=$(docker_compose run --rm phpqa phpcs)
+	PHPCS=$(docker_compose_run_with_host_user phpqa phpcs)
 	if [ -z "${PHPCS}" ]
 	then
 		print_success
@@ -41,13 +41,13 @@ function run_phpcs() {
 function run_phpcbf() {
 	NO_ERRORS="No fixable errors"
 	printf "Running PHPCBF\t........... ";
-	PHPCBF=$(docker_compose run --rm phpqa phpcbf)
+	PHPCBF=$(docker_compose_run_with_host_user phpqa phpcbf)
 	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
 }
 
 function run_phpstan() {
 	printf "Running PHPSTAN\t........... ";
-	PHPSTAN=$(docker_compose run --rm phpqa phpstan analyse 2> /dev/null)
+	PHPSTAN=$(docker_compose_run_with_host_user phpqa phpstan analyse 2> /dev/null)
 	if [ $? -eq 0 ]
 	then
 		print_success
@@ -57,7 +57,7 @@ function run_phpstan() {
 	fi
 
 	printf "Running PHPSTAN (TESTS)\t... ";
-	PHPSTANTESTS=$(docker_compose run --rm phpqa phpstan analyse -c tests/phpstan.neon.dist 2> /dev/null)
+	PHPSTANTESTS=$(docker_compose_run_with_host_user phpqa phpstan analyse -c tests/phpstan.neon.dist 2> /dev/null)
 	if [ $? -eq 0 ]
 	then
 		print_success
@@ -69,7 +69,7 @@ function run_phpstan() {
 
 function run_stylint() {
 	printf "Running STYLINT\t........... ";
-	STYLINT=$(docker_compose run --rm assets-node npm run lint:style)
+	STYLINT=$(docker_compose_run_with_host_user assets-node npm run lint:style)
 
 	if [[ ! "${STYLINT}" =~ "Errors" ]] && [[ ! "${STYLINT}" =~ "Warnings" ]];
 	then
@@ -82,7 +82,7 @@ function run_stylint() {
 
 function run_eslint() {
 	printf "Running ESLINT\t........... ";
-	ESLINT=$(docker_compose run --rm assets-node npm run lint:js)
+	ESLINT=$(docker_compose_run_with_host_user assets-node npm run lint:js)
 
 	if [[ ! "${ESLINT}" =~ "errors" ]] && [[ ! "${STYLINT}" =~ "warnings" ]];
 	then

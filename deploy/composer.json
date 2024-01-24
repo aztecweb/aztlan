@@ -1,11 +1,11 @@
 {
     "name": "aztecweb/deployer",
     "require": {
-        "deployer/deployer": "6.8.0"
+        "deployer/deployer": "6.9.0"
     },
 	"config": {
 		"platform": {
-			"php": "7.4"
+			"php": "8.3"
 		}
 	}
 }

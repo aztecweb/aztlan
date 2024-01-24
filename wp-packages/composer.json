@@ -19,6 +19,9 @@
 		}
 	},
 	"config": {
+		"platform": {
+			"php": "8.3"
+		},
 		"allow-plugins": {
 			"johnpbloch/wordpress-core-installer": true
 		}
