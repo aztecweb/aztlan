@@ -32,9 +32,18 @@
                 "phpunit/phpunit": "^8"
             },
             "bin": [
-                "dep"
+                "bin/dep"
             ],
             "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Support/helpers.php",
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Deployer\\": "src/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -54,7 +63,7 @@
             },
             "funding": [
                 {
-                    "url": "https://github.com/sponsors/antonmedv",
+                    "url": "https://github.com/antonmedv",
                     "type": "github"
                 }
             ],
