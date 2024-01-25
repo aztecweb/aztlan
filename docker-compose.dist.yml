@@ -13,7 +13,6 @@ services:
       WORDPRESS: ${WORDPRESS}
       CACHE_CONTROL: ${CACHE_CONTROL}
       NGINX_LISTEN_PORT: ${NGINX_LISTEN_PORT}
-      S3_SERVICE_ENDPOINT: ${S3_SERVICE_ENDPOINT}
     links:
       - wordpress
     ports:

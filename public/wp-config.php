@@ -13,7 +13,7 @@ if (file_exists($wppackages_autoload_file)) {
 /**
  * Load environment variables
  */
-if ( null === $_SERVER[ 'WP_HOME' ] ) {
+if ( false === isset( $_SERVER[ 'WP_HOME' ] ) ) {
 	$env_dir = $root_dir;
 	$dotenv = Dotenv\Dotenv::createImmutable( $env_dir, '.env' );
 	$dotenv->load();
