@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+wp_command="cli/vendor/bin/wp"
+
+if [ "$#" -gt "0" ]; then
+	[[ "$1" = "dist" ]] && cd /app/public/wp
+fi
+
+# Waiting database connection
+while ! mysqladmin ping -h ${DB_HOST} --silent; do
+	echo 'Waiting database connection' && sleep 3
+done
+
+[[ ${MULTISITE} = true ]] && WP_CORE_INSTALL="multisite-install --skip-config" || WP_CORE_INSTALL="install"
+
+# Install WordPress if not installed
+if ! ${wp_command} core is-installed; then
+	${wp_command} db create &>/dev/null || ${wp_command} db reset --yes 2>/dev/null
+	${wp_command} core "${WP_CORE_INSTALL}" --url="${WP_HOME}" --title="${WP_TITLE}" --admin_user="${WP_USER}" --admin_password="${WP_PASSWORD}" --admin_email="${WP_EMAIL}" --skip-email
+fi
+
+# Activate theme
+${wp_command} theme is-active "${THEME_ACTIVE}" || ${wp_command} theme activate "${THEME_ACTIVE}"
+
+# Activate all plugins excluding deactivated plugins
+${wp_command} plugin activate --all --exclude="${DEACTIVATE_PLUGINS}"
+
+# Update permalink structure according to .env
+${wp_command} rewrite structure "${PERMALINK}"

@@ -129,10 +129,6 @@ cd $( dirname $0 )/../..
 
 . ${BIN_DIR}/shared/docker_compose.sh
 
-# Load project environment variables
-dotenv ${ENVIRONMENT_DIR}/env/app.env
-dotenv ${ENVIRONMENT_DIR}/env/install.env
-
 # WP core directory
 WP_ROOT=public/wp
 

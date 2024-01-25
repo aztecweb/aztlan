@@ -1,0 +1,63 @@
+# Development project infrastructure generated over the Docker
+version: "3.8"
+services:
+
+  # Nginx
+  server:
+    build:
+      context: .
+      dockerfile: ./environment/docker/nginx/Dockerfile
+      target: distribution
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:server-${VERSION}
+    environment:
+      WORDPRESS: ${WORDPRESS}
+      CACHE_CONTROL: ${CACHE_CONTROL}
+      NGINX_LISTEN_PORT: ${NGINX_LISTEN_PORT}
+    links:
+      - wordpress
+    ports:
+      - '${NGINX_LISTEN_PORT}:${NGINX_LISTEN_PORT}'
+
+  # PHP-FPM with WP dependencies
+  wordpress:
+    build:
+      context: .
+      dockerfile: ./environment/docker/php/Dockerfile
+      target: fpm-distribution
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:fpm-${VERSION}
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=10.254.254.254
+
+  # WP CLI
+  wp:
+    build:
+      context: .
+      dockerfile: ./environment/docker/php/Dockerfile
+      target: cli-distribution
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    image: ${REGISTRY_ENDPOINT}/${REPOSITORY_NAME}:cli-${VERSION}
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=10.254.254.254
+
+  installer:
+    extends:
+      file: docker-compose.dist.yml
+      service: wp
+    entrypoint: [ "aztlan-install", "dist" ]
+    environment:
+      WP_TITLE: ${WP_TITLE:-WordPress}
+      WP_USER: ${WP_USER:-admin}
+      WP_PASSWORD: ${WP_PASSWORD:-admin}
+      WP_EMAIL: ${WP_EMAIL:-admin@admin.com}
+      PERMALINK: ${PERMALINK:-/%postname%/}
+      DEACTIVATE_PLUGINS: ${DEACTIVATE_PLUGINS:-}
+      VERSION: ${VERSION:-}
+    env_file:
+      - .env

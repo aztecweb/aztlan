@@ -1,5 +1,11 @@
+ARG PHP_VERSION
+
+# =========================base=========================
+FROM alpine as base
+RUN apk add --no-cache bash acl curl wget
+
 # =========================build deps=========================
-FROM php:7.4-alpine AS build-deps
+FROM php:${PHP_VERSION}-alpine AS build-deps
 
 RUN set -ex; \
 	\
@@ -17,10 +23,13 @@ RUN { \
 
 # =========================Xdebug=========================
 FROM build-deps AS xdebug
+ARG XDEBUG_VERSION
+
+RUN apk add --update linux-headers;
 
 RUN set -ex; \
 	# Install Xdebug extension
-	pecl install xdebug-3.1.6; \
+	pecl install xdebug-${XDEBUG_VERSION}; \
 	docker-php-ext-enable xdebug;
 
 # Install, enable and configure Xdebug
@@ -38,7 +47,7 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/xdebug.ini
 
 # =========================msmtp=========================
-FROM php:7.4-alpine AS msmtp
+FROM php:${PHP_VERSION}-alpine AS msmtp
 
 RUN set -ex; \
 	apk add --no-cache msmtp;
@@ -70,7 +79,7 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/smtp.ini
 
 # =========================WordPress CLI=========================
-FROM wordpress:cli-php7.4 AS cli-base
+FROM wordpress:cli-php${PHP_VERSION} AS cli-base
 ENV PATH=/app/cli/vendor/bin:$PATH
 WORKDIR /app
 
@@ -88,13 +97,15 @@ COPY --from=xdebug /usr/local/lib/php/ /usr/local/lib/php/
 
 USER www-data
 
+ENTRYPOINT ["wp"]
+
 FROM cli-base AS cli-distribution
-COPY aztlan-install /usr/local/bin/
-ADD dist.tar.gz /app
+COPY environment/bin/aztlan-install /usr/local/bin/aztlan-install
+ADD build/environment/docker/php/dist-cli.tar.gz /app
 
 # =========================WordPress FPM=========================
-FROM wordpress:php7.4-fpm-alpine AS fpm-base
-COPY docker-entrypoint.sh /usr/local/bin/
+FROM wordpress:php${PHP_VERSION}-fpm-alpine AS fpm-base
+COPY environment/docker/php/docker-entrypoint.sh /usr/local/bin/
 WORKDIR /app
 
 FROM fpm-base AS fpm-development
@@ -115,10 +126,10 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/tests-bypass.ini
 
 FROM fpm-base AS fpm-distribution
-ADD dist.tar.gz /app
+ADD build/environment/docker/php/dist-fpm.tar.gz /app
 
 # =========================pdo-mysql=========================
-FROM php:7.4-alpine AS pdo-mysql
+FROM php:${PHP_VERSION}-alpine AS pdo-mysql
 RUN { \
 	# Install Codeception DB dependencies
 	docker-php-ext-install pdo_mysql; \
@@ -136,7 +147,7 @@ RUN { \
 	}
 
 # =========================iconv=========================
-FROM php:7.4-alpine AS iconv
+FROM php:${PHP_VERSION}-alpine AS iconv
 RUN { \
 	# Install iconv library
 	apk add --no-cache gnu-libiconv; \
@@ -149,7 +160,7 @@ RUN { \
 	} > $PHP_INI_DIR/conf.d/memory.ini
 
 # =========================PHPQA=========================
-FROM php:7.4-alpine AS phpqa
+FROM php:${PHP_VERSION}-alpine AS phpqa
 
 # Copy Xdebug files
 COPY --from=xdebug /usr/local/etc/php/ /usr/local/etc/php/
@@ -172,7 +183,7 @@ ENV PATH=/app/phpqa/vendor/bin:$PATH
 WORKDIR /app/phpqa
 
 # =========================OpenSSH=========================
-FROM php:7.4-alpine AS openssh
+FROM php:${PHP_VERSION}-alpine AS openssh
 
 RUN { \
 	apk update --no-cache \
@@ -181,7 +192,7 @@ RUN { \
 	}
 
 # =========================Deployer=========================
-FROM php:7.4-alpine AS deployer
+FROM php:${PHP_VERSION}-alpine AS deployer
 
 # Copy OpenSSH to image
 COPY --from=openssh /etc/ssh/ /etc/ssh/
