@@ -1,12 +1,12 @@
 # Development project infrastructure generated over the Docker
-version: "3.7"
+version: "3.8"
 
 services:
   # Nginx
   server:
     volumes:
       - app:/app:nocopy
-      - ./docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf
+      - ./environment/docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf
 
   # PHP-FPM with WP dependencies
   wordpress:

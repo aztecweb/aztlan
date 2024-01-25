@@ -1,0 +1,174 @@
+services:
+  base:
+    build:
+      context: .
+      dockerfile: ./environment/docker/php/Dockerfile
+      target: base
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        XDEBUG_VERSION: ${XDEBUG_VERSION}
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE}
+      HTTP_USER: ${HTTP_USER}
+    volumes:
+      - ./:/app:z
+      - ~/.docker_cache/wp-cli:/.wp-cli/cache:z
+      - ./deploy/.ssh:/root/.ssh:z
+    extra_hosts:
+      - "host.docker.internal:${HOST_DOCKER_INTERNAL_IP}"
+
+  # WP base
+  wordpress-base:
+    extends:
+      service: base
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_CHARSET: ${DB_CHARSET}
+      DB_COLLATE: ${DB_COLLATE}
+      DB_TABLE_PREFIX: ${DB_TABLE_PREFIX}
+      WP_LANG: ${WP_LANG}
+      WP_HOME: ${WP_HOME}
+      WP_SITEURL: ${WP_SITEURL}
+      AUTH_KEY: ${AUTH_KEY}
+      SECURE_AUTH_KEY: ${SECURE_AUTH_KEY}
+      LOGGED_IN_KEY: ${LOGGED_IN_KEY}
+      NONCE_KEY: ${NONCE_KEY}
+      AUTH_SALT: ${AUTH_SALT}
+      SECURE_AUTH_SALT: ${SECURE_AUTH_SALT}
+      LOGGED_IN_SALT: ${LOGGED_IN_SALT}
+      NONCE_SALT: ${NONCE_SALT}
+      MULTISITE: ${MULTISITE}
+      SUBDOMAIN_INSTALL: ${SUBDOMAIN_INSTALL}
+      DOMAIN_CURRENT_SITE: ${DOMAIN_CURRENT_SITE}
+      PATH_CURRENT_SITE: ${PATH_CURRENT_SITE}
+      WP_DEBUG: ${WP_DEBUG}
+      LOG_STREAM: ${LOG_STREAM}
+      LOG_LEVEL: ${LOG_LEVEL}
+      ASSETS_URL: ${ASSETS_URL}
+      THEME_ACTIVE: ${THEME_ACTIVE}
+      UPLOADS_DIR: ${UPLOADS_DIR}
+      GLOTPRESS_PROJECT_ENV_URL: ${GLOTPRESS_PROJECT_ENV_URL}
+      VERSION: ${VERSION}
+      REGISTRY_ENDPOINT: ${REGISTRY_ENDPOINT}
+      REPOSITORY_NAME: ${REPOSITORY_NAME}
+
+  # WP CLI
+  cli:
+    extends:
+      service: wordpress-base
+    build:
+      target: cli-development
+
+  # Install WordPress
+  installer:
+    extends:
+      service: cli
+    environment:
+      WP_TITLE: ${WP_TITLE}
+      WP_USER: ${WP_USER}
+      WP_PASSWORD: ${WP_PASSWORD}
+      WP_EMAIL: ${WP_EMAIL}
+      PERMALINK: ${PERMALINK}
+      DEACTIVATE_PLUGINS: ${DEACTIVATE_PLUGINS}
+    entrypoint: ["aztlan-install"]
+    volumes:
+      - ./environment/bin/aztlan-install:/usr/local/bin/aztlan-install:z
+
+  # PHP-FPM with WP dependencies
+  wordpress:
+    extends:
+      service: wordpress-base
+    build:
+      target: fpm-development
+
+  # Nginx
+  server:
+    build:
+      context: ./environment/docker/nginx
+      target: development
+    ports:
+      - "80:80"
+    links:
+      - wordpress
+    environment:
+      WORDPRESS: ${WORDPRESS}
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx/conf.d-from-template/
+      CACHE_CONTROL: ${CACHE_CONTROL}
+    volumes:
+      - ./:/app:z
+      - ./environment/docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
+      - ./environment/docker/nginx/etc/conf.d:/etc/nginx/conf.d:z
+      - ./environment/docker/nginx/etc/templates:/etc/nginx/templates:z
+      - ./environment/docker/nginx/etc/conf.d-from-template:/etc/nginx/conf.d-from-template:z
+
+  # MariaDB
+  db:
+    image: mariadb
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./environment/initdb:/docker-entrypoint-initdb.d:z
+      
+  # Node 20 with NPM/Yarn/npx
+  assets-node:
+    image: node:${NODE_VERSION}
+    volumes:
+      - ./:/app:z
+      - ~/.docker_cache/npm:/.npm:z
+    working_dir: /app/assets
+
+  # PHPQA
+  phpqa:
+    extends:
+      service: base
+    build:
+      target: phpqa
+
+  # Test SMTP server
+  smtp:
+    image: schickling/mailcatcher
+    restart: always
+    ports:
+      - "1080:1080"
+    environment:
+      MAILCATCHER_PORT: 1025
+
+  # Deployer
+  deployer:
+    extends:
+      service: base
+    build:
+      target: deployer
+
+  # Xdebug profiling viewer
+  webgrind:
+    image: wodby/webgrind
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./xdebug:/tmp:z
+      - ./:/app:z
+
+  # Composer
+  composer:
+    image: composer
+    volumes:
+      - .:/app:z
+      - ~/.docker_cache/composer:/tmp/cache:z
+
+  # Codecept
+  codecept:
+    extends:
+      service: phpqa
+    entrypoint: ["/app/phpqa/vendor/bin/codecept"]
+

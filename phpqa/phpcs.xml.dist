@@ -22,6 +22,7 @@
     <!-- Sniff the template and files -->
     <file>/app/inc/src</file>
     <file>/app/themes</file>
+    <file>/app/deploy/deploy.php</file>
 
     <!-- No sniff assets files -->
     <exclude-pattern>*.(js|css)</exclude-pattern>

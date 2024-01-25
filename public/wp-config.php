@@ -5,12 +5,17 @@ $webroot_dir = $root_dir . '/public';
 
 require_once $root_dir . '/inc/vendor/autoload.php';
 
+$wppackages_autoload_file = $root_dir . '/wp-packages/vendor/autoload.php';
+if (file_exists($wppackages_autoload_file)) {
+	require_once $wppackages_autoload_file;
+}
+
 /**
- * Load environmen variables
+ * Load environment variables
  */
-if ( null === $_SERVER[ 'ENV' ] ) {
-	$env_dir = $root_dir . '/environment/env/';
-	$dotenv = Dotenv\Dotenv::createImmutable( $env_dir, 'app.env' );
+if ( false === isset( $_SERVER[ 'WP_HOME' ] ) ) {
+	$env_dir = $root_dir;
+	$dotenv = Dotenv\Dotenv::createImmutable( $env_dir, '.env' );
 	$dotenv->load();
 }
 

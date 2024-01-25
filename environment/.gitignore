@@ -1,2 +1,4 @@
 .tmp-phpqa
 xdebug
+docker/nginx/etc/conf.d-from-template/*
+!docker/nginx/etc/conf.d-from-template/.gitkeep

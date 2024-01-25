@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2889b0239707cbb5c89fe8809db69518",
+    "content-hash": "d9b5193742998f80df20563e328cded8",
     "packages": [
         {
             "name": "johnpbloch/wordpress",
@@ -163,5 +163,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.3"
+    },
     "plugin-api-version": "2.6.0"
 }

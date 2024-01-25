@@ -1,36 +1,19 @@
 #!/bin/bash
 
 # Import .env data
-. environment/env/app.env
+. .env
 
 # Import shell helpers
 . environment/bin/shared/docker_compose.sh
 . environment/bin/shared/aztlan_variables.sh
 . environment/bin/shared/utils.sh
 
-# Docker Compose
-alias project-docker-compose="docker_compose"
-alias project-docker-compose-dist="docker_compose_dist"
-
-## WP CLI
-function wp() {
-	if [ "$1" != "bash" ]; then
-		cmd=(docker_compose_run_with_host_user wp --path=public/wp "$@")
-	else
-		cmd=(docker_compose_run_with_host_user wp "$@")
-	fi
-
-	eval "$( keep_args_consistent "${cmd[@]}")"
-}
-
-## Server
+alias build="environment/bin/build"
+alias install="docker_compose_run_with_host_user installer"
 alias server="docker_compose up -d server"
 
-# Live reload
-alias livereload="docker_compose up -d livereload"
-
 ## Node
-alias node="docker_compose run --rm assets-node"
+alias node="docker_compose_run_with_host_user assets-node"
 alias assets-watch="node npm run watch"
 alias assets-build="node npm run build"
 
