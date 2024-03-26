@@ -11,16 +11,19 @@ namespace Deployer;
 require 'recipe/common.php';
 
 host( 'staging' )
-	->hostname( '207.246.74.78' )
-	->port( 2201 )
-	->stage( 'staging' )
-	->user( 'ambiente_staging' )
+	->set( 'hostname', '207.246.74.78' )
+	->set( 'port', 2201 )
+	->set( 'remote_user', 'ambiente_staging' )
+	->set( 'labels', ['stage' => 'staging'] )
+	->set( 'user', 'ambiente_staging' )
 	->set( 'branch', 'staging' )
 	->set( 'deploy_path', '/home/ambiente_staging' );
 
 set( 'http_user', $_SERVER['HTTP_USER'] );
 set( 'repository', 'git@git.aztecweb.net:aztecwebteam/ambiente.git' );
 set( 'keep_releases', '3' );
+set( 'writable_recursive', true );
+set( 'update_code_strategy', 'clone' );
 
 set(
 	'shared_files',
@@ -67,7 +70,7 @@ task(
 			preg_match( '/\d.\d/', $_SERVER['PHP_VERSION'], $php_version ); // explicar melhor 7.4.33 -> 7.4
 			run( 'sudo service php' . reset( $php_version ) . '-fpm reload' );
 			run( 'sudo bash -c "nginx -t && service nginx reload"' );
-		} catch ( \Deployer\Exception\RuntimeException $e ) {
+		} catch (\Deployer\Exception\RunException $e) {
 			writeln( '<error>FPM and NGINX need to be restarted manually</error>' );
 		}
 	}
@@ -77,10 +80,6 @@ task(
 	'deploy',
 	array(
 		'deploy:prepare',
-		'deploy:lock',
-		'deploy:release',
-		'deploy:update_code',
-		'deploy:shared',
 		'deploy:update_env',
 		'deploy:build',
 		'deploy:install',
@@ -88,7 +87,7 @@ task(
 		'deploy:symlink',
 		'deploy:restart_services',
 		'deploy:unlock',
-		'cleanup',
-		'success',
+		'deploy:cleanup',
+		'deploy:success',
 	)
 );
