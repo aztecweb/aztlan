@@ -17,7 +17,7 @@ services:
       service: server
     environment:
       WORDPRESS: testwordpress
-    links:
+    links: !override
       - testwordpress
     volumes:
       - ./environment/docker/nginx/etc/nginx.conf:/etc/nginx/nginx.conf:z
