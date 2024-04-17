@@ -5,7 +5,7 @@
 		"codeception/module-db": "3.1.3",
 		"codeception/module-phpbrowser": "3.0.1",
 		"codeception/module-webdriver": "3.2.1",
-		"lucatume/wp-browser": "4.0.10",
+		"lucatume/wp-browser": "4.1.6",
 		"phpcompatibility/php-compatibility": "9.3.5",
 		"phpstan/extension-installer": "1.3.1",
 		"phpstan/phpstan": "1.10.57",
@@ -16,7 +16,8 @@
     },
 	"config": {
 		"platform": {
-			"php": "8.3"
+			"php": "8.3",
+			"ext-mysqli": "8.3.4"
 		},
         "allow-plugins": {
             "phpstan/extension-installer": true,
