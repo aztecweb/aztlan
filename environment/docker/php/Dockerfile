@@ -2,7 +2,7 @@ ARG PHP_VERSION
 
 # =========================base=========================
 FROM alpine as base
-RUN apk add --no-cache bash acl curl wget php-mysql
+RUN apk add --no-cache bash acl curl wget
 
 # =========================build deps=========================
 FROM php:${PHP_VERSION}-alpine AS build-deps
@@ -13,7 +13,6 @@ RUN set -ex; \
 	apk add --update --no-cache --virtual .build-deps \
 	autoconf \
 	build-base \
-	php-mysql \
 	gcc;
 
 # PHP  error settings
