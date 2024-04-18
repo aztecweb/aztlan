@@ -90,4 +90,7 @@ task(
 		'deploy:cleanup',
 		'deploy:success',
 	)
+
 );
+
+after('rollback', 'deploy:restart_services');
