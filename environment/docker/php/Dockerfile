@@ -87,8 +87,10 @@ FROM cli-base AS cli-development
 USER root
 
 # Copy MSMTP bin and settings
-COPY --from=msmtp /usr/bin/ /usr/local/bin/
 COPY --from=msmtp /etc/msmtprc /etc/msmtprc
+COPY --from=msmtp /lib/ /lib/
+COPY --from=msmtp /usr/bin/ /usr/bin/
+COPY --from=msmtp /usr/lib/ /usr/lib/
 COPY --from=msmtp /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # Copy Xdebug
@@ -111,8 +113,10 @@ WORKDIR /app
 FROM fpm-base AS fpm-development
 
 # Copy MSMTP bin and settings
-COPY --from=msmtp /usr/bin/ /usr/local/bin/
 COPY --from=msmtp /etc/msmtprc /etc/msmtprc
+COPY --from=msmtp /lib/ /lib/
+COPY --from=msmtp /usr/bin/ /usr/bin/
+COPY --from=msmtp /usr/lib/ /usr/lib/
 COPY --from=msmtp /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 
 # Copy Xdebug
