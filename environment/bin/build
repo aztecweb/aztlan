@@ -467,11 +467,11 @@ download_and_install_languages_packages() {
 		URL_LANGUAGE_THEME=${GLOTPRESS_PROJECT_ENV_URL}/theme/${URL_LANGUAGE_SET}
 		URL_LANGUAGE_INC=${GLOTPRESS_PROJECT_ENV_URL}/inc/${URL_LANGUAGE_SET}
 		URL_LANGUAGE_ASSETS=${GLOTPRESS_PROJECT_ENV_URL}/assets/${URL_LANGUAGE_SET}
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}") ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}") ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}") ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}") ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_ASSETS}") ]] && docker_compose_run_with_host_user_bash "wget -q -O assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po ${URL_LANGUAGE_ASSETS}/?format=po"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_ASSETS}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po ${URL_LANGUAGE_ASSETS}/?format=po"
 	fi
 
 	docker_compose_run_with_host_user_bash "ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/"
