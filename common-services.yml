@@ -136,12 +136,10 @@ services:
 
   # Test SMTP server
   smtp:
-    image: schickling/mailcatcher
+    image: mailhog/mailhog
     restart: always
     ports:
-      - "1080:1080"
-    environment:
-      MAILCATCHER_PORT: 1025
+      - "8025:8025"
 
   # Deployer
   deployer:
