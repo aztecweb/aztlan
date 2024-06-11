@@ -1,6 +1,4 @@
 # Development project infrastructure generated over the Docker
-version: "3.8"
-
 services:
   # Base
   base:
