@@ -23,7 +23,7 @@ host( 'staging' )
 
 set( 'http_user', 'www-data' );
 if ( true === isset( $_SERVER['HTTP_USER'] ) ) {
-	set( 'http_user', sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER'] ) ) );
+	set( 'http_user', $_SERVER['HTTP_USER'] );  // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 }
 set( 'repository', 'git@git.aztecweb.net:aztecwebteam/ambiente.git' );
 set( 'keep_releases', '3' );
@@ -73,7 +73,7 @@ task(
 	function () {
 		try {
 			if ( true === isset( $_SERVER['PHP_VERSION'] ) ) {
-				preg_match( '/\d.\d/', sanitize_text_field( wp_unslash( $_SERVER['PHP_VERSION'] ) ), $php_version );
+				preg_match( '/\d.\d/', $_SERVER['PHP_VERSION'], $php_version ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			}
 			run( 'sudo service php' . reset( $php_version ) . '-fpm reload' );
 			run( 'sudo bash -c "nginx -t && service nginx reload"' );
