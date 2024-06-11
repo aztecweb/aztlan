@@ -18,17 +18,18 @@ abstract class Base {
 	}
 
 	/**
-	 * Create a callback from a function
+	 * Create a callback from a method
 	 *
-	 * @throws Exception If $function isn't a callable.
+	 * @throws Exception If $method isn't a callable.
 	 */
-	public function callback( string $function ) : callable {
-		$callable = array( $this->container->get( get_class( $this ) ), $function );
+	public function callback( string $method ): callable {
+		$callable = array( $this->container->get( get_class( $this ) ), $method );
 
 		if ( is_callable( $callable ) ) {
 			return $callable;
 		}
 
-		throw new Exception( sprintf( '%s::%s isn\'t a callable function', ...$callable ) );
+		$message = sprintf( '%s::%s isn\'t a callable method', ...$callable );
+		throw new Exception( esc_html( $message ) );
 	}
 }
