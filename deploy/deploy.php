@@ -1,10 +1,12 @@
 <?php
 
-declare(strict_types = 1);
-
 /**
  * Deploy settings
+ *
+ * This file contains settings and tasks for deployment using Deployer.
  */
+
+declare(strict_types=1);
 
 namespace Deployer;
 
@@ -14,12 +16,15 @@ host( 'staging' )
 	->set( 'hostname', '207.246.74.78' )
 	->set( 'port', 2201 )
 	->set( 'remote_user', 'ambiente_staging' )
-	->set( 'labels', ['stage' => 'staging'] )
+	->set( 'labels', array( 'stage' => 'staging' ) )
 	->set( 'user', 'ambiente_staging' )
 	->set( 'branch', 'staging' )
 	->set( 'deploy_path', '/home/ambiente_staging' );
 
-set( 'http_user', $_SERVER['HTTP_USER'] );
+set( 'http_user', 'www-data' );
+if ( true === isset( $_SERVER['HTTP_USER'] ) ) {
+	set( 'http_user', sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER'] ) ) );
+}
 set( 'repository', 'git@git.aztecweb.net:aztecwebteam/ambiente.git' );
 set( 'keep_releases', '3' );
 set( 'writable_recursive', true );
@@ -67,10 +72,12 @@ task(
 	'deploy:restart_services',
 	function () {
 		try {
-			preg_match( '/\d.\d/', $_SERVER['PHP_VERSION'], $php_version ); // explicar melhor 7.4.33 -> 7.4
+			if ( true === isset( $_SERVER['PHP_VERSION'] ) ) {
+				preg_match( '/\d.\d/', sanitize_text_field( wp_unslash( $_SERVER['PHP_VERSION'] ) ), $php_version );
+			}
 			run( 'sudo service php' . reset( $php_version ) . '-fpm reload' );
 			run( 'sudo bash -c "nginx -t && service nginx reload"' );
-		} catch (\Deployer\Exception\RunException $e) {
+		} catch ( \Deployer\Exception\RunException $e ) {
 			writeln( '<error>FPM and NGINX need to be restarted manually</error>' );
 		}
 	}
@@ -90,7 +97,6 @@ task(
 		'deploy:cleanup',
 		'deploy:success',
 	)
-
 );
 
-after('rollback', 'deploy:restart_services');
+after( 'rollback', 'deploy:restart_services' );

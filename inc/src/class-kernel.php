@@ -21,11 +21,11 @@ class Kernel {
 		$this->define_services();
 	}
 
-	private function define_services() : void {
+	private function define_services(): void {
 		$this->container->set( LoggerInterface::class, $this->create_logger() );
 	}
 
-	private function create_logger() : LoggerInterface {
+	private function create_logger(): LoggerInterface {
 		$log_stream = isset( $_SERVER['LOG_STREAM'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LOG_STREAM'] ) ) : 'php://stdout';
 		$log_level  = isset( $_SERVER['LOG_LEVEL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['LOG_LEVEL'] ) ) : 'debug';
 
@@ -40,7 +40,7 @@ class Kernel {
 		return $log;
 	}
 
-	public function init() : void {
+	public function init(): void {
 		$init_classes = array(
 			// Aztlan.
 			\Aztec\Aztlan\Integration\Mail::class,

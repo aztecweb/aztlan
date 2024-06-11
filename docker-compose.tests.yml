@@ -1,6 +1,4 @@
 # Development project infrastructure generated over the Docker
-version: "3.8"
-
 services:
   # MySQL
   testdb:
@@ -44,18 +42,21 @@ services:
       - chrome
 
   selenium-hub:
-    image: selenium/hub:3.141.59
+    image: selenium/hub
 
   chrome:
-    image: selenium/node-chrome:3.141.59
+    image: selenium/node-chrome
+    shm_size: '2gb'
     volumes:
       - /dev/shm:/dev/shm
+      - ./:/app
     depends_on:
       - selenium-hub
       - testserver
     environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
 
 volumes:
   test_mysql_data:
