@@ -30,15 +30,15 @@ class Assets extends Base {
 		$this->language_dir = ABSPATH . '../../assets/languages';
 	}
 
-	protected function set_enqueue_hook( string $hook ) : void {
+	protected function set_enqueue_hook( string $hook ): void {
 		$this->enqueue_hook = $hook;
 	}
 
-	protected function set_file( string $file ) : void {
+	protected function set_file( string $file ): void {
 		$this->file = $file;
 	}
 
-	private function handle( string $suffix = '' ) : string {
+	private function handle( string $suffix = '' ): string {
 		if ( '' === $suffix ) {
 			$suffix = $this->file;
 		}
@@ -46,7 +46,7 @@ class Assets extends Base {
 		return $this->handle_base . '-' . $suffix;
 	}
 
-	protected function add_hooks() : void {
+	protected function add_hooks(): void {
 		add_action( 'init', $this->callback( 'register_script' ) );
 		add_action( 'init', $this->callback( 'register_style' ) );
 		add_action( 'init', $this->callback( 'set_script_translations' ) );
@@ -55,13 +55,13 @@ class Assets extends Base {
 		add_filter( 'load_script_translation_file', $this->callback( 'load_script_translation_file' ), 10, 3 );
 	}
 
-	public function assets_uri( string $path ) : string {
+	public function assets_uri( string $path ): string {
 		$assets_url = isset( $_SERVER['ASSETS_URL'] ) ? sanitize_text_field( wp_unslash( $_SERVER['ASSETS_URL'] ) ) : 'http://localhost';
 
 		return $assets_url . '/' . trim( $path, '/' );
 	}
 
-	public function register_script() : void {
+	public function register_script(): void {
 		$src           = $this->assets_uri( $this->file . '.js' );
 		$vendor_handle = $this->handle( 'vendor' );
 
@@ -69,13 +69,13 @@ class Assets extends Base {
 		wp_register_script( $this->handle(), $src, array( $vendor_handle ), self::VERSION, true );
 	}
 
-	public function register_style() : void {
+	public function register_style(): void {
 		$src = $this->assets_uri( $this->file . '.css' );
 
 		wp_register_style( $this->handle(), $src, array(), self::VERSION );
 	}
 
-	public function set_script_translations() : void {
+	public function set_script_translations(): void {
 		$theme_active = isset( $_SERVER['THEME_ACTIVE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['THEME_ACTIVE'] ) ) : 'aztlan';
 
 		wp_set_script_translations( $this->handle(), $theme_active . '_assets', $this->language_dir );
@@ -86,7 +86,7 @@ class Assets extends Base {
 	 *
 	 * As the assets is out of WordPress structure, the files must be loaded with a custom code.
 	 */
-	public function load_script_translation_file( string $file, string $handle, string $domain ) : string {
+	public function load_script_translation_file( string $file, string $handle, string $domain ): string {
 		if ( $this->handle() !== $handle ) {
 			return $file;
 		}
@@ -101,7 +101,7 @@ class Assets extends Base {
 	/**
 	 * Enqueue assets on the page
 	 */
-	public function enqueue() : void {
+	public function enqueue(): void {
 		wp_enqueue_script( $this->handle() );
 		wp_enqueue_style( $this->handle() );
 	}

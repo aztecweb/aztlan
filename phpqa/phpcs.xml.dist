@@ -2,7 +2,9 @@
 <ruleset name="aztlan">
     <description>The PHP coding standard.</description>
 
-    <config name="installed_paths" value="/app/phpqa/vendor/wp-coding-standards/wpcs,/app/phpqa/vendor/phpcompatibility/php-compatibility" />
+    <arg name="extensions" value="php" />
+    <arg value="-colors" />
+    <arg value="ns" />
 
     <!--
          Use WordPress coding standard

@@ -21,7 +21,7 @@ class Logger_Factory {
 	 * @param HandlerInterface|array<HandlerInterface> $handler
 	 * @return LoggerInterface
 	 */
-	public function create( $handler ) : LoggerInterface {
+	public function create( $handler ): LoggerInterface {
 		if ( ! is_array( $handler ) ) {
 			$handler = array( $handler );
 		}
