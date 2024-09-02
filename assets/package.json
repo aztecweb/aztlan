@@ -15,9 +15,9 @@
   "license": "GPL-2.0",
   "devDependencies": {
     "@babel/core": "7.25.2",
-    "@babel/preset-env": "7.25.2",
+    "@babel/preset-env": "7.25.4",
     "@babel/preset-react": "7.24.7",
-    "@wordpress/eslint-plugin": "20.2.0",
+    "@wordpress/eslint-plugin": "20.3.0",
     "acorn": "8.12.1",
     "babel-loader": "9.1.3",
     "babel-plugin-import-glob": "2.0.0",
@@ -27,24 +27,24 @@
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-react": "7.35.0",
     "file-loader": "6.2.0",
-    "mini-css-extract-plugin": "2.9.0",
+    "mini-css-extract-plugin": "2.9.1",
     "node-sass": "9.0.0",
     "prettier": "3.3.3",
     "sass": "1..77.6",
-    "sass-loader": "16.0.0",
+    "sass-loader": "16.0.1",
     "style-loader": "4.0.0",
-    "stylelint": "16.8.1",
+    "stylelint": "16.9.0",
     "stylelint-config-standard-scss": "13.1.0",
     "terser-webpack-plugin": "5.3.10",
     "typescript": "5.5.4",
     "url-loader": "4.1.1",
-    "webpack": "5.93.0",
+    "webpack": "5.94.0",
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
     "ajv": "8.17.1",
     "postcss-markdown": "1.2.0",
-    "postcss-selector-parser": "6.1.1",
+    "postcss-selector-parser": "6.1.2",
     "webfontloader": "1.6.28"
   }
 }
