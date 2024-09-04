@@ -76,7 +76,7 @@ class Log implements LoggerInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	// @phpstan-ignore-next-line: has parameter $level with no type specified.
+	// @phpstan-ignore-next-line: $level has no type specified to be compatible with Psr\Log\LoggerInterface::log.
 	public function log( $level, string|\Stringable $message, array $context = array() ): void {
 		$this->logger->log( $level, $message, $context );
 	}
