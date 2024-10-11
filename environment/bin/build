@@ -188,11 +188,6 @@ set_script_variables() {
 	# Set general variables
 	HTTP_USER=$(docker_compose_run_with_host_user wordpress-base printenv HTTP_USER)
 	WP_BASH="wp bash"
-	CLI_COMPOSER="docker_compose_run_with_host_user -w /app/cli composer"
-	INC_COMPOSER="docker_compose_run_with_host_user -w /app/inc composer"
-	WP_COMPOSER="docker_compose_run_with_host_user -w /app/wp-packages composer"
-	PHPQA_COMPOSER="docker_compose_run_with_host_user -w /app/phpqa composer"
-	DEPLOY_COMPOSER="docker_compose_run_with_host_user -w /app/deploy composer"
 	NPM="docker_compose_run_with_host_user assets-node npm"
 	if is_dist_build; then
 		COMPOSER_INSTALL_OPTIONS="--no-progress --no-interaction --prefer-dist --no-dev --optimize-autoloader -vvv"
@@ -299,11 +294,13 @@ install_private_themes() {
 }
 
 install_composer_packages() {
-	${CLI_COMPOSER} install ${COMPOSER_INSTALL_OPTIONS}
-	${INC_COMPOSER} install ${COMPOSER_INSTALL_OPTIONS}
-	${WP_COMPOSER} install ${COMPOSER_INSTALL_OPTIONS}
-	${PHPQA_COMPOSER} install ${COMPOSER_INSTALL_OPTIONS}
-	${DEPLOY_COMPOSER} install ${COMPOSER_INSTALL_OPTIONS}
+	list_all_versioned_composer_files | while IFS= read -r line; do
+		[[ -f $line ]] && docker_compose_run_with_host_user -w /app/`dirname $line` composer install ${COMPOSER_INSTALL_OPTIONS} < /dev/tty
+	done
+}
+
+list_all_versioned_composer_files() {
+	git ls-files | grep composer.json
 }
 
 install_node_packages() {
