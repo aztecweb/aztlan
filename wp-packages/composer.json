@@ -1,10 +1,18 @@
 {
 	"name": "aztecweb/aztlan",
-	"repositories": [{
-		"type": "composer",
-		"url": "https://wpackagist.org"
-	}],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://wpackagist.org"
+		},
+		{
+			"type": "path",
+			"url": "private/plugins/*"
+		}
+	],
 	"require": {
+		"aztecweb/aztec": "1.0.0",
+        "composer/installers": "~1.0",
 		"johnpbloch/wordpress": "6.6.2"
 	},
 	"extra": {
@@ -23,7 +31,8 @@
 			"php": "8.3"
 		},
 		"allow-plugins": {
-			"johnpbloch/wordpress-core-installer": true
+			"johnpbloch/wordpress-core-installer": true,
+			"composer/installers": true
 		}
 	}
 }
