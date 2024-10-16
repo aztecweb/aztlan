@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8edb55395a1622b84e3256537fc51ac8",
+    "content-hash": "af2f4157f14acba6a4981c9cf88a7bb3",
     "packages": [
         {
             "name": "aztecweb/aztec",
@@ -18,6 +18,27 @@
             "transport-options": {
                 "relative": true
             }
+        },
+        {
+            "name": "aztecweb/aztlan-plugin",
+            "version": "0.1",
+            "dist": {
+                "type": "zip",
+                "url": "/var/repman/artifacts/aztlan-plugin/aztlan-plugin-0.1.zip",
+                "shasum": "41b581e426f80681fc89c3652a886dfc3d3fa947",
+                "mirrors": [
+                    {
+                        "url": "https://aztec.repo.packagist.aztecweb.net/dists/%package%/%version%/%reference%.%type%",
+                        "preferred": true
+                    },
+                    {
+                        "url": "https://aztec.repo.packagist.aztecweb.net/dists/%package%/%version%/%type%",
+                        "preferred": false
+                    }
+                ]
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://aztec.repo.packagist.aztecweb.net/downloads"
         },
         {
             "name": "composer/installers",
