@@ -401,7 +401,7 @@ build_docker_image() {
 }
 
 configure_composer_token() {
-	docker_compose_run_with_host_user -w /app/wp-packages/ composer config http-basic.aztec.repo.packagist.aztecweb.net token "${REPMAN_TOKEN}" < /dev/tty
+	docker_compose_run_with_host_user -w /app/wp-packages/ composer config http-basic.aztec.repo.packagist.aztecweb.net token "${REPMAN_TOKEN}"
 }
 
 main "$@"
