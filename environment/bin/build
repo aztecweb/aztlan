@@ -296,9 +296,12 @@ install_private_themes() {
 }
 
 install_composer_packages() {
-	list_all_versioned_composer_files | while IFS= read -r line; do
-		[[ -f $line ]] && docker_compose_run_with_host_user -w /app/`dirname $line` composer install ${COMPOSER_INSTALL_OPTIONS} < /dev/tty
-	done
+	exec 3</dev/tty || exec 3<&0
+	while read composer_file
+	do
+		[[ -f $composer_file ]] && docker_compose_run_with_host_user -w /app/`dirname $composer_file` composer install ${COMPOSER_INSTALL_OPTIONS} <&3
+	done < <(list_all_versioned_composer_files)
+	exec 3<&-
 }
 
 list_all_versioned_composer_files() {
