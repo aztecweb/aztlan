@@ -8,12 +8,18 @@
 		{
 			"type": "path",
 			"url": "private/plugins/*"
+		},
+		{
+			"type": "composer",
+			"url": "https://aztec.repo.packagist.aztecweb.net"
 		}
 	],
 	"require": {
 		"aztecweb/aztec": "1.0.0",
-        "composer/installers": "~1.0",
+		"aztecweb/aztlan-plugin": "1.0.0",
+		"composer/installers": "~1.0",
 		"johnpbloch/wordpress": "6.6.2"
+		
 	},
 	"extra": {
 		"wordpress-install-dir": "../public/wp",
