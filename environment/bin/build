@@ -188,6 +188,7 @@ set_script_variables() {
 
 	# Set general variables
 	HTTP_USER=$(docker_compose_run_with_host_user wordpress-base printenv HTTP_USER)
+	WP_COMPOSER="docker_compose_run_with_host_user -w /app/wp-packages composer"
 	WP_BASH="wp bash"
 	NPM="docker_compose_run_with_host_user assets-node npm"
 	if is_dist_build; then
