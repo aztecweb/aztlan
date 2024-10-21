@@ -36,6 +36,7 @@ main() {
 	clear_themes_and_plugins_folder
 	install_private_plugins
 	install_private_themes
+	configure_composer_token
 	install_composer_packages
 	install_node_packages
 	build_webpack
@@ -393,6 +394,10 @@ build_docker_image() {
 
 	# Cleanup build directory
 	cleanup build
+}
+
+configure_composer_token() {
+	docker_compose_run_with_host_user -w /app/wp-packages/ composer config http-basic.aztec.repo.packagist.aztecweb.net token "${REPMAN_TOKEN}" < /dev/tty
 }
 
 main "$@"

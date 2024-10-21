@@ -4,3 +4,4 @@ xdebug/
 themes/*/languages/*
 !themes/*/languages/.gitkeep
 .env
+wp-packages/auth.json
