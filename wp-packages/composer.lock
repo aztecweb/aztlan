@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2f4157f14acba6a4981c9cf88a7bb3",
+    "content-hash": "416b7f0f03956dffcff701bcad5b738d",
     "packages": [
         {
             "name": "aztecweb/aztec",
@@ -21,11 +21,11 @@
         },
         {
             "name": "aztecweb/aztlan-plugin",
-            "version": "0.1",
+            "version": "1.0.0",
             "dist": {
                 "type": "zip",
-                "url": "/var/repman/artifacts/aztlan-plugin/aztlan-plugin-0.1.zip",
-                "shasum": "41b581e426f80681fc89c3652a886dfc3d3fa947",
+                "url": "/var/repman/artifacts/aztlan-plugin/aztlan-plugin-1.0.0.zip",
+                "shasum": "561944831fb9573a7688b8fccc74b20b04f3972c",
                 "mirrors": [
                     {
                         "url": "https://aztec.repo.packagist.aztecweb.net/dists/%package%/%version%/%reference%.%type%",
