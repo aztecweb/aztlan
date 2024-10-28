@@ -1,7 +1,7 @@
 ARG PHP_VERSION
 
 # =========================base=========================
-FROM alpine as base
+FROM alpine AS base
 RUN apk add --no-cache bash acl curl wget
 
 # =========================build deps=========================
