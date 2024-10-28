@@ -72,13 +72,22 @@ task(
 	'deploy:restart_services',
 	function () {
 		try {
+			$has_sudo = test( 'sudo -v' );
+
+			if ( ! $has_sudo ) {
+				writeln( '<error>FPM and NGINX need to be restarted manually.</error>' );
+				return;
+			}
+
 			if ( true === isset( $_SERVER['PHP_VERSION'] ) ) {
 				preg_match( '/\d.\d/', $_SERVER['PHP_VERSION'], $php_version ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			}
+
 			run( 'sudo service php' . reset( $php_version ) . '-fpm reload' );
 			run( 'sudo bash -c "nginx -t && service nginx reload"' );
+
 		} catch ( \Deployer\Exception\RunException $e ) {
-			writeln( '<error>FPM and NGINX need to be restarted manually</error>' );
+			writeln( '<error>FPM and NGINX need to be restarted manually.</error>' );
 		}
 	}
 );
