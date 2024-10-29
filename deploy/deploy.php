@@ -72,9 +72,9 @@ task(
 	'deploy:restart_services',
 	function () {
 		try {
-			$has_sudo = test( 'sudo -v' );
+			$has_sudo_permissions = test( 'sudo -v' );
 
-			if ( ! $has_sudo ) {
+			if ( ! $has_sudo_permissions ) {
 				writeln( '<error>FPM and NGINX need to be restarted manually.</error>' );
 				return;
 			}
