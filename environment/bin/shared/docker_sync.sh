@@ -16,7 +16,7 @@ docker_sync() {
   # This is necessary because Docker Sync uses `pwd` as path to sync
   CURRENT_DIR=$(pwd)
   cd ${ENV_ROOT_PATH}
-  VOLUME_PREFIX=${VOLUME_PREFIX} docker-sync $@ -c ${ENV_ROOT_PATH}/environment/docker-sync.yml
+  VOLUME_PREFIX=${VOLUME_PREFIX} docker-sync $@ -c ${ENV_ROOT_PATH}/environment/docker-sync.yaml
   cd ${CURRENT_DIR}
 }
 

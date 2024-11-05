@@ -47,7 +47,7 @@ services:
 
   installer:
     extends:
-      file: docker-compose.dist.yml
+      file: compose.dist.yaml
       service: wp
     entrypoint: [ "aztlan-install", "dist" ]
     environment:
