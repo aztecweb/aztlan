@@ -18,7 +18,7 @@ class Logger_Factory {
 	/**
 	 * Create a logger with one handler or a array of handlers
 	 *
-	 * @param HandlerInterface|array<HandlerInterface> $handler
+	 * @param HandlerInterface|list<HandlerInterface> $handler
 	 * @return LoggerInterface
 	 */
 	public function create( $handler ): LoggerInterface {
