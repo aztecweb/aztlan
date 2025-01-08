@@ -9,7 +9,7 @@ if [ "$#" -gt "0" ]; then
 fi
 
 # Waiting database connection
-while ! mysqladmin ping -h ${DB_HOST} --silent; do
+while ! mysqladmin ping -h ${DB_HOST} -u ${MYSQL_USER} -p${MYSQL_PASSWORD} --silent; do
 	echo 'Waiting database connection' && sleep 3
 done
 
