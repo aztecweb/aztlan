@@ -14,10 +14,10 @@ environment/docker
 environment/env
 environment/.gitignore
 environment/.upgradeable
-environment/docker-compose.dist.yml
-environment/docker-compose.mac.yml
-environment/docker-compose.yml
-environment/docker-sync.yml
+environment/compose.dist.yaml
+environment/compose.mac.yaml
+environment/compose.yaml
+environment/docker-sync.yaml
 environment/profile
 inc/src/aztlan
 inc/src/class-base.php
