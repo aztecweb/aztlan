@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+trap "exit" INT
+
 main() {
 	parse_commandline "$@"
 	handle_passed_args_count
