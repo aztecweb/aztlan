@@ -21,13 +21,6 @@ services:
     volumes:
       - app:/app:nocopy
 
-  # Composer
-  composer:
-    volumes:
-      - app:/app:nocopy
-      # Map local user Composer directory with container for cache packages
-      - composer_cache:/tmp/cache:nocopy
-
   # PHPQA
   phpqa:
     volumes:
@@ -39,9 +32,6 @@ services:
       - app:/app:nocopy
 
 volumes:
-  composer_cache:
-    external: true
-
   app:
     name: ${VOLUME_PREFIX}app_sync
     external: true

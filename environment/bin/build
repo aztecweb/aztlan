@@ -192,7 +192,7 @@ set_script_variables() {
 
 	# Set general variables
 	HTTP_USER=$(docker_compose_run_with_host_user wordpress-base printenv HTTP_USER)
-	WP_COMPOSER="docker_compose_run_with_host_user -w /app/wp-packages composer"
+	WP_COMPOSER="docker_compose_run_with_host_user -w /app/wp-packages --entrypoint=composer wp"
 	WP_BASH="wp bash"
 	NPM="docker_compose_run_with_host_user assets-node npm"
 	if is_dist_build; then
@@ -315,7 +315,7 @@ install_composer_packages() {
 	exec 3</dev/tty || exec 3<&0
 	while read composer_file
 	do
-		[[ -f $composer_file ]] && docker_compose_run_with_host_user -w /app/`dirname $composer_file` composer install ${COMPOSER_INSTALL_OPTIONS} <&3
+		[[ -f $composer_file ]] && docker_compose_run_with_host_user -w /app/`dirname $composer_file` --entrypoint=composer wp install ${COMPOSER_INSTALL_OPTIONS} <&3
 	done < <(list_all_versioned_composer_files)
 	exec 3<&-
 }

@@ -86,6 +86,9 @@ WORKDIR /app
 FROM cli-base AS cli-development
 USER root
 
+# Copy composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
 # Copy MSMTP bin and settings
 COPY --from=msmtp /etc/msmtprc /etc/msmtprc
 COPY --from=msmtp /lib/ /lib/
