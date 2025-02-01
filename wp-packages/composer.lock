@@ -4,28 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6196dbd769c45032e3f2d973ae88c76",
+    "content-hash": "6b8ed8b9b0fee639c9800086f54e1c6b",
     "packages": [
-        {
-            "name": "aztecweb/aztec",
-            "version": "1.0.0",
-            "dist": {
-                "type": "path",
-                "url": "private/plugins/aztec",
-                "reference": "ce51ae6904dcfb3e86a7e13b506ed56afb40ad81"
-            },
-            "type": "wordpress-plugin",
-            "transport-options": {
-                "relative": true
-            }
-        },
         {
             "name": "aztecweb/aztlan-plugin",
             "version": "1.0.0",
             "dist": {
                 "type": "zip",
                 "url": "/var/repman/artifacts/aztlan-plugin/aztlan-plugin-1.0.0.zip",
-                "shasum": "561944831fb9573a7688b8fccc74b20b04f3972c",
+                "shasum": "38a15df8181b9ef118f04f9d3fefcb3a191dc871",
                 "mirrors": [
                     {
                         "url": "https://aztec.repo.packagist.aztecweb.net/dists/%package%/%version%/%reference%.%type%",
@@ -39,6 +26,19 @@
             },
             "type": "wordpress-plugin",
             "notification-url": "https://aztec.repo.packagist.aztecweb.net/downloads"
+        },
+        {
+            "name": "aztlan/aztec",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "private/plugins/aztec",
+                "reference": "bd4f217480d54017dba34bf92dc07f5b602d48ce"
+            },
+            "type": "wordpress-plugin",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "composer/installers",
