@@ -307,6 +307,10 @@ install_private_themes() {
     "
 }
 
+configure_composer_token() {
+	${WP_COMPOSER} config http-basic.aztec.repo.packagist.aztecweb.net token "${REPMAN_TOKEN}"
+}
+
 install_composer_packages() {
 	exec 3</dev/tty || exec 3<&0
 	while read composer_file
@@ -410,10 +414,6 @@ build_docker_image() {
 
 	# Cleanup build directory
 	cleanup build
-}
-
-configure_composer_token() {
-	docker_compose_run_with_host_user -w /app/wp-packages/ composer config http-basic.aztec.repo.packagist.aztecweb.net token "${REPMAN_TOKEN}"
 }
 
 main "$@"
