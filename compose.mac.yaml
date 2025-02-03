@@ -16,11 +16,6 @@ services:
     volumes:
       - app:/app:nocopy
 
-  # Node 8.2 with NPM/Yarn/npx
-  assets-node:
-    volumes:
-      - app:/app:nocopy
-
   # Composer
   composer:
     volumes:
