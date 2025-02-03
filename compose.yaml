@@ -81,5 +81,11 @@ services:
       file: common-services.yaml
       service: composer
 
+  # editorconfig-checker
+  editorconfig-checker:
+    extends:
+      file: common-services.yaml
+      service: editorconfig-checker
+
 volumes:
   mysql_data:

@@ -25,7 +25,18 @@ function return_run() {
 	echo "$2"
 }
 
-# Code standards functions
+function run_editorconfig_checker() {
+	printf "Running EDITORCONFIG\t........... ";
+	EDITORCONFIG=$(docker_compose_run_with_host_user editorconfig-checker)
+	if [ -z "${EDITORCONFIG}" ]
+	then
+		print_success
+	else
+		print_error;
+		EXIT_CODE=1;
+	fi
+}
+
 function run_phpcs() {
 	printf "Running PHPCS\t........... ";
 	PHPCS=$(docker_compose_run_with_host_user phpqa phpcs)
@@ -97,6 +108,7 @@ function run_eslint() {
 source environment/bin/shared/docker_compose.sh
 
 # Run code standards functions
+run_editorconfig_checker
 run_phpcbf
 run_phpcs
 run_phpstan
@@ -107,6 +119,7 @@ if [ ${EXIT_CODE} == 0 ]
 then
 	printf "\nCode Standards validation successfull \nCommiting... \n\n"
 else
+	return_run "EDITORCONFIG" "$EDITORCONFIG"
 	return_run "PHPCBF" "$PHPCBF"
 	return_run "PHPCS" "$PHPCS"
 	return_run "PHPSTAN" "$PHPSTAN"

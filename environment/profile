@@ -20,6 +20,7 @@ alias assets-build="node npm run build"
 # Lint
 alias jslint="node npm run lint:js"
 alias stylelint="node npm run lint:style"
+alias editorconfig-checker="docker_compose_run_with_host_user editorconfig-checker"
 
 # PHPQA
 alias phpqa="docker_compose_run_with_host_user phpqa"
