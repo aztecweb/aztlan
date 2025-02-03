@@ -4,7 +4,7 @@ root = true
 charset = utf-8
 end_of_line = lf
 indent_size = 4
-indent_style = tab
+indent_style = s
 insert_final_newline = true
 trim_trailing_whitespace = true
 
@@ -13,11 +13,6 @@ trim_trailing_whitespace = false
 
 [*.{sh,yml}]
 indent_size = 2
-indent_style = spaces
-
-[*.xml.dist]
-indent_style = spaces
 
 [*.{styl,scss,sass}]
 indent_size = 2
-indent_style = space
