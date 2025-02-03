@@ -75,10 +75,6 @@ alias project-docker-sync="docker_sync"
 
 # Languages POT generation
 function i18n() {
-	# Set host user as conteiner user for non-Mac users to allow write the POT files
-	USER_ARGS=''
-	[ 'Darwin' = ${OS} ] || USER_ARGS=" -u $(id -u ${USER}):$(id -g ${USER})"
-
 	eval $(echo docker_compose_run_with_host_user wp i18n make-pot --domain=${THEME_ACTIVE}_assets assets/dist assets/languages/${THEME_ACTIVE}_assets.pot)
 	eval $(echo docker_compose_run_with_host_user wp i18n make-pot --domain=${THEME_ACTIVE}_inc inc/src inc/languages/${THEME_ACTIVE}_inc.pot)
 	eval $(echo docker_compose_run_with_host_user wp i18n make-pot themes/${THEME_ACTIVE} themes/${THEME_ACTIVE}/languages/${THEME_ACTIVE}.pot)
