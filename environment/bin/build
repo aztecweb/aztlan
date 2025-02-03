@@ -172,7 +172,6 @@ import_shell_helpers() {
 set_script_variables() {
 	# WP packages public directory
 	PUBLIC_PACKAGES_DIR="public/packages"
-	MU_PLUGIN_DIR="${PUBLIC_PACKAGES_DIR}/mu-plugins"
 	UPLOADS_DIR=$(docker_compose_run_with_host_user wordpress-base printenv UPLOADS_DIR)
 	THEMES_DIR="${PUBLIC_PACKAGES_DIR}/themes"
 	PLUGINS_DIR="${PUBLIC_PACKAGES_DIR}/plugins"
