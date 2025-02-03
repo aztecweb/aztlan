@@ -385,7 +385,6 @@ build_docker_image() {
 	mkdir -p ${ENV_ROOT_PATH}
 
 	# Copy file to execute the build process
-	# Use rsync to work with MacOS
 	rsync -aR ${BUILD_FILES[@]} ${ENV_ROOT_PATH}/
 
 	# Copy mu-plugins files to public directory
