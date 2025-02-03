@@ -45,10 +45,6 @@ class Kernel {
 			// Aztlan.
 			\Aztec\Aztlan\Integration\Mail::class,
 
-			// Assets.
-			\Aztec\Aztlan\Assets\App::class,
-			\Aztec\Aztlan\Assets\Editor::class,
-
 			// Languages.
 			\Aztec\Setup\Textdomain::class,
 		);

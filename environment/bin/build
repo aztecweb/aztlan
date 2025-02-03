@@ -43,8 +43,6 @@ main() {
 	install_private_themes
 	configure_composer_token
 	install_composer_packages
-	install_node_packages
-	build_webpack
 	download_and_install_languages_packages
 	shutdown_network
 
@@ -194,16 +192,11 @@ set_script_variables() {
 	HTTP_USER=$(docker_compose_run_with_host_user wordpress-base printenv HTTP_USER)
 	WP_COMPOSER="docker_compose_run_with_host_user -w /app/wp-packages --entrypoint=composer wp"
 	WP_BASH="wp bash"
-	NPM="docker_compose_run_with_host_user assets-node npm"
 	if is_dist_build; then
 		COMPOSER_INSTALL_OPTIONS="--no-progress --no-interaction --prefer-dist --no-dev --optimize-autoloader -vvv"
-		NPM_INSTALL_COMMAND="ci"
-		WEBPACK_ENVIRONMENT="build"
 		DOCKER_COMPOSE_DOWN_OPTIONS="--rmi local"
 	else
 		COMPOSER_INSTALL_OPTIONS="--no-progress --no-interaction -vv"
-		NPM_INSTALL_COMMAND="install"
-		WEBPACK_ENVIRONMENT="dev"
 		DOCKER_COMPOSE_DOWN_OPTIONS=""
 	fi
 
@@ -224,8 +217,6 @@ set_script_variables() {
 
 		# List of files used to build the application
 		BUILD_FILES=(
-			assets/languages
-			assets/dist
 			cli/vendor
 			environment/docker/
 			inc/vendor
@@ -241,15 +232,6 @@ set_script_variables() {
 
 		# Files doesn't necessary after the build
 		BUILD_CLEAN_FILES=(
-			assets/languages/.gitkeep
-			assets/languages/*.po
-			assets/languages/*.pot
-			assets/node_modules/
-			assets/src/
-			assets/.babelrc
-			assets/package-lock.json
-			assets/package.json
-			assets/webpack.config.js
 			cli/composer.json
 			cli/composer.lock
 			inc/composer.json
@@ -326,25 +308,15 @@ list_all_versioned_composer_files() {
 	git ls-files | grep composer.json
 }
 
-install_node_packages() {
-	${NPM} ${NPM_INSTALL_COMMAND}
-}
-
-build_webpack() {
-	${NPM} run ${WEBPACK_ENVIRONMENT}
-}
-
 download_and_install_languages_packages() {
 	if [ ${GLOTPRESS_PROJECT_ENV_URL} ]; then
 		URL_LANGUAGE_SET=pt-br/default/export-translations
 		URL_LANGUAGE_THEME=${GLOTPRESS_PROJECT_ENV_URL}/theme/${URL_LANGUAGE_SET}
 		URL_LANGUAGE_INC=${GLOTPRESS_PROJECT_ENV_URL}/inc/${URL_LANGUAGE_SET}
-		URL_LANGUAGE_ASSETS=${GLOTPRESS_PROJECT_ENV_URL}/assets/${URL_LANGUAGE_SET}
 		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po"
 		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo"
 		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po"
 		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_ASSETS}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po ${URL_LANGUAGE_ASSETS}/?format=po"
 	fi
 
 	docker_compose_run_with_host_user_bash "ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/"
@@ -371,8 +343,6 @@ download_and_install_languages_packages() {
 			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${THEME_LANGUAGES_DIR} tmp.zip && rm tmp.zip"
 		fi
 	done 3< <(printf '%s\n' "${WP_COMPOSER_INFO}")
-
-	[[ -f "assets/languages/${THEME_ACTIVE}_assets-${WP_LANG}.po" ]] && wp i18n make-json assets/languages/"${THEME_ACTIVE}"_assets-"${WP_LANG}".po --no-purge
 }
 
 shutdown_network() {
@@ -405,10 +375,10 @@ build_docker_image() {
 
 	# Build server image
 	SERVER_IMAGE_DIR=${ENVIRONMENT_DIR}/docker/nginx
-	tar -zcf ${SERVER_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} assets public themes
+	tar -zcf ${SERVER_IMAGE_DIR}/dist.tar.gz -C ${ENV_ROOT_PATH} public themes
 
 	# Build WordPress PHP-FPM image
-	tar -zcf ${PHP_IMAGES_DIR}/dist-fpm.tar.gz -C ${ENV_ROOT_PATH} assets/languages inc public themes
+	tar -zcf ${PHP_IMAGES_DIR}/dist-fpm.tar.gz -C ${ENV_ROOT_PATH} inc public themes
 
 	# Build dist images
 	docker_compose_dist build

@@ -12,14 +12,7 @@ alias build="environment/bin/build"
 alias install="docker_compose_run_with_host_user installer"
 alias server="docker_compose up -d server"
 
-## Node
-alias node="docker_compose_run_with_host_user assets-node"
-alias assets-watch="node npm run watch"
-alias assets-build="node npm run build"
-
 # Lint
-alias jslint="node npm run lint:js"
-alias stylelint="node npm run lint:style"
 alias editorconfig-checker="docker_compose_run_with_host_user editorconfig-checker"
 
 # PHPQA
@@ -66,10 +59,6 @@ alias deploy-ssh-key="cat deploy/.ssh/id_ed25519.pub"
 function dep() {
 	eval $(echo docker_compose run --rm deployer $@ --log deploy.log | tr -d \')
 }
-
-# Docker sync
-. environment/bin/shared/docker_sync.sh
-alias project-docker-sync="docker_sync"
 
 # Languages POT generation
 function i18n() {

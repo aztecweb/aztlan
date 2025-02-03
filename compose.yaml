@@ -45,12 +45,6 @@ services:
       file: common-services.yaml
       service: cli
 
-  # Node 20 with NPM/Yarn/npx
-  assets-node:
-    extends:
-      file: common-services.yaml
-      service: assets-node
-
   # PHPQA
   phpqa:
     extends:
