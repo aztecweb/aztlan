@@ -69,12 +69,6 @@ services:
       file: common-services.yaml
       service: deployer
 
-  # Xdebug profiling viewer
-  webgrind:
-    extends:
-      file: common-services.yaml
-      service: webgrind
-
   # editorconfig-checker
   editorconfig-checker:
     extends:

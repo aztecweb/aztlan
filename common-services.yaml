@@ -150,15 +150,6 @@ services:
     build:
       target: deployer
 
-  # Xdebug profiling viewer
-  webgrind:
-    image: wodby/webgrind
-    ports:
-      - "8000:8080"
-    volumes:
-      - ./xdebug:/tmp:z
-      - ./:/app:z
-
   # Codecept
   codecept:
     extends:

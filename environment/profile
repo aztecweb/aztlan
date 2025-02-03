@@ -67,9 +67,6 @@ function dep() {
 	eval $(echo docker_compose run --rm deployer $@ --log deploy.log | tr -d \')
 }
 
-# Webgrind (Xdebug profiling viewer)
-alias webgrind="docker_compose up -d webgrind"
-
 # Docker sync
 . environment/bin/shared/docker_sync.sh
 alias project-docker-sync="docker_sync"
