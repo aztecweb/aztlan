@@ -1,4 +1,0 @@
-dist
-languages/*
-!languages/.gitkeep
-node_modules

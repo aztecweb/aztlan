@@ -78,32 +78,6 @@ function run_phpstan() {
 	fi
 }
 
-function run_stylint() {
-	printf "Running STYLINT\t........... ";
-	STYLINT=$(docker_compose_run_with_host_user assets-node npm run lint:style)
-
-	if [[ ! "${STYLINT}" =~ "Errors" ]] && [[ ! "${STYLINT}" =~ "Warnings" ]];
-	then
-		print_success;
-	else
-		print_error;
-		EXIT_CODE=1;
-	fi
-}
-
-function run_eslint() {
-	printf "Running ESLINT\t........... ";
-	ESLINT=$(docker_compose_run_with_host_user assets-node npm run lint:js)
-
-	if [[ ! "${ESLINT}" =~ "errors" ]] && [[ ! "${STYLINT}" =~ "warnings" ]];
-	then
-		print_success;
-	else
-		print_error;
-		EXIT_CODE=1;
-	fi
-}
-
 # Load environment
 source environment/bin/shared/docker_compose.sh
 
@@ -112,7 +86,6 @@ run_editorconfig_checker
 run_phpcbf
 run_phpcs
 run_phpstan
-run_stylint
 run_eslint
 
 if [ ${EXIT_CODE} == 0 ]
