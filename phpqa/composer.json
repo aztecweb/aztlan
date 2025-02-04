@@ -2,14 +2,14 @@
     "name": "aztecweb/phpqa",
     "require": {
         "codeception/module-asserts": "3.0.0",
-        "codeception/module-db": "3.1.4",
+        "codeception/module-db": "3.2.0",
         "codeception/module-phpbrowser": "3.0.1",
         "codeception/module-webdriver": "4.0.2",
         "lucatume/wp-browser": "4.4.1",
         "phpcompatibility/php-compatibility": "9.3.5",
         "phpstan/extension-installer": "1.4.3",
-        "phpstan/phpstan": "2.1.1",
-        "phpstan/phpstan-strict-rules": "2.0.1",
+        "phpstan/phpstan": "2.1.2",
+        "phpstan/phpstan-strict-rules": "2.0.3",
         "szepeviktor/phpstan-wordpress": "2.0.1",
         "wp-coding-standards/wpcs": "3.1.0"
     },

@@ -12,7 +12,7 @@
             "dist": {
                 "type": "zip",
                 "url": "/var/repman/artifacts/aztlan-plugin/aztlan-plugin-1.0.0.zip",
-                "shasum": "38a15df8181b9ef118f04f9d3fefcb3a191dc871",
+                "shasum": "8509d51ec66e0eaba2aa2f9c8ce74e817834d82b",
                 "mirrors": [
                     {
                         "url": "https://aztec.repo.packagist.aztecweb.net/dists/%package%/%version%/%reference%.%type%",
