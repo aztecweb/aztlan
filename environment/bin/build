@@ -1,6 +1,10 @@
 #!/bin/bash
 
-set -euo pipefail
+set -Eeuo pipefail
+
+trap "exit" ERR
+
+trap "exit" INT
 
 main() {
 	parse_commandline "$@"
@@ -280,7 +284,7 @@ create_public_packages_directories() {
 }
 
 create_symlink_mu-plugins() {
-	[[ ! -d "${MU_PLUGIN_DIR}" ]] && docker_compose_run_with_host_user_bash "ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}"
+	[[ ! -e ${MU_PLUGIN_DIR} ]] && docker_compose_run_with_host_user_bash "ln -fs ../../wp-packages/mu-plugins ${MU_PLUGIN_DIR}" || echo "The mu-plugin directory already exists"
 }
 
 clear_themes_and_plugins_folder() {
@@ -288,11 +292,19 @@ clear_themes_and_plugins_folder() {
 }
 
 install_private_plugins() {
-	docker_compose_run_with_host_user_bash "find ${PRIVATE_PLUGINS_PACKAGES} -name *.zip -exec unzip -qqod ${PLUGINS_DIR} {} \;"
+    docker_compose_run_with_host_user_bash "
+        for zip_file in \$(find ${PRIVATE_PLUGINS_PACKAGES} -name '*.zip' 2>/dev/null); do
+            unzip -qqod ${PLUGINS_DIR} \"\$zip_file\"
+        done
+    "
 }
 
 install_private_themes() {
-	docker_compose_run_with_host_user_bash "find ${PRIVATE_THEMES_PACKAGES} -name *.zip -exec unzip -qqod ${THEMES_DIR} {} \;"
+    docker_compose_run_with_host_user_bash "
+        for zip_file in \$(find ${PRIVATE_THEMES_PACKAGES} -name '*.zip' 2>/dev/null); do
+            unzip -qqod ${THEMES_DIR} \"\$zip_file\"
+        done
+    "
 }
 
 install_composer_packages() {
