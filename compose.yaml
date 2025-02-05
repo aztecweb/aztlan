@@ -75,11 +75,5 @@ services:
       file: common-services.yaml
       service: webgrind
 
-  # Composer
-  composer:
-    extends:
-      file: common-services.yaml
-      service: composer
-
 volumes:
   mysql_data:

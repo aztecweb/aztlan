@@ -64,6 +64,8 @@ services:
       service: wordpress-base
     build:
       target: cli-development
+    volumes:
+      - ~/.docker_cache/composer:/.composer/cache/:z
 
   # Install WordPress
   installer:
@@ -156,13 +158,6 @@ services:
     volumes:
       - ./xdebug:/tmp:z
       - ./:/app:z
-
-  # Composer
-  composer:
-    image: composer
-    volumes:
-      - .:/app:z
-      - ~/.docker_cache/composer:/tmp/cache:z
 
   # Codecept
   codecept:

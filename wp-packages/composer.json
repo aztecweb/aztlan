@@ -15,11 +15,10 @@
 		}
 	],
 	"require": {
-		"aztecweb/aztec": "1.0.0",
+		"aztlan/aztec": "1.0.0",
 		"aztecweb/aztlan-plugin": "1.0.0",
 		"composer/installers": "~1.0",
 		"johnpbloch/wordpress": "6.7.1"
-
 	},
 	"extra": {
 		"wordpress-install-dir": "../public/wp",
