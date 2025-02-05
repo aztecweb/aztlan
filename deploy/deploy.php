@@ -93,6 +93,22 @@ task(
 );
 
 task(
+    'deploy:symlink_cache',
+    function () {
+        $cache_path = "{{deploy_path}}/current/public/packages/cache";
+        $cache_symlink_path = "/var/cache/sites/{{user}}";
+
+        if (test("[ -d $cache_symlink_path ]")) {
+            run("ln -s $cache_symlink_path $cache_path");
+            writeln("<info>Symlink created: $cache_path -> $cache_symlink_path</info>");
+        } else {
+            writeln("<info>Cache directory does not exist, skipping symlink creation.</info>");
+        return;
+        }
+    }
+);
+
+task(
 	'deploy',
 	array(
 		'deploy:prepare',
@@ -101,6 +117,7 @@ task(
 		'deploy:install',
 		'deploy:clear_paths',
 		'deploy:symlink',
+		'deploy:symlink_cache',
 		'deploy:restart_services',
 		'deploy:unlock',
 		'deploy:cleanup',
