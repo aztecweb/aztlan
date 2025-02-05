@@ -119,7 +119,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./environment/initdb:/docker-entrypoint-initdb.d:z
 
-  # Node 22 with NPM/Yarn/npx
+  # Node 20 with NPM/Yarn/npx
   assets-node:
     image: node:${NODE_VERSION}
     volumes:
