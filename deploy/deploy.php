@@ -92,21 +92,21 @@ task(
 	}
 );
 
-task(
-	'deploy:symlink_cache',
-	function () {
-		$cache_path = '{{deploy_path}}/current/public/packages/cache';
-		$cache_symlink_path = '/var/cache/sites/{{user}}';
+set('user', 'ambiente_staging' );
+set('cache_symlink_path', '/var/cache/sites/{{user}}');
+set('cache_dir', '{{release_path}}/public/packages/cache');
 
-		if ( test( '[ -d $cache_symlink_path ]' ) ) {
-			run( 'ln -s $cache_symlink_path $cache_path' );
-			writeln( '<info>Symlink created: $cache_path -> $cache_symlink_path</info>' );
-		} else {
-			writeln( '<info>Cache directory does not exist, skipping symlink creation.</info>' );
-			return;
-		}
-	}
-);
+task('deploy:symlink_cache', function () {
+
+    run("if [ -L {{cache_dir}} ]; then rm -f {{cache_dir}}; fi");
+
+    if (run('if [ -d {{cache_symlink_path}} ]; then echo "1"; fi', ['timeout' => null]) === '1') {
+        run("ln -sfn {{cache_symlink_path}} {{cache_dir}}", ['timeout' => null]);
+        writeln('<info>Symlink created: {{release_path}}/public/packages/cache -> {{cache_symlink_path}}</info>');
+    } else {
+        writeln('<info>Cache directory does not exist, skipping symlink creation.</info>');
+    }
+});
 
 task(
 	'deploy',
