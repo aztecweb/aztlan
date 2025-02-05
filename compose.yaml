@@ -45,7 +45,7 @@ services:
       file: common-services.yaml
       service: cli
 
-  # Node 22 with NPM/Yarn/npx
+  # Node 20 with NPM/Yarn/npx
   assets-node:
     extends:
       file: common-services.yaml
