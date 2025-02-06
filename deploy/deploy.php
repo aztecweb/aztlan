@@ -98,9 +98,8 @@ task(
 task(
 	'deploy:symlink_cache',
 	function () {
-
 		$cache_exists_command = '[ -d {{cache_symlink_path}} ]';
-
+		run( 'rm -rf {{cache_dir}}', array( 'timeout' => null ) );
 		if ( test( $cache_exists_command ) ) {
 			run( 'ln -sfn {{cache_symlink_path}} {{cache_dir}}', array( 'timeout' => null ) );
 			writeln( '<info>Symlink created: {{release_path}}/public/packages/cache -> {{cache_symlink_path}}</info>' );
