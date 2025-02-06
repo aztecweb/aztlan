@@ -29,6 +29,9 @@ set( 'repository', 'git@git.aztecweb.net:aztecwebteam/ambiente.git' );
 set( 'keep_releases', '3' );
 set( 'writable_recursive', true );
 set( 'update_code_strategy', 'clone' );
+set( 'user', 'ambiente_staging' );
+set( 'cache_symlink_path', '/var/cache/sites/{{user}}' );
+set( 'cache_dir', '{{release_path}}/public/packages/cache' );
 
 set(
 	'shared_files',
@@ -92,17 +95,13 @@ task(
 	}
 );
 
-set( 'user', 'ambiente_staging' );
-set( 'cache_symlink_path', '/var/cache/sites/{{user}}' );
-set( 'cache_dir', '{{release_path}}/public/packages/cache' );
-
 task(
 	'deploy:symlink_cache',
 	function () {
 
-		run( 'if [ -L {{cache_dir}} ]; then rm -f {{cache_dir}}; fi' );
+		$cache_exists_command = '[ -d {{cache_symlink_path}} ]';
 
-		if ( run( 'if [ -d {{cache_symlink_path}} ]; then echo "1"; fi', array( 'timeout' => null ) ) === '1' ) {
+		if ( test( $cache_exists_command ) ) {
 			run( 'ln -sfn {{cache_symlink_path}} {{cache_dir}}', array( 'timeout' => null ) );
 			writeln( '<info>Symlink created: {{release_path}}/public/packages/cache -> {{cache_symlink_path}}</info>' );
 		} else {
