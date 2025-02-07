@@ -275,8 +275,8 @@ enable_pre_commit() {
 
 create_directory_and_give_permissions_to_http_user() {
 	local directory="$1"
-	[[ ! -d "${directory}" ]] && docker_compose_run_with_host_user_bash "mkdir -p ${directory}"
-	[[ ! -L "${directory}" ]] && docker_compose_run_with_host_user_bash "setfacl -R -m g:${HTTP_USER}:rwx ${directory}/ && setfacl -Rd -m g:${HTTP_USER}:rwx ${directory}/"
+	[[ ! -d "${directory}" ]] && docker_compose_run_with_host_user_bash "mkdir -p ${directory}" || echo "The ${directory} already exists"
+	[[ ! -L "${directory}" ]] && docker_compose_run_with_host_user_bash "setfacl -R -m g:${HTTP_USER}:rwx ${directory}/ && setfacl -Rd -m g:${HTTP_USER}:rwx ${directory}/" || echo "The ${directory} is a symlink"
 }
 
 create_public_packages_directories() {
