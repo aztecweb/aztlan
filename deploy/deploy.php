@@ -29,6 +29,8 @@ set( 'repository', 'git@git.aztecweb.net:aztecwebteam/ambiente.git' );
 set( 'keep_releases', '3' );
 set( 'writable_recursive', true );
 set( 'update_code_strategy', 'clone' );
+set( 'cache_symlink_path', '/var/cache/sites/{{user}}' );
+set( 'cache_dir', '{{release_path}}/public/packages/cache' );
 
 set(
 	'shared_files',
@@ -85,9 +87,22 @@ task(
 
 			run( 'sudo service php' . reset( $php_version ) . '-fpm reload' );
 			run( 'sudo bash -c "nginx -t && service nginx reload"' );
-
 		} catch ( \Deployer\Exception\RunException $e ) {
 			writeln( '<error>FPM and NGINX need to be restarted manually.</error>' );
+		}
+	}
+);
+
+task(
+	'deploy:symlink_cache',
+	function () {
+		$cache_exists_command = '[ -d {{cache_symlink_path}} ]';
+		if ( test( $cache_exists_command ) ) {
+			run( 'rm -rf {{cache_dir}}', array( 'timeout' => null ) );
+			run( 'ln -s {{cache_symlink_path}} {{cache_dir}}', array( 'timeout' => null ) );
+			writeln( '<info>Symlink created: {{release_path}}/public/packages/cache -> {{cache_symlink_path}}</info>' );
+		} else {
+			writeln( '<info>Cache directory does not exist, skipping symlink creation.</info>' );
 		}
 	}
 );
@@ -101,6 +116,7 @@ task(
 		'deploy:install',
 		'deploy:clear_paths',
 		'deploy:symlink',
+		'deploy:symlink_cache',
 		'deploy:restart_services',
 		'deploy:unlock',
 		'deploy:cleanup',
