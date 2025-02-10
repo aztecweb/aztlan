@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0dc71bf616e035c73861c21150805dfa",
+    "content-hash": "50fee1b388bd4dc1927dc456464e66aa",
     "packages": [
         {
             "name": "aztecweb/aztlan-plugin",
