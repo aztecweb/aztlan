@@ -1,6 +1,5 @@
 .upgrade/
 build/
-xdebug/
 themes/*/languages/*
 !themes/*/languages/.gitkeep
 .env

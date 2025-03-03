@@ -30,9 +30,10 @@ main() {
 	set_script_variables
 
 	if is_filesystem_build; then
-		create_directory_and_give_permissions_to_http_user ${UPLOADS_DIR}
-		create_directory_and_give_permissions_to_http_user ${UPGRADE_DIR}
 		create_directory_and_give_permissions_to_http_user ${LANGUAGES_DIR}
+		create_directory_and_give_permissions_to_http_user ${UPGRADE_DIR}
+		create_directory_and_give_permissions_to_http_user ${UPLOADS_DIR}
+		create_directory_and_give_permissions_to_http_user ${XDEBUG_DIR}
 	fi
 
 	create_public_packages_directories
@@ -171,7 +172,6 @@ import_shell_helpers() {
 set_script_variables() {
 	# WP packages public directory
 	PUBLIC_PACKAGES_DIR="public/packages"
-	MU_PLUGIN_DIR="${PUBLIC_PACKAGES_DIR}/mu-plugins"
 	UPLOADS_DIR=$(docker_compose_run_with_host_user wordpress-base printenv UPLOADS_DIR)
 	THEMES_DIR="${PUBLIC_PACKAGES_DIR}/themes"
 	PLUGINS_DIR="${PUBLIC_PACKAGES_DIR}/plugins"
@@ -212,6 +212,8 @@ set_script_variables() {
 	THEME_ACTIVE=$(docker_compose_run_with_host_user wordpress-base printenv THEME_ACTIVE)
 	WP_LANG=$(docker_compose_run_with_host_user wordpress-base printenv WP_LANG)
 	set -x
+
+	XDEBUG_DIR="/app/xdebug"
 
 	if is_image_build; then
 		set +x
