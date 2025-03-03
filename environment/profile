@@ -67,10 +67,6 @@ function dep() {
 	eval $(echo docker_compose run --rm deployer $@ --log deploy.log | tr -d \')
 }
 
-# Docker sync
-. environment/bin/shared/docker_sync.sh
-alias project-docker-sync="docker_sync"
-
 # Languages POT generation
 function i18n() {
 	eval $(echo docker_compose_run_with_host_user wp i18n make-pot --domain=${THEME_ACTIVE}_assets assets/dist assets/languages/${THEME_ACTIVE}_assets.pot)
