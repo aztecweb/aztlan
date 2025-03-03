@@ -13,8 +13,6 @@ docker_compose() {
 
   COMPOSE="docker compose -p ${PROJECT} -f ${MAIN_COMPOSE_FILE}"
 
-  [ 'Darwin' = ${OS} ] && COMPOSE+=" -f compose.mac.yaml"
-
   VOLUME_PREFIX=${VOLUME_PREFIX} ${COMPOSE} "$@"
 }
 
