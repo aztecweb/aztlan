@@ -75,5 +75,11 @@ services:
       file: common-services.yaml
       service: webgrind
 
+  # editorconfig-checker
+  editorconfig-checker:
+    extends:
+      file: common-services.yaml
+      service: editorconfig-checker
+
 volumes:
   mysql_data:

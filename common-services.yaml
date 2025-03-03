@@ -165,3 +165,8 @@ services:
       service: phpqa
     entrypoint: ["/app/phpqa/vendor/bin/codecept"]
 
+  # editorconfig-checker
+  editorconfig-checker:
+    image: mstruebing/editorconfig-checker
+    volumes:
+      - .:/check:z
