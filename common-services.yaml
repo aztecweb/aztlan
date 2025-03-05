@@ -50,7 +50,6 @@ services:
       WP_DEBUG: ${WP_DEBUG}
       LOG_STREAM: ${LOG_STREAM}
       LOG_LEVEL: ${LOG_LEVEL}
-      ASSETS_URL: ${ASSETS_URL}
       THEME_ACTIVE: ${THEME_ACTIVE}
       UPLOADS_DIR: ${UPLOADS_DIR}
       GLOTPRESS_PROJECT_ENV_URL: ${GLOTPRESS_PROJECT_ENV_URL}
@@ -120,14 +119,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./environment/initdb:/docker-entrypoint-initdb.d:z
-
-  # Node 20 with NPM/Yarn/npx
-  assets-node:
-    image: node:${NODE_VERSION}
-    volumes:
-      - ./:/app:z
-      - ~/.docker_cache/npm:/.npm:z
-    working_dir: /app/assets
 
   # PHPQA
   phpqa:
