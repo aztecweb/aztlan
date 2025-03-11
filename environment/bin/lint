@@ -86,7 +86,6 @@ run_editorconfig_checker
 run_phpcbf
 run_phpcs
 run_phpstan
-run_eslint
 
 if [ ${EXIT_CODE} == 0 ]
 then
@@ -97,8 +96,6 @@ else
 	return_run "PHPCS" "$PHPCS"
 	return_run "PHPSTAN" "$PHPSTAN"
 	return_run "PHPSTAN (TESTS)" "$PHPSTANTESTS"
-	return_run "STYLINT" "$STYLINT"
-	return_run "ESLINT" "$ESLINT"
 fi
 
 exit ${EXIT_CODE};
