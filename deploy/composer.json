@@ -1,7 +1,7 @@
 {
     "name": "aztecweb/deployer",
     "require": {
-        "deployer/deployer": "7.5.8"
+        "deployer/deployer": "7.5.12"
     },
 	"config": {
 		"platform": {
