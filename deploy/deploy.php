@@ -18,7 +18,7 @@ host( 'staging' )
 	->set( 'remote_user', 'ambiente_staging' )
 	->set( 'labels', array( 'stage' => 'staging' ) )
 	->set( 'user', 'ambiente_staging' )
-	->set( 'branch', 'staging' )
+	->set( 'branch', 'main' )
 	->set( 'deploy_path', '/home/ambiente_staging' );
 
 set( 'http_user', 'www-data' );
