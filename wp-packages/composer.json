@@ -18,7 +18,9 @@
 		"aztlan/aztec": "1.0.0",
 		"aztecweb/aztlan-plugin": "1.0.0",
 		"composer/installers": "2.3.0",
-		"johnpbloch/wordpress": "6.7.1"
+		"johnpbloch/wordpress": "6.7.1",
+		"inpsyde/wp-translation-downloader": "^2.5",
+		"wpackagist-theme/hello-elementor": "3.3.0"
 	},
 	"extra": {
 		"wordpress-install-dir": "../public/wp",
@@ -29,15 +31,28 @@
 			"../public/packages/themes/{$name}/": [
 				"type:wordpress-theme"
 			]
+		},
+		"wp-translation-downloader": {
+			"languages": [
+				"pt_BR"
+			],
+			"languageRootDir": "../public/packages/languages",
+			"api": {
+				"names": {
+					"aztecweb/*": "https://translate.aztecweb.net/api/translations/%projectName%/%packageVersion%/%projectName%/"
+				}
+			}
 		}
 	},
 	"config": {
+		"secure-http":false,
 		"platform": {
 			"php": "8.3"
 		},
 		"allow-plugins": {
 			"johnpbloch/wordpress-core-installer": true,
-			"composer/installers": true
+			"composer/installers": true,
+			"inpsyde/wp-translation-downloader": true
 		}
 	}
 }

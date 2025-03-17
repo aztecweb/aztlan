@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "50fee1b388bd4dc1927dc456464e66aa",
+    "content-hash": "15ef90ecc3afc1c21c82e6f27937e083",
     "packages": [
         {
             "name": "aztecweb/aztlan-plugin",
@@ -33,7 +33,7 @@
             "dist": {
                 "type": "path",
                 "url": "private/plugins/aztec",
-                "reference": "bd4f217480d54017dba34bf92dc07f5b602d48ce"
+                "reference": "745df94a97d89678f83607d0214fe8dead6fcc39"
             },
             "type": "wordpress-plugin",
             "transport-options": {
@@ -187,6 +187,62 @@
             "time": "2024-06-24T20:46:46+00:00"
         },
         {
+            "name": "inpsyde/wp-translation-downloader",
+            "version": "2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inpsyde/wp-translation-downloader.git",
+                "reference": "623b060cfc22210c8599d14a2eafa1e0bec53df1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inpsyde/wp-translation-downloader/zipball/623b060cfc22210c8599d14a2eafa1e0bec53df1",
+                "reference": "623b060cfc22210c8599d14a2eafa1e0bec53df1",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0",
+                "composer/installers": "^1.0 || ^2.0",
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "behat/behat": "^v3.10.0",
+                "brain/monkey": "^2.6.1",
+                "composer/composer": "^2.3.7",
+                "inpsyde/php-coding-standards": "^1.0.0",
+                "mikey179/vfsstream": "^v1.6.10",
+                "ondram/ci-detector": "^4.1.0",
+                "phpunit/phpunit": "^8.5.26",
+                "vimeo/psalm": "^4.23.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Inpsyde\\WpTranslationDownloader\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Inpsyde\\WpTranslationDownloader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Leucht",
+                    "email": "c.leucht@inpsyde.com"
+                }
+            ],
+            "description": "Composer plugin to download translations from wordpress.org API.",
+            "support": {
+                "issues": "https://github.com/inpsyde/wp-translation-downloader/issues",
+                "source": "https://github.com/inpsyde/wp-translation-downloader/tree/2.5"
+            },
+            "time": "2023-04-14T08:49:43+00:00"
+        },
+        {
             "name": "johnpbloch/wordpress",
             "version": "6.7.1",
             "source": {
@@ -333,6 +389,24 @@
                 "source": "https://github.com/johnpbloch/wordpress-core-installer/tree/master"
             },
             "time": "2020-04-16T21:44:57+00:00"
+        },
+        {
+            "name": "wpackagist-theme/hello-elementor",
+            "version": "3.3.0",
+            "source": {
+                "type": "svn",
+                "url": "https://themes.svn.wordpress.org/hello-elementor/",
+                "reference": "3.3.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/theme/hello-elementor.3.3.0.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-theme",
+            "homepage": "https://wordpress.org/themes/hello-elementor/"
         }
     ],
     "packages-dev": [],

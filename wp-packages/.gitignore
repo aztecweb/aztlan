@@ -1,3 +1,4 @@
 vendor
 languages/*/*
 !languages/*/.gitkeep
+wp-translation-downloader.lock
