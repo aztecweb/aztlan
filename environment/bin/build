@@ -43,7 +43,6 @@ main() {
 	install_private_themes
 	configure_composer_token
 	install_composer_packages
-	download_and_install_languages_packages
 	shutdown_network
 
 	if is_image_build; then
@@ -184,9 +183,6 @@ set_script_variables() {
 	PRIVATE_DIR="${PACKAGES_DIR}/private"
 	PRIVATE_PLUGINS_PACKAGES="${PRIVATE_DIR}/plugins/*.zip"
 	PRIVATE_THEMES_PACKAGES="${PRIVATE_DIR}/themes/*.zip"
-	PACKAGES_LANGUAGES_DIR="${PACKAGES_DIR}/languages"
-	PACKAGES_THEME_LANGUAGES_DIR="${PACKAGES_LANGUAGES_DIR}/themes"
-	PACKAGES_PLUGINS_LANGUAGES_DIR="${PACKAGES_LANGUAGES_DIR}/plugins"
 
 	# Set general variables
 	HTTP_USER=$(docker_compose_run_with_host_user wordpress-base printenv HTTP_USER)
@@ -199,12 +195,6 @@ set_script_variables() {
 		COMPOSER_INSTALL_OPTIONS="--no-progress --no-interaction -vv"
 		DOCKER_COMPOSE_DOWN_OPTIONS=""
 	fi
-
-	set +x
-	GLOTPRESS_PROJECT_ENV_URL=$(docker_compose_run_with_host_user wordpress-base printenv GLOTPRESS_PROJECT_ENV_URL)
-	THEME_ACTIVE=$(docker_compose_run_with_host_user wordpress-base printenv THEME_ACTIVE)
-	WP_LANG=$(docker_compose_run_with_host_user wordpress-base printenv WP_LANG)
-	set -x
 
 	XDEBUG_DIR="/app/xdebug"
 
@@ -306,43 +296,6 @@ install_composer_packages() {
 
 list_all_versioned_composer_files() {
 	git ls-files | grep composer.json
-}
-
-download_and_install_languages_packages() {
-	if [ ${GLOTPRESS_PROJECT_ENV_URL} ]; then
-		URL_LANGUAGE_SET=pt-br/default/export-translations
-		URL_LANGUAGE_THEME=${GLOTPRESS_PROJECT_ENV_URL}/theme/${URL_LANGUAGE_SET}
-		URL_LANGUAGE_INC=${GLOTPRESS_PROJECT_ENV_URL}/inc/${URL_LANGUAGE_SET}
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo"
-	fi
-
-	docker_compose_run_with_host_user_bash "ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/"
-	docker_compose_run_with_host_user_bash "ls -1 ${PACKAGES_PLUGINS_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_PLUGINS_LANGUAGES_DIR}/% ${PLUGINS_LANGUAGES_DIR}/"
-
-	WP_COMPOSER_INFO=$(${WP_COMPOSER} info | tr -s " " | sed 's/[ \t]/,/g' | cut -d "," -f 1,2)
-
-	while IFS="," read -u 3 package version; do
-		if [[ ${package} == "johnpbloch/wordpress-core" ]]; then
-			if [[ ${version} == *".0" ]]; then
-				version=$(echo "${version}" | sed 's/..$//')
-			fi
-			URL="https://downloads.wordpress.org/translation/core/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${LANGUAGES_DIR} tmp.zip && rm tmp.zip"
-
-		elif [[ ${package} == *"wpackagist-plugin/"* ]]; then
-			plugin=$(echo ${package} | awk -F'wpackagist-plugin/' '{ print $2 }')
-			URL="https://downloads.wordpress.org/translation/plugin/${plugin}/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${PLUGINS_LANGUAGES_DIR} tmp.zip && rm tmp.zip"
-
-		elif [[ ${package} == *"wpackagist-theme/"* ]]; then
-			theme=$(echo ${package} | awk -F'wpackagist-theme/' '{ print $2 }')
-			URL="https://downloads.wordpress.org/translation/plugin/${theme}/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${THEME_LANGUAGES_DIR} tmp.zip && rm tmp.zip"
-		fi
-	done 3< <(printf '%s\n' "${WP_COMPOSER_INFO}")
 }
 
 shutdown_network() {
