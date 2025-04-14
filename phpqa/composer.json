@@ -8,8 +8,8 @@
         "lucatume/wp-browser": "4.4.2",
         "phpcompatibility/php-compatibility": "9.3.5",
         "phpstan/extension-installer": "1.4.3",
-        "phpstan/phpstan": "2.1.8",
-        "phpstan/phpstan-strict-rules": "2.0.3",
+        "phpstan/phpstan": "2.1.11",
+        "phpstan/phpstan-strict-rules": "2.0.4",
         "szepeviktor/phpstan-wordpress": "2.0.1",
         "wp-coding-standards/wpcs": "3.1.0"
     },
