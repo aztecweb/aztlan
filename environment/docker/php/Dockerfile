@@ -86,6 +86,8 @@ WORKDIR /app
 FROM cli-base AS cli-development
 USER root
 
+RUN apk add patch
+
 # Copy composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
