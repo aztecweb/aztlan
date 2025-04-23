@@ -86,8 +86,13 @@ WORKDIR /app
 FROM cli-base AS cli-development
 USER root
 
-# Copy composer
+# Copy Composer and project dependencies
+# patch - to apply Composer patches
+# subversion - to allow Composer to download WordPress packages
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/patch /usr/bin/patch
+COPY --from=composer /usr/bin/svn* /usr/bin
+COPY --from=composer /usr/lib/libsvn* /usr/lib
 
 # Copy MSMTP bin and settings
 COPY --from=msmtp /etc/msmtprc /etc/msmtprc
