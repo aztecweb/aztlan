@@ -86,10 +86,9 @@ WORKDIR /app
 FROM cli-base AS cli-development
 USER root
 
-RUN apk add patch
-
-# Copy composer
+# Copy Composer and patch as Composer dependency
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/patch /usr/bin/patch
 
 # Copy MSMTP bin and settings
 COPY --from=msmtp /etc/msmtprc /etc/msmtprc
