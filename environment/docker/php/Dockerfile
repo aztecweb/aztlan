@@ -1,4 +1,4 @@
-ARG PHP_VERSION
+ARG PHP_VERSION=0.0
 
 # =========================base=========================
 FROM alpine AS base
@@ -211,5 +211,3 @@ ENV PATH=/app/deploy/vendor/bin:$PATH
 
 ENTRYPOINT ["dep"]
 CMD ["list"]
-
-
