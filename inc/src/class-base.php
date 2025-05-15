@@ -29,7 +29,7 @@ abstract class Base {
 			return $callable;
 		}
 
-		$message = sprintf( '%s::%s isn\'t a callable method', ...$callable );
+		$message = sprintf( '%s::%s isn\'t a callable method', get_class( $callable[0] ), $callable[1] );
 		throw new Exception( esc_html( $message ) );
 	}
 }
