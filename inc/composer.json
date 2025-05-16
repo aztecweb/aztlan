@@ -5,8 +5,8 @@
         "files": ["autoload.php"]
     },
     "require": {
-        "php-di/php-di": "7.0.9",
-		"vlucas/phpdotenv": "5.6.1",
+        "php-di/php-di": "7.0.10",
+		"vlucas/phpdotenv": "5.6.2",
         "monolog/monolog": "3.9.0"
     },
 	"config": {
