@@ -313,10 +313,10 @@ download_and_install_languages_packages() {
 		URL_LANGUAGE_SET=pt-br/default/export-translations
 		URL_LANGUAGE_THEME=${GLOTPRESS_PROJECT_ENV_URL}/theme/${URL_LANGUAGE_SET}
 		URL_LANGUAGE_INC=${GLOTPRESS_PROJECT_ENV_URL}/inc/${URL_LANGUAGE_SET}
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po"
-		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.po ${URL_LANGUAGE_THEME}/?format=po" || echo "Theme translation not found"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_THEME}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O themes/${THEME_ACTIVE}/languages/${WP_LANG}.mo ${URL_LANGUAGE_THEME}/?format=mo" || echo "Theme translation not found"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.po ${URL_LANGUAGE_INC}/?format=po" || echo "Theme translation not found"
+		[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL_LANGUAGE_INC}"/) ]] && docker_compose_run_with_host_user_bash "wget -q -O inc/languages/${THEME_ACTIVE}_inc-${WP_LANG}.mo ${URL_LANGUAGE_INC}/?format=mo" || echo "Theme translation not found"
 	fi
 
 	docker_compose_run_with_host_user_bash "ls -1 ${PACKAGES_THEME_LANGUAGES_DIR} | xargs -I % ln -sf ../../../../${PACKAGES_THEME_LANGUAGES_DIR}/% ${THEME_LANGUAGES_DIR}/"
@@ -330,17 +330,17 @@ download_and_install_languages_packages() {
 				version=$(echo "${version}" | sed 's/..$//')
 			fi
 			URL="https://downloads.wordpress.org/translation/core/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${LANGUAGES_DIR} tmp.zip && rm tmp.zip"
+			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${LANGUAGES_DIR} tmp.zip && rm tmp.zip" || echo "Core translation not found"
 
 		elif [[ ${package} == *"wpackagist-plugin/"* ]]; then
 			plugin=$(echo ${package} | awk -F'wpackagist-plugin/' '{ print $2 }')
 			URL="https://downloads.wordpress.org/translation/plugin/${plugin}/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${PLUGINS_LANGUAGES_DIR} tmp.zip && rm tmp.zip"
+			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${PLUGINS_LANGUAGES_DIR} tmp.zip && rm tmp.zip" || echo "Plugin translation not found"
 
 		elif [[ ${package} == *"wpackagist-theme/"* ]]; then
 			theme=$(echo ${package} | awk -F'wpackagist-theme/' '{ print $2 }')
 			URL="https://downloads.wordpress.org/translation/theme/${theme}/${version}/${WP_LANG}.zip"
-			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${THEME_LANGUAGES_DIR} tmp.zip && rm tmp.zip"
+			[[ '200' = $(docker_compose_run_with_host_user_bash "curl -I -s -o /dev/null -w "%{http_code}" ${URL}") ]] && docker_compose_run_with_host_user_bash "wget -q -O tmp.zip ${URL} && unzip -qqod ${THEME_LANGUAGES_DIR} tmp.zip && rm tmp.zip" || echo "Theme translation not found"
 		fi
 	done 3< <(printf '%s\n' "${WP_COMPOSER_INFO}")
 }
