@@ -3,4 +3,5 @@ build/
 themes/*/languages/*
 !themes/*/languages/.gitkeep
 .env
+.env.example
 wp-packages/auth.json
