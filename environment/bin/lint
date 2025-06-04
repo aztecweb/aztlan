@@ -49,13 +49,6 @@ function run_phpcs() {
 	fi
 }
 
-function run_phpcbf() {
-	NO_ERRORS="No violations were found"
-	printf "Running PHPCBF\t........... ";
-	PHPCBF=$(docker_compose_run_with_host_user phpqa phpcbf)
-	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
-}
-
 function run_phpstan() {
 	printf "Running PHPSTAN\t........... ";
 	PHPSTAN=$(docker_compose_run_with_host_user phpqa phpstan analyse 2> /dev/null)
@@ -83,7 +76,6 @@ source environment/bin/shared/docker_compose.sh
 
 # Run code standards functions
 run_editorconfig_checker
-run_phpcbf
 run_phpcs
 run_phpstan
 
