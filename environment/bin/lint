@@ -50,7 +50,7 @@ function run_phpcs() {
 }
 
 function run_phpcbf() {
-	NO_ERRORS="No fixable errors"
+	NO_ERRORS="No violations were found"
 	printf "Running PHPCBF\t........... ";
 	PHPCBF=$(docker_compose_run_with_host_user phpqa phpcbf)
 	[[ $PHPCBF =~ "$NO_ERRORS" ]]  && print_success || print_error
