@@ -18,7 +18,7 @@
 		"aztlan/aztec": "1.0.0",
 		"aztecweb/aztlan-plugin": "1.0.0",
 		"composer/installers": "2.3.0",
-		"johnpbloch/wordpress": "6.8.1"
+		"johnpbloch/wordpress": "6.8.2"
 	},
 	"extra": {
 		"wordpress-install-dir": "../public/wp",
