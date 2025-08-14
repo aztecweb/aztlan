@@ -8,10 +8,10 @@
         "lucatume/wp-browser": "4.5.4",
         "phpcompatibility/php-compatibility": "9.3.5",
         "phpstan/extension-installer": "1.4.3",
-        "phpstan/phpstan": "2.1.17",
-        "phpstan/phpstan-strict-rules": "2.0.4",
+        "phpstan/phpstan": "2.1.21",
+        "phpstan/phpstan-strict-rules": "2.0.6",
         "szepeviktor/phpstan-wordpress": "2.0.2",
-        "wp-coding-standards/wpcs": "3.1.0"
+        "wp-coding-standards/wpcs": "3.2.0"
     },
     "config": {
         "platform": {
